@@ -10,7 +10,7 @@
 - Spring Boot : 3.1.5
 - Package name : com.project.Restaurant
 - Packaging : Jar
-- JAVA Ver. : 17
+- JAVA Version : 17
 
 - Dependencies :
   - Spring Boot DevTools
