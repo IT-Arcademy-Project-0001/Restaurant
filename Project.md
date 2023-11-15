@@ -35,3 +35,11 @@ B팀 2조 (김용구, 윤지원, 이건구, 장미나, 장찬익)
   - 스프링 시큐리티 관련 (스프링부트 프레임워크 + 타임리프 시큐리티 관련)
     - implementation 'org.springframework.boot:spring-boot-starter-security'
     - implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6:3.1.1.RELEASE'
+   
+# 개발 규칙
+
+- 카멜표기법(wordSample)과 파스칼표기법(WordSample)을 적절히 사용
+- 클래스명은 파스칼표기법으로 표기
+- 도메인 경로 규칙 (Request, Get, Post 모두 해당)
+  - 클래스별 메인페이지 : /place (클래스명)
+  - 클래스별 기능페이지 : /place/search, /place/regist (클래스명/기능)
