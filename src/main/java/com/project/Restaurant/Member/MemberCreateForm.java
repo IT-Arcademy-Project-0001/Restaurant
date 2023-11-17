@@ -14,6 +14,9 @@ public class MemberCreateForm {
     @NotEmpty(message = "비밀번호는 필수입니다.")
     private String password;
 
+    @NotEmpty(message = "닉네임은 필수입니다.")
+    private String memberNickName;
+
     @NotEmpty(message = "비밀번호 확인은 필수입니다.")
     private String passwordConfirm;
 

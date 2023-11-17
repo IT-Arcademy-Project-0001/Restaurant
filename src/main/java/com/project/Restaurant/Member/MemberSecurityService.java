@@ -1,5 +1,6 @@
 package com.project.Restaurant.Member;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -20,6 +21,7 @@ public class MemberSecurityService implements UserDetailsService {
     private final MemberRepository memberRepository;
 
     @Override
+    @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<Member> _member = memberRepository.findByusername(username);
         if (_member.isEmpty()) {

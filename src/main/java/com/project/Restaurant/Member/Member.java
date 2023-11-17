@@ -25,6 +25,9 @@ public class Member {
   private String password;    //  유저비밀번호
 
   @Column(unique = true)
+  private String memberNickName;  //  유저닉네임
+
+  @Column(unique = true)
   private String email;   //  유저이메일
 
   private LocalDateTime signupDate; //  유저가입일

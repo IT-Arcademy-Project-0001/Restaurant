@@ -3,7 +3,11 @@ package com.project.Restaurant.Member;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,7 +43,7 @@ public class MemberController {
         }
         try {
             memberService.create(memberCreateForm.getUsername(), memberCreateForm.getEmail(),
-                    memberCreateForm.getPassword());
+                    memberCreateForm.getPassword(), memberCreateForm.getMemberNickName());
         } catch (DataIntegrityViolationException e) {
             e.printStackTrace();
             bindingResult.reject("signupFailed", "이미 등록된 사용자입니다.");
@@ -49,7 +53,15 @@ public class MemberController {
             bindingResult.reject("signupFailed", e.getMessage());
             return "signup_form";
         }
-
         return "redirect:/member/login";
+    }
+
+    @GetMapping("/information")
+    public String memberInformation(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        Member targetMember = memberService.getMemberByUsername(userDetails.getUsername());
+        model.addAttribute("targetMember", targetMember);
+        return "memberInformation";
     }
 }
