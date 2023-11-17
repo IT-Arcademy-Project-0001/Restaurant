@@ -26,12 +26,12 @@ public class Member {
   @Column(unique = true)
   private String email;   //  유저이메일
 
-//  @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
-//  private List<Place> placeList;
-//
-//  @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
-//  private List<Post> postList;
-//
-//  @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
-//  private List<Reservation> reservationList;
+  @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
+  private List<Place> placeList;
+
+  @OneToMany(mappedBy = "author", cascade = CascadeType.REMOVE)
+  private List<Post> postList;
+
+  @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
+  private List<Reservation> reservationList;
 }

@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -25,9 +27,9 @@ public class Reservation {
 
   private LocalDateTime localDateTime;
 
-//  @ManyToOne
-//  private Member member;
-//
-//  @ManyToOne
-//  private Place place;
+  @ManyToOne
+  private Member member;
+
+  @ManyToOne
+  private Place place;
 }
