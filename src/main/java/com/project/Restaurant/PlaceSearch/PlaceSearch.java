@@ -5,5 +5,8 @@ public class PlaceSearch {
     public void test() {
 
     }
+    public void test2() {
+
+    }
 
 }
