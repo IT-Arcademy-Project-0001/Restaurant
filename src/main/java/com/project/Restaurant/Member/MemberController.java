@@ -1,9 +1,11 @@
+
 package com.project.Restaurant.Member;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -12,6 +14,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Controller
@@ -61,7 +66,11 @@ public class MemberController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         Member targetMember = memberService.getMemberByUsername(userDetails.getUsername());
+
         model.addAttribute("targetMember", targetMember);
+        model.addAttribute("memberAuthorities", userDetails.getAuthorities());
+
+        System.out.println(userDetails.getAuthorities());
         return "memberInformation";
     }
 }
