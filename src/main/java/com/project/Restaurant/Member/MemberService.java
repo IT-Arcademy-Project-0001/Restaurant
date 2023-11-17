@@ -20,6 +20,21 @@ public class MemberService {
         member.setMemberNickName(memberNickName);
         member.setPassword(passwordEncoder.encode(password));
         member.setSignupDate(LocalDateTime.now());
+        member.setAuthority("customer");
+        member.setMemberActivation(true);
+        memberRepository.save(member);
+        return member;
+    }
+
+    public Member createSeller(String username, String email, String password, String memberNickName) {
+        Member member = new Member();
+        member.setUsername(username);
+        member.setEmail(email);
+        member.setMemberNickName(memberNickName);
+        member.setPassword(passwordEncoder.encode(password));
+        member.setSignupDate(LocalDateTime.now());
+        member.setAuthority("seller");
+        member.setMemberActivation(false);
         memberRepository.save(member);
         return member;
     }

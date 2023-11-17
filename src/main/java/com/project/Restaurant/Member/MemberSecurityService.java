@@ -2,6 +2,7 @@ package com.project.Restaurant.Member;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -28,6 +29,9 @@ public class MemberSecurityService implements UserDetailsService {
             throw new UsernameNotFoundException("사용자를 찾을수 없습니다.");
         }
         Member member = _member.get();
+        if (member.getMemberActivation()) {
+            throw new DisabledException("계정이 활성화되지 않았습니다. 관리자의 승인을 기다려주세요.");
+        }
         List<GrantedAuthority> authorities = new ArrayList<>();
         if ("admin".equals(username)) {
             authorities.add(new SimpleGrantedAuthority(MemberRole.ADMIN.getValue()));

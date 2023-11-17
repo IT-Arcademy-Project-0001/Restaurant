@@ -32,7 +32,7 @@ public class Member {
 
   private LocalDateTime signupDate; //  유저가입일
 
-  @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
+  @OneToMany(mappedBy = "member")
   private List<Place> placeList;
 
   @OneToMany(mappedBy = "author", cascade = CascadeType.REMOVE)
@@ -40,4 +40,9 @@ public class Member {
 
   @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
   private List<Reservation> reservationList;
+
+  private String authority; //  유저권한
+
+  private Boolean memberActivation; //  유저활성화
+
 }
