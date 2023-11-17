@@ -41,9 +41,9 @@ public class Place {
 
   private String storeMemo;      // 추가 안내사항 작성
 
-//  @ManyToOne
-//  private Member member;
-//
-//  @OneToMany(mappedBy = "place", cascade = CascadeType.REMOVE)
-//  private List<Reservation> reservationList;
+  @ManyToOne
+  private Member member;
+
+  @OneToMany(mappedBy = "place", cascade = CascadeType.REMOVE)
+  private List<Reservation> reservationList;
 }

@@ -21,9 +21,9 @@ public class PostComment {
   private String content;
   private LocalDateTime CreateDate;
 
-//  @ManyToOne
-//  private Member author;
-//
-//  @ManyToOne
-//  private Post post;
+  @ManyToOne
+  private Member author;
+
+  @ManyToOne
+  private Post post;
 }

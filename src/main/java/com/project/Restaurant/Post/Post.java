@@ -26,9 +26,9 @@ public class Post {
 
   private LocalDateTime localDateTime;
 
-//  @ManyToOne
-//  private Member author;
-//
-//  @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
-//  private List<PostComment> postCommentList;
+  @ManyToOne
+  private Member author;
+
+  @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
+  private List<PostComment> postCommentList;
 }

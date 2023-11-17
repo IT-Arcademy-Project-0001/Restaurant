@@ -25,9 +25,9 @@ public class Reservation {
 
   private LocalDateTime localDateTime;
 
-//  @ManyToOne
-//  private Member member;
-//
-//  @ManyToOne
-//  private Place place;
+  @ManyToOne
+  private Member member;
+
+  @ManyToOne
+  private Place place;
 }
