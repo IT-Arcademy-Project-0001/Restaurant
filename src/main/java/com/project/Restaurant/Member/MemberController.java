@@ -27,24 +27,23 @@ public class MemberController {
 
     @GetMapping("/login")
     public String login() {
-        return "login_form";
+        return "/member/login_form";
     }
 
     @GetMapping("/signup")
     public String signup(MemberCreateForm memberCreateForm) {
-        return "signup_form";
+        return "/member/signup_form";
     }
 
     @PostMapping("/signup")
     public String signup(@Valid MemberCreateForm memberCreateForm, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "signup_form";
+            return "/member/signup_form";
         }
-
         if (!memberCreateForm.getPassword().equals(memberCreateForm.getPasswordConfirm())) {
             bindingResult.rejectValue("passwordConfirm", "passwordInCorrect",
                     "패스워드가 일치하지 않습니다.");
-            return "signup_form";
+            return "/member/signup_form";
         }
         try {
             memberService.create(memberCreateForm.getUsername(), memberCreateForm.getEmail(),
@@ -52,11 +51,11 @@ public class MemberController {
         } catch (DataIntegrityViolationException e) {
             e.printStackTrace();
             bindingResult.reject("signupFailed", "이미 등록된 사용자입니다.");
-            return "signup_form";
+            return "/member/signup_form";
         } catch (Exception e) {
             e.printStackTrace();
             bindingResult.reject("signupFailed", e.getMessage());
-            return "signup_form";
+            return "/member/signup_form";
         }
         return "redirect:/member/login";
     }
@@ -64,13 +63,12 @@ public class MemberController {
     @PostMapping("/signupSeller")
     public String signupSeller(@Valid MemberCreateForm memberCreateForm, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "signup_form";
+            return "/member/signup_form";
         }
-
         if (!memberCreateForm.getPassword().equals(memberCreateForm.getPasswordConfirm())) {
             bindingResult.rejectValue("passwordConfirm", "passwordInCorrect",
                     "패스워드가 일치하지 않습니다.");
-            return "signup_form";
+            return "/member/signup_form";
         }
         try {
             memberService.createSeller(memberCreateForm.getUsername(), memberCreateForm.getEmail(),
@@ -78,11 +76,11 @@ public class MemberController {
         } catch (DataIntegrityViolationException e) {
             e.printStackTrace();
             bindingResult.reject("signupFailed", "이미 등록된 사용자입니다.");
-            return "signup_form";
+            return "/member/signup_form";
         } catch (Exception e) {
             e.printStackTrace();
             bindingResult.reject("signupFailed", e.getMessage());
-            return "signup_form";
+            return "/member/signup_form";
         }
         return "redirect:/member/login";
     }
@@ -97,6 +95,6 @@ public class MemberController {
         model.addAttribute("memberAuthorities", userDetails.getAuthorities());
 
         System.out.println(userDetails.getAuthorities());
-        return "memberInformation";
+        return "/member/memberInformation";
     }
 }

@@ -21,16 +21,6 @@ public class MainController {
     return "guide";
   }
 
-//  @GetMapping("/member/login")
-//  public String login() {
-//    return "login";
-//  }
-//
-//  @GetMapping("/member/signup")
-//  public String membersignup() {
-//    return "signup";
-//  }
-
   @GetMapping("/food/regist")
   public String foodregist() {
     return "foodregist";

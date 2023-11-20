@@ -15,34 +15,34 @@ import java.util.List;
 @Setter
 public class Member {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-  @Column(unique = true)
-  private String username;    //  유저아이디
+    @Column(unique = true)
+    private String username;    //  유저아이디
 
-  private String password;    //  유저비밀번호
+    private String password;    //  유저비밀번호
 
-  @Column(unique = true)
-  private String memberNickName;  //  유저닉네임
+    @Column(unique = true)
+    private String memberNickName;  //  유저닉네임
 
-  @Column(unique = true)
-  private String email;   //  유저이메일
+    @Column(unique = true)
+    private String email;   //  유저이메일
 
-  private LocalDateTime signupDate; //  유저가입일
+    private LocalDateTime signupDate; //  유저가입일
 
-  @OneToMany(mappedBy = "member")
-  private List<Place> placeList;
+    @OneToMany(mappedBy = "member")
+    private List<Place> placeList;
 
-  @OneToMany(mappedBy = "author", cascade = CascadeType.REMOVE)
-  private List<Post> postList;
+    @OneToMany(mappedBy = "author", cascade = CascadeType.REMOVE)
+    private List<Post> postList;
 
-  @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
-  private List<Reservation> reservationList;
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
+    private List<Reservation> reservationList;
 
-  private String authority; //  유저권한
+    private String authority; //  유저권한
 
-  private Boolean memberActivation; //  유저활성화
+    private Boolean memberActivation; //  유저활성화
 
 }

@@ -29,16 +29,15 @@ public class MemberSecurityService implements UserDetailsService {
             throw new UsernameNotFoundException("사용자를 찾을수 없습니다.");
         }
         Member member = _member.get();
-        if (member.getMemberActivation()) {
+        if (!member.getMemberActivation()) {
             throw new DisabledException("계정이 활성화되지 않았습니다. 관리자의 승인을 기다려주세요.");
         }
         List<GrantedAuthority> authorities = new ArrayList<>();
         if ("admin".equals(username)) {
             authorities.add(new SimpleGrantedAuthority(MemberRole.ADMIN.getValue()));
-        } else {
+        } else if ("customer".equals(member.getAuthority())){
             authorities.add(new SimpleGrantedAuthority(MemberRole.CUSTOMER.getValue()));
-        }
-        if (!member.getPlaceList().isEmpty()) {
+        } else if ("seller".equals(member.getAuthority())) {
             authorities.add(new SimpleGrantedAuthority((MemberRole.SELLER.getValue())));
         }
         return new User(member.getUsername(), member.getPassword(), authorities);
