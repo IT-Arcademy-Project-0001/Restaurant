@@ -1,31 +1,34 @@
-  package com.project.Restaurant.Reservation;
+package com.project.Restaurant.Reservation;
 
-  import com.project.Restaurant.Member.Member;
-  import com.project.Restaurant.Place.Place;
-  import jakarta.persistence.*;
-  import lombok.Getter;
-  import lombok.Setter;
+import com.project.Restaurant.Member.Member;
+import com.project.Restaurant.Place.Place;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
-  import java.time.LocalDateTime;
+import java.time.LocalDateTime;
 
-  @Entity
-  @Getter
-  @Setter
-  public class Reservation {
+@Entity
+@Getter
+@Setter
+public class Reservation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-  private String ownerId;
+    private LocalDateTime ReservationTime;
 
-  private String customerId;
+    private String status;
 
-  private LocalDateTime localDateTime;
+    @ManyToOne
+    private Member member;
 
-  @ManyToOne
-  private Member member;
+    @ManyToOne
+    private Place place;
 
-  @ManyToOne
-  private Place place;
+    private String ownerId;
+    private String store;
+    private String storeId;
+    private String customerId;
 }

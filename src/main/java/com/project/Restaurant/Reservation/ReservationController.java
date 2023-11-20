@@ -1,42 +1,45 @@
 package com.project.Restaurant.Reservation;
 
+import com.project.Restaurant.Member.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
+@RequiredArgsConstructor
 
 @Controller
 public class ReservationController {
 
-    private final ReservationRepository reservationRepository;
-
-    @Autowired
-    public ReservationController(ReservationRepository reservationRepository) {
-        this.reservationRepository = reservationRepository;
-    }
+    private final ReservationService reservationService;
 
     @PostMapping("/reservation/request")
-    public String Request(@RequestParam String storeId,@RequestParam String customerId,@RequestParam String ownerId) {
+    public String Request(@RequestParam String store, @RequestParam String customerId,
+                          @RequestParam String ownerId) {
         Reservation reservation = new Reservation();
-        reservation.setStoreId(storeId);
+        reservation.setStore(store);
         reservation.setCustomerId(customerId);
-
-
-
         reservation.setOwnerId(ownerId);
         reservation.setReservationTime(LocalDateTime.now());
+        reservation.setStatus("에약요청");
 
-        reservationRepository.save(reservation);
+        reservationService.save(reservation);
+
+        if ("예약요청".equals(reservation.getStatus())) {
+            // 예약요청에 대한 추가 로직
+            // 예: 알림 메일 전송, 알림 메시지 등
+        } else if ("예약승인".equals(reservation.getStatus())) {
+            // 예약승인에 대한 추가 로직
+        } else if ("예약완료".equals(reservation.getStatus())) {
+            // 예약완료에 대한 추가 로직
+        }
 
         return "redirect:/reservation/list";
     }
@@ -48,8 +51,10 @@ public class ReservationController {
 
     @GetMapping("/reservation/list")
     public String list(Model model) {
-        List<Reservation> reservationsList = this.reservationRepository.findAll();
+        List<Reservation> reservationsList = this.reservationService.findAll();
         model.addAttribute("reservationList", reservationsList);
         return "reservation_list";
     }
+
+
 }
