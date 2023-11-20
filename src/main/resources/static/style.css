@@ -1,0 +1,68 @@
+body, ul, li{
+  list-style:none;
+  margin:0;
+  padding:0;
+}
+
+a{
+  text-decoration:none;
+  color:inherit;
+}
+
+.main-wrap {
+  margin : 0;
+  padding : 0;
+}
+
+.content-wrap {
+  display : flex;
+}
+
+.locationList {
+    background : azure;
+    height : 659px;
+    width : 410px;
+    border-radius: 10px;
+    overflow-y : auto;
+}
+.mapside {
+    height : 800px;
+}
+
+.mb-3 {
+  border: 1px solid rgba(0,0,0,.87);
+  border-radius: 10px;
+}
+
+
+.form-control{
+  height : 30px;
+  font-size : 15px;
+  margin : 5px;
+  overflow : auto;
+  word-break:break-all;
+}
+
+.registBtn{
+    background : #289AFF;
+    color : white;
+    border-radius: 10px;
+    width : 200px;
+    height : 30px;
+}
+
+.regist_array{
+    background : yellow;
+    width : 80%;
+    height : 80%;
+    display : flex;
+    margin-left : 10%;
+}
+
+.regist_form{
+    border-radius: 10px;
+    border: 1px solid rgba(0,0,0,.87);
+
+    width : 80%;
+    height : 80%;
+}
