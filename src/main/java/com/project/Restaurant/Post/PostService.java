@@ -19,6 +19,7 @@ public class PostService {
 
     private final PostRepository postRepository;
 
+
     public Page<Post> getList(int page){
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.desc("localDateTime"));
