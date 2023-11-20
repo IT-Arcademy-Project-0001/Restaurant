@@ -1,0 +1,33 @@
+<!-- reservation_list.html -->
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservation List</title>
+</head>
+<body>
+<h1>Reservation List</h1>
+
+<!-- 예약 목록을 표시하는 테이블 -->
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Store ID</th>
+        <th>Owner ID</th>
+        <th>Customer ID</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="reservation : ${reservationList}">
+        <td th:text="${reservation.id}"></td>
+        <td th:text="${reservation.storeId}"></td>
+        <td th:text="${reservation.ownerId}"></td>
+        <td th:text="${reservation.customerId}"></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
