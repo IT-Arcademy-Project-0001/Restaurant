@@ -1,0 +1,39 @@
+<html layout:decorate="~{layout}">
+<div class="all" layout:fragment="content">
+    <h2>회원가입</h2>
+    <form id="signupForm" th:object="${memberCreateForm}" method="post">
+        <div role="alert" th:if="${#fields.hasAnyErrors()}">
+            <div th:replace="~{form_errors :: formErrorsFragment}"></div>
+        </div>
+        <div>
+            <label for="username">아이디 : </label>
+            <input type="text" id="username" th:field="*{username}" name="username" pattern="^(?=.*[a-zA-Z])[a-zA-Z0-9]+$" title="영어와 숫자만 입력 가능합니다.">
+        </div>
+        <div>
+            <label for="password">비밀번호 : </label>
+            <input type="text" id="password" th:field="*{password}" name="password" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$"
+                   title="8자 이상의 비밀번호를 입력하세요. 영어 대문자, 소문자, 숫자를 최소 한 글자씩 포함해야 합니다.">
+        </div>
+        <div>
+            <label for="passwordConfirm">비밀번호 확인 : </label>
+            <input type="text" id="passwordConfirm" th:field="*{passwordConfirm}" name="passwordConfirm">
+        </div>
+        <div>
+            <label for="memberNickName">닉네임 : </label>
+            <input type="text" id="memberNickName" th:field="*{memberNickName}" name="memberNickName" pattern="^\S*$" title="공백을 사용할 수 없습니다.">
+        </div>
+        <div>
+            <label for="email">이메일 : </label>
+            <input type="text" id="email" th:field="*{email}" name="eamil" pattern="^\S*$" title="공백을 사용할 수 없습니다.">
+        </div>
+        <input type="button" value="개인 회원가입" onclick="submitForm('/member/signup')">
+        <input type="button" value="사업자 회원가입" onclick="submitForm('/member/signupSeller')">
+    </form>
+</div>
+<script>
+    function submitForm(url) {
+        document.getElementById('signupForm').action = url;
+        document.getElementById('signupForm').submit();
+    }
+</script>
+</html>

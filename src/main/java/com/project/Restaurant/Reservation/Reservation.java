@@ -17,15 +17,15 @@
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String storeId;
-    private String ownerId;
-    private String customerId;
-    private LocalDateTime reservationTime;
-    private boolean confirmed; // 예약이 확인된 상태인지 여부
+  private String ownerId;
 
-  //  @ManyToOne
-  //  private Member member;
-  //
-  //  @ManyToOne
-  //  private Place place;
-  }
+  private String customerId;
+
+  private LocalDateTime localDateTime;
+
+  @ManyToOne
+  private Member member;
+
+  @ManyToOne
+  private Place place;
+}
