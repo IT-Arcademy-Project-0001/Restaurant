@@ -13,9 +13,9 @@ import java.time.LocalDateTime;
 @Setter
 public class Reservation {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
     private LocalDateTime ReservationTime;
 
@@ -23,6 +23,7 @@ public class Reservation {
 
     @ManyToOne
     private Member member;
+
 
     @ManyToOne
     private Place place;
