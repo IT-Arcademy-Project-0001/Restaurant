@@ -1,6 +1,7 @@
 
 package com.project.Restaurant.Member;
 
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -26,7 +27,9 @@ public class MemberController {
     private final MemberService memberService;
 
     @GetMapping("/login")
-    public String login() {
+    public String login(HttpSession session, Model model) {
+        model.addAttribute("errorMessage", session.getAttribute("errorMessage"));
+
         return "/member/login_form";
     }
 
