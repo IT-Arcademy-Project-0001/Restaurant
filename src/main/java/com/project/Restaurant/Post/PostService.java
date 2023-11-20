@@ -1,6 +1,7 @@
 package com.project.Restaurant.Post;
 
 
+import com.project.Restaurant.Member.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -35,11 +36,23 @@ public class PostService {
         }
     }
 
-    public void create(String title, String content) {
+    public void create(String title, String content, Member member) {
         Post p = new Post();
         p.setTitle(title);
         p.setContent(content);
         p.setLocalDateTime(LocalDateTime.now());
+        p.setAuthor(member);
         this.postRepository.save(p);
+    }
+
+    public void modify(Post post, String title, String content) {
+        post.setTitle(title);
+        post.setContent(content);
+        post.setModifyDate(LocalDateTime.now());
+        this.postRepository.save(post);
+    }
+
+    public void delete(Post post) {
+        this.postRepository.delete(post);
     }
 }

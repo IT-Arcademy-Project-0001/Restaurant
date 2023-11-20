@@ -26,4 +26,6 @@ public class PostComment {
 
   @ManyToOne
   private Post post;
+
+  private LocalDateTime modifyDate;
 }

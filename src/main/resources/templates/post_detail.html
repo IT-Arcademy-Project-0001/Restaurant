@@ -6,43 +6,91 @@
         <div class="card-body">
             <div class="card-text" style="white-space: pre-line;" th:text="${post.content}"></div>
             <div class="d-flex justify-content-end">
+                <div th:if="${post.modifyDate != null}" class="badge bg-light text-dark p-2 text-start mx-3">
+                    <div class="mb-2">수정한 날짜</div>
+                    <div th:text="${#temporals.format(post.modifyDate, 'yyyy-MM-dd HH:mm')}"></div>
+                </div>
                 <div class="badge bg-light text-dark p-2 text-start">
+                    <div class="mb-2">
+                        <span th:if="${post.author != null}" th:text="${post.author.memberNickName}"></span>
+                    </div>
                     <div th:text="${#temporals.format(post.localDateTime, 'yyyy-MM-dd HH:mm')}"></div>
                 </div>
+            </div>
+            <div class="my-3">
+                <a th:href="@{|/post/modify/${post.id}|}" class="btn btn-sm btn-outline-secondary"
+                   sec:authorize="isAuthenticated()"
+                   th:if="${post.author != null and #authentication.getPrincipal().getUsername() == post.author.username}"
+                   th:text="수정"></a>
+                <a href="javascript:void(0);" th:data-uri="@{|/post/delete/${post.id}|}"
+                   class="delete btn btn-sm btn-outline-secondary" sec:authorize="isAuthenticated()"
+                   th:if="${post.author != null and #authentication.getPrincipal().getUsername() == post.author.username}"
+                   th:text="삭제"></a>
             </div>
         </div>
     </div>
     <!-- 답변의 갯수 표시 -->
     <h5 class="border-bottom my-3 py-2"
-        th:text="|${#lists.size(post.postCommentList)}개의 답변이 있습니다.|"></h5>
+        th:text="|댓글${#lists.size(post.postCommentList)}개|"></h5>
+
+
     <!-- 답변 반복 시작 -->
     <div class="card my-3" th:each="postcomment : ${post.postCommentList}">
         <div class="card-body">
             <div class="card-text" style="white-space: pre-line;" th:text="${postcomment.content}"></div>
             <div class="d-flex justify-content-end">
+                <div th:if="${postcomment.modifyDate != null}" class="badge bg-light text-dark p-2 text-start mx-3">
+                    <div class="mb-2">수정한 날짜</div>
+                    <div th:text="${#temporals.format(postcomment.modifyDate, 'yyyy-MM-dd HH:mm')}"></div>
+                </div>
                 <div class="badge bg-light text-dark p-2 text-start">
+                    <div class="mb-2">
+                        <span th:if="${postcomment.author != null}" th:text="${postcomment.author.memberNickName}"></span>
+                    </div>
                     <div th:text="${#temporals.format(postcomment.localDateTime, 'yyyy-MM-dd HH:mm')}"></div>
                 </div>
+            </div>
+            <div class="my-3">
+                <a th:href="@{|/comment/modify/${postcomment.id}|}" class="btn btn-sm btn-outline-secondary"
+                   sec:authorize="isAuthenticated()"
+                   th:if="${postcomment.author != null and #authentication.getPrincipal().getUsername() == postcomment.author.username}"
+                   th:text="수정"></a>
+                <a href="javascript:void(0);" th:data-uri="@{|/comment/delete/${postcomment.id}|}"
+                   class="delete btn btn-sm btn-outline-secondary" sec:authorize="isAuthenticated()"
+                   th:if="${postcomment.author != null and #authentication.getPrincipal().getUsername() == postcomment.author.username}"
+                   th:text="삭제"></a>
             </div>
         </div>
     </div>
     <!-- 답변 반복 끝  -->
+
     <!-- 답변 작성 -->
     <form th:action="@{|/comment/create/${post.id}|}" method="post" class="my-3" th:object="${postCommentForm}" onsubmit="return submitPost()">
         <div class="alert alert-danger" role="alert" th:if="${#fields.hasAnyErrors()}">
             <div th:each="err : ${#fields.allErrors()}" th:text="${err}" />
         </div>
-        <textarea th:field="*{content}" rows="10" class="form-control"></textarea>
-        <input type="submit" value="답변등록" class="btn btn-primary my-2">
+        <div id="floatingTextarea">
+            <!-- 익명 사용자인 경우 "로그인" 버튼을 표시 -->
+            <div th:if="${#authorization.expression('isAnonymous()')}">
+                <textarea disabled th:field="*{content}" class="form-control" rows="2" placeholder="로그인을 해주세요." id="anonymousContent"></textarea>
+                <input type="submit" value="로그인" class="btn btn-primary my-2">
+            </div>
+            <!-- 인증된 사용자인 경우 "답변등록" 버튼을 표시 -->
+            <div th:if="${#authorization.expression('isAuthenticated()')}">
+                <textarea th:field="*{content}" class="form-control" rows="2" placeholder="댓글을 남겨보세요." id="authenticatedContent"></textarea>
+                <input type="submit" value="등록" class="btn btn-primary my-2">
+            </div>
+        </div>
     </form>
+
 
     <script>
         function submitPost() {
             // 답변 내용을 가져오기
-            var content = document.getElementById("content").value;
+            var content = document.getElementById("authenticatedContent").value;
 
             // 답변 내용이 비어있는 경우
-            if (!content) {
+            if (!content.trim()) {
                 // 경고창 띄우기
                 alert("댓글을 입력해주세요.");
                 return false; // 폼 제출을 막음
@@ -52,6 +100,16 @@
                 return true; // 폼 제출 허용
             }
         }
+    </script>
+    <script layout:fragment="script" type='text/javascript'>
+        const delete_elements = document.getElementsByClassName("delete");
+        Array.from(delete_elements).forEach(function(element) {
+            element.addEventListener('click', function() {
+                if(confirm("정말로 삭제하시겠습니까?")) {
+                    location.href = this.dataset.uri;
+                };
+            });
+        });
     </script>
 </div>
 </html>
