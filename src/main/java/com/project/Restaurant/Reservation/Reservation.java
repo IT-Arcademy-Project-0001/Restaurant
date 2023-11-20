@@ -13,15 +13,17 @@
   @Setter
   public class Reservation {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
+
+  private String storeId;
 
   private String ownerId;
 
   private String customerId;
 
-  private LocalDateTime localDateTime;
+  private LocalDateTime reservationTime;
 
   @ManyToOne
   private Member member;

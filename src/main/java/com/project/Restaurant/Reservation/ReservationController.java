@@ -30,9 +30,6 @@ public class ReservationController {
         Reservation reservation = new Reservation();
         reservation.setStoreId(storeId);
         reservation.setCustomerId(customerId);
-
-
-
         reservation.setOwnerId(ownerId);
         reservation.setReservationTime(LocalDateTime.now());
 
