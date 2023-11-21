@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="ko" layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title> 카카오지도 장소등록 </title>
+    <link rel="stylesheet" href="/MapRegist.css">
+    <style>
+        button {
+            border: none;
+            outline: none;
+        }
+    </style>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="regist_array">
+        <a style="font-size : 30px; font-weight : bold; top : 10px;">신규 등록</a>
+        <div class="regist_form" style="margin-top : 50px;">
+            <div class="regist_title" style="margin : 50px;">
+                <a style="font-size : 25px; font-weight : bold; margin-bottom : 10px;">기본 정보</a> <a class="regist_sub" > *필수 </a>
+            </div>
+            <div class="regist_content">
+                <label class="regist_label" > 매장명 </label> <a class="regist_sub" style="left : 70px; top : -22px;"> *필수 </a>
+                <input type="text" class="regist_text" style="margin-top : -16px;" placeholder="매장명을 작성해주세요.">
+                <label class="regist_label" style="margin-bottom : -10px;"> 주소 </label> <a class="regist_sub" style="left : 70px; top : -10px;"> *필수 </a>
+                <form onsubmit="searchPlaces(); return false;">
+                    <input type="text" class="regist_text" id="search" style="margin-top : -18px; width : 66%;" placeholder="주소를 검색해주세요.">
+                </form>
+                <input type="text" class="regist_text"  style="margin-top : -45px; margin-left : 67%; width : 32%;"  placeholder="상세주소">
+                <div class="regist_map" id="regist_map"  style="width : 98%; height : 300px;" ></div>
+                <label class="regist_label" > 전화번호 </label>
+                <input type="text" class="regist_text" id ="phoneNum" maxlength="13" oninput="hypenTel(this)" placeholder="대표전화번호를 작성해주세요.">
+                <label class="regist_label" > 업종 </label>
+                <div style="width : 98%; height : 36px; margin-left : 5px;">
+                    <label>
+                        <input type="radio" name="contact" value="음식점" checked />
+                        <span>음식점</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="contact" value="카페" checked />
+                        <span>카페</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="contact" value="술집" checked />
+                        <span>술집</span>
+                    </label>
+                </div>
+                <label class="regist_label" > 영업시간 </label>
+                <nav th:replace="~{MapRegistOpentime :: navbarFragment}"></nav>
+
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript"
+            src="//dapi.kakao.com/v2/maps/sdk.js?appkey=1f6119cdfa6fe0122000dfaa0c837e0e&libraries=services,clusterer"></script>
+
+    <!-- 카카오지도 키워드 검색  -->
+    <script th:inline="javascript">
+
+        ////////////////////////////////////////////////  함수 구현  ////////////////////////////////////////////////
+              var autoHypenPhone = function(str){
+                  str = str.replace(/[^0-9]/g, '');
+                  var tmp = '';
+
+                  if( str.length < 4){
+                      return str;
+                  }else if(str.length < 7){
+                      tmp += str.substr(0, 3);
+                      tmp += '-';
+                      tmp += str.substr(3);
+                      return tmp;
+                  }else if(str.length < 11){
+                      tmp += str.substr(0, 3);
+                      tmp += '-';
+                      tmp += str.substr(3, 3);
+                      tmp += '-';
+                      tmp += str.substr(6);
+                      return tmp;
+                  }else{
+                      tmp += str.substr(0, 3);
+                      tmp += '-';
+                      tmp += str.substr(3, 4);
+                      tmp += '-';
+                      tmp += str.substr(7);
+                      return tmp;
+                  }
+
+                  return str;
+              }
+
+
+             var phoneNum = document.getElementById('phoneNum');
+
+             phoneNum.onkeyup = function(){
+              this.value = autoHypenPhone( this.value ) ;
+             }
+
+        ////////////////////////////////////////////////  함수 구현 끝  ///////////////////////////////////////////////////////
+
+
+        ////////////////////////////////////////////////  주소 지도 구현 시작  ////////////////////////////////////////////////
+            // 마커를 담을 배열입니다
+            var markers = [];
+
+            var mapContainer = document.getElementById('regist_map'), // 지도를 표시할 div
+            mapOption = {
+                center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
+                level: 3 // 지도의 확대 레벨
+            };
+
+            // 지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
+            var map = new kakao.maps.Map(mapContainer, mapOption);
+
+            // 장소 검색 객체를 생성합니다
+            var ps = new kakao.maps.services.Places();
+
+            // 키워드로 장소를 검색합니다
+            searchPlaces();
+
+            // 키워드 검색을 요청하는 함수입니다
+            function searchPlaces() {
+
+                var keyword = document.getElementById('search').value;
+
+                if (!keyword.replace(/^\s+|\s+$/g, '')) {
+                    alert('키워드를 입력해주세요!');
+                    return false;
+                }
+
+                // 장소검색 객체를 통해 키워드로 장소검색을 요청합니다
+                ps.keywordSearch( keyword, placesSearchCB);
+            }
+
+            // 장소검색이 완료됐을 때 호출되는 콜백함수 입니다
+            function placesSearchCB(data, status, pagination) {
+                if (status === kakao.maps.services.Status.OK) {
+
+                    // 정상적으로 검색이 완료됐으면
+                    // 검색 목록과 마커를 표출합니다
+                    displayPlaces(data);
+
+                } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
+
+                    alert('검색 결과가 존재하지 않습니다.');
+                    return;
+
+                } else if (status === kakao.maps.services.Status.ERROR) {
+
+                    alert('검색 결과 중 오류가 발생했습니다.');
+                    return;
+
+                }
+            }
+
+            // 검색 결과 목록과 마커를 표출하는 함수입니다
+            function displayPlaces(places) {
+
+                fragment = document.createDocumentFragment(),
+                bounds = new kakao.maps.LatLngBounds(),
+                listStr = '';
+
+                for ( var i=0; i<places.length; i++ ) {
+
+                    // 마커를 생성하고 지도에 표시합니다
+                    var placePosition = new kakao.maps.LatLng(places[i].y, places[i].x);
+
+                    // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
+                    // LatLngBounds 객체에 좌표를 추가합니다
+                    bounds.extend(placePosition);
+                }
+
+                // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
+                map.setBounds(bounds);
+            }
+
+
+         ////////////////////////////////////////////////  메인 지도 구현 끝  ////////////////////////////////////////////////
+
+    </script>
+</div>
+</body>
+</html>
