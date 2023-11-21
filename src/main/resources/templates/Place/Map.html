@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title> 카카오지도 장소등록 </title>
-    <link rel="stylesheet" href="/map.css">
+    <link rel="stylesheet" href="/Map.css">
     <style>
         button {
             border: none;
@@ -86,7 +86,6 @@
             </div>
         </div>
     </div>
-    <hr>
     <script type="text/javascript"
             src="//dapi.kakao.com/v2/maps/sdk.js?appkey=1f6119cdfa6fe0122000dfaa0c837e0e&libraries=services,clusterer"></script>
 
@@ -139,49 +138,13 @@
 
 
 
-        ////////////////////////////////////////////////  모달 구현  ////////////////////////////////////////////////
+        ////////////////////////////////////////////////  모달 구현  ///////////////////////////////////////////////////
             document.addEventListener('keydown', function (e) {
                 var modal = document.getElementById('my_modal');
                 if (modal && modal.classList.contains('active') && e.key === 'Enter') {
                 e.preventDefault();
                 }
             });
-
-            function test(id) {
-                var zIndex = 9999;
-                var modal = document.getElementById('my_modal');
-                var bg = document.createElement('div');
-
-                bg.setStyle({
-                    position: 'fixed',
-                    zIndex: zIndex,
-                    left: '0px',
-                    top: '0px',
-                    width: '100%',
-                    height: '100%',
-                    overflow: 'auto',
-                    backgroundColor: 'rgba(0,0,0,0.4)'
-                });
-                document.body.append(bg);
-
-                modal.setStyle({
-                    position: 'fixed',
-                    display: 'block',
-                    boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
-                    zIndex: zIndex + 1,
-                    opacity:100%0
-                });
-
-                // 모달이 열릴 때 내용을 저장
-                originalModalContent = modal.innerHTML;
-
-                modal.querySelector('.modal_close_btn').addEventListener('click', function() {
-                    bg.remove();
-                    modal.innerHTML = originalModalContent;
-                    modal.style.display = 'none';
-
-                });
-            }
 
             function modal(id) {
                 var zIndex = 9999;
