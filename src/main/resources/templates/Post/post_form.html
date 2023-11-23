@@ -1,9 +1,8 @@
 <html layout:decorate="~{layout}">
 <div layout:fragment="content" class="container">
     <h5 class="my-3 border-bottom pb-2">게시물 등록</h5>
-    <!--    <form th:object="${questionForm}" method="post">-->
-    <!--        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />-->
-    <form th:action="@{/post/create}" th:object="${postForm}" method="post" onsubmit="return validateForm()">
+    <form th:object="${postForm}" method="post" onsubmit="return validateForm()">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
         <div style="display:none;" id="server-errors" class="alert alert-danger" role="alert">
             <!--
             <div th:each="err : ${#fields.allErrors()}" th:text="${err}" />

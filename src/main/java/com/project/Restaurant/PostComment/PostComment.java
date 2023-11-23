@@ -19,11 +19,14 @@ public class PostComment {
 
   @Column(nullable = false, length = 200)
   private String content;
+
   private LocalDateTime localDateTime;
 
   @ManyToOne
-  private Customer customer;
+  private Customer author;
 
   @ManyToOne
   private Post post;
+
+  private LocalDateTime modifyDate;
 }

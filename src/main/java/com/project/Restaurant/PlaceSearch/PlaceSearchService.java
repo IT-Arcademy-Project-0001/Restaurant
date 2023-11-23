@@ -71,8 +71,6 @@ public class PlaceSearchService {
       }
     }
 
-    System.out.println(searchResults.size());
-
     return searchResults;
   }
 

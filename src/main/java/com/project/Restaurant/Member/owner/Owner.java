@@ -34,6 +34,6 @@ public class Owner {
 
   private Boolean memberActivation; //  유저활성화
 
-  @OneToMany(mappedBy = "owner")
+  @OneToMany(mappedBy = "owner", cascade = CascadeType.REMOVE)
   private List<PlaceOwner> placeOwnerList;
 }

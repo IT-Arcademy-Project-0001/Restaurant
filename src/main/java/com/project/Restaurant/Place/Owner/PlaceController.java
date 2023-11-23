@@ -23,11 +23,11 @@ public class PlaceController {
   public String regist(Model model) {
     List<PlaceOperate> placeOperateList = this.placeOperateService.getAllOperateList(null);
     model.addAttribute("placeOperateList", placeOperateList);
-    return "Map/MapRegist";
+    return "Place/MapRegist";
   }
   @GetMapping("/map/regist/owner")
   public String regist2() {
-    return "Map/MapRegistOpentime";
+    return "Place/MapRegistOpentime";
   }
 
   @PostMapping("/map/regist/owner/time")

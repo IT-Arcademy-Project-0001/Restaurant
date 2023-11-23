@@ -17,6 +17,12 @@ public class ReservationController {
 
     private final ReservationService reservationService;
 
+
+        @GetMapping("/reservation/request")
+        public String Request() {
+            return "Reservation/reservation_request";
+        }
+
         @PostMapping("/reservation/request")
         public String Request(@RequestParam String store, @RequestParam String customerId,
                               @RequestParam String ownerId) {
@@ -41,10 +47,6 @@ public class ReservationController {
             return "redirect:/reservation/list";
         }
 
-        @GetMapping("/reservation/request")
-        public String Request() {
-            return "reservation_request";
-        }
 
         @GetMapping("/reservation/list")
         public String list(Model model) {
@@ -52,9 +54,9 @@ public class ReservationController {
             if(authentication != null && authentication.isAuthenticated()) {
                 List<Reservation> reservationsList = this.reservationService.findAll();
                 model.addAttribute("reservationList", reservationsList);
-                return "reservation_list";
+                return "Reservation/reservation_list";
             } else {
-                return "redirect:/login";
+                return "redirect:/member/login";
             }
         }
     }

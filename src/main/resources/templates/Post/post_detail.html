@@ -12,7 +12,7 @@
                 </div>
                 <div class="badge bg-light text-dark p-2 text-start">
                     <div class="mb-2">
-                        <span th:if="${post.author != null}" th:text="${post.author.memberNickName}"></span>
+                        <span th:if="${post.author != null}" th:text="${post.author.nickname}"></span>
                     </div>
                     <div th:text="${#temporals.format(post.localDateTime, 'yyyy-MM-dd HH:mm')}"></div>
                 </div>
@@ -45,7 +45,7 @@
                 </div>
                 <div class="badge bg-light text-dark p-2 text-start">
                     <div class="mb-2">
-                        <span th:if="${postcomment.author != null}" th:text="${postcomment.author.memberNickName}"></span>
+                        <span th:if="${postcomment.author != null}" th:text="${postcomment.author.nickname}"></span>
                     </div>
                     <div th:text="${#temporals.format(postcomment.localDateTime, 'yyyy-MM-dd HH:mm')}"></div>
                 </div>

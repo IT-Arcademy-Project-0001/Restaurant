@@ -4,9 +4,14 @@ import com.project.Restaurant.Member.consumer.Customer;
 import com.project.Restaurant.Member.owner.Owner;
 import com.project.Restaurant.Place.Owner.PlaceOwner;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
+@Entity
+@Getter
+@Setter
 public class PlaceOwnerComment {
 
   @Id

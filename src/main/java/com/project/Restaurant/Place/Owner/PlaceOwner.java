@@ -1,6 +1,7 @@
 package com.project.Restaurant.Place.Owner;
 
 import com.project.Restaurant.Member.owner.Owner;
+import com.project.Restaurant.Place.Comment.PlaceOwnerComment;
 import com.project.Restaurant.Place.Operate.PlaceOperate;
 import com.project.Restaurant.Reservation.Reservation;
 import jakarta.persistence.*;
@@ -43,12 +44,13 @@ public class PlaceOwner {
 
     private String storeMemo;      // 추가 안내사항 작성
 
-    @OneToMany(mappedBy = "placeOwner")
-    private List<PlaceOperate> placeOperateList;
-
     @ManyToOne
     private Owner owner;
 
     @OneToMany(mappedBy="placeOwner", cascade = CascadeType.REMOVE)
     private List<Reservation> reservationList;
+
+    @OneToMany(mappedBy="placeOwner", cascade = CascadeType.REMOVE)
+    private List<PlaceOwnerComment> placeOwnerCommentList;
+
 }

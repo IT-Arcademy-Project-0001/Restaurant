@@ -11,44 +11,37 @@
 <div layout:fragment="content">
 
     <!-- 사용자가 인증되었는지 확인 -->
-    <div th:if="${#authorization.expression('isAuthenticated()')}">
-
+    <div>
         <h2>예약 목록</h2>
 
         <!-- 예약 목록을 표시하는 테이블 -->
-        <table>
-            <thead>
+
+        <table class="table">
+            <thead class="table-dark">
             <tr>
-                <th>상호명</th>
-                <th>예약자</th>
-                <th>사장</th>
-                <th>가게번호</th>
+                <th>주문번호</th>
+                <th>가게이름</th>
+                <th>사장이름</th>
+                <th>손님이름</th>
                 <th>예약상태</th>
             </tr>
             </thead>
             <tbody>
-            <!-- 예약 목록 반복 -->
             <tr th:each="reservation : ${reservationList}">
                 <!-- 각 열에 예약 정보 표시 -->
-                <td th:text="${reservation.store}"></td>
-                <td th:text="${reservation.customerId}"></td>
-                <td th:text="${reservation.ownerId}"></td>
+                <td th:text="${reservation.id}"></td>
+                <td th:text="${reservation.placeOwner.store}"></td>
+                <td th:text="${reservation.placeOwner.owner.username}"></td>
+                <td th:text="${reservation.customer.username}"></td>
                 <td>
                     <!-- 예약 상태에 따라 다른 내용을 표시하는 if문 -->
-                    <span th:if="${reservation.status == '에약요청'}">요청 중</span>
-                    <span th:if="${reservation.status == '예약승인'}">승인됨</span>
-                    <span th:if="${reservation.status == '예약완료'}">완료됨</span>
+                    <span th:if="${reservation.status == '0'}">요청중</span>
+                    <span th:if="${reservation.status == '1'}">승인됨</span>
+                    <span th:if="${reservation.status == '2'}">완료됨</span>
                 </td>
             </tr>
             </tbody>
         </table>
-
-    </div>
-
-    <!-- 사용자가 로그인되어 있지 않은 경우 -->
-    <div th:unless="${#authorization.expression('isAuthenticated()')}">
-        <p>로그인이 필요합니다.</p>
-        <!-- 로그인 페이지로 이동하는 링크 또는 다른 처리 -->
     </div>
 
 </div>

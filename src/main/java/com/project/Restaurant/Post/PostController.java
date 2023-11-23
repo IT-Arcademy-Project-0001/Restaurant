@@ -51,11 +51,11 @@ public class PostController {
                              Principal principal) {
         if (bindingResult.hasErrors()) {
             // 유효성 검사 실패 시 에러 메시지를 모델에 추가
-            return "post_form";
+            return "Post/post_form";
         }
         Customer customer = this.customerService.findByusername(principal.getName());
         this.postService.create(postForm.getTitle(), postForm.getContent(), customer);
-        return "Post/redirect:/post/list";
+        return "redirect:/post/list";
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -72,17 +72,17 @@ public class PostController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/modify/{id}")
-    public String postModify(@Valid PostForm postForm, BindingResult bindingResult,
-                             Principal principal, @PathVariable("id") Long id) {
+    public String questionModify(@Valid PostForm postForm, BindingResult bindingResult,
+                                 Principal principal, @PathVariable("id") Long id) {
         if (bindingResult.hasErrors()) {
-            return "post_form";
+            return "Post/post_form";
         }
         Post post = this.postService.getPost(id);
         if (!post.getAuthor().getUsername().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
         this.postService.modify(post, postForm.getTitle(), postForm.getContent());
-        return String.format("Post/redirect:/post/detail/%s", id);
+        return String.format("redirect:/post/detail/%s", id);
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -93,6 +93,6 @@ public class PostController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제권한이 없습니다.");
         }
         this.postService.delete(post);
-        return "Post/redirect:/post/list";
+        return "redirect:/post/list";
     }
 }

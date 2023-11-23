@@ -1,4 +1,4 @@
-package com.example.SampleKakaoMap.Place.Operate;
+package com.project.Restaurant.Place.Operate;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;

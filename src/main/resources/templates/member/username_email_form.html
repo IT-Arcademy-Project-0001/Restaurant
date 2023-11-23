@@ -2,7 +2,7 @@
 <html lang="ko" layout:decorate="~{layout}">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="/member_form.css">
+    <link rel="stylesheet" href="/member/member_form.css">
 </head>
 <body>
 <div layout:fragment="content">
@@ -12,11 +12,15 @@
                 <span th:text="${message}"></span>
             </div>
             <div class="mb-3">
+                <label for="username" class="form-label">아이디</label>
+                <input type="text" class="form-control" id="username" name="username">
+            </div>
+            <div class="mb-3">
                 <label for="email" class="form-label">이메일</label>
                 <input type="text" class="form-control" id="email" name="email">
             </div>
-            <input type="submit" value="일반유저 아이디찾기" formaction="/customer/findusername" class="btn btn-secondary">
-            <input type="submit" value="사장님 아이디찾기" formaction="/owner/findusername" class="btn btn-secondary">
+            <input type="submit" value="일반유저 비밀번호초기화" formaction="/customer/resetPassword" class="btn btn-secondary">
+            <input type="submit" value="사장님 비밀번호초기화" formaction="/owner/resetPassword" class="btn btn-secondary">
         </form>
     </div>
 </div>

@@ -21,24 +21,4 @@ public class MainController {
     return "Guide/guide";
   }
 
-  @GetMapping("/food/regist")
-  public String foodregist() {
-    return "foodregist";
-  }
-
-  @GetMapping("/food/search")
-  public String foodsearch() {
-    return "foodsearch";
-  }
-
-  @GetMapping("/reservation")
-  public String reservation() {
-    return "reservation";
-  }
-
-  @GetMapping("/community")
-  public String community() {
-    return "community";
-  }
-
 }

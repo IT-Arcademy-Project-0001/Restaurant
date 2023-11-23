@@ -1,4 +1,10 @@
-<html layout:decorate="~{layout}">
+<!DOCTYPE html>
+<html lang="ko" layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title> 팀프로젝트 0001 </title>
+</head>
+<body>
 <div layout:fragment="content" class="container my-3">
     <link rel="stylesheet" href="/style.css">
     <table class="table">
@@ -16,10 +22,10 @@
             <td class="text-start">
                 <a th:href="@{|/post/detail/${post.id}|}" th:text="${post.title}"></a>
                 <span class="text-danger small ms-2" th:if="${#lists.size(post.postCommentList) > 0}">
-     [<span class="comment-text" th:text="${#lists.size(post.postCommentList)}"></span>]
-</span>
+                    [<span class="comment-text" th:text="${#lists.size(post.postCommentList)}"></span>]
+                </span>
             </td>
-            <td><span th:if="${post.author != null}" th:text="${post.author.memberNickName}"></span></td>
+            <td><span th:if="${post.author != null}" th:text="${post.author.nickname}"></span></td>
             <td th:text="${#temporals.format(post.localDateTime, 'yyyy-MM-dd HH:mm')}"></td>
         </tr>
         </tbody>
@@ -74,4 +80,5 @@
         <a th:href="@{/post/create}" class="btn btn-primary">글쓰기</a>
     </div>
 </div>
+</body>
 </html>
