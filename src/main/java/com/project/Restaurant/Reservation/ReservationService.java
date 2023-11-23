@@ -21,4 +21,9 @@ public class ReservationService {
 
         return reservationRepository.save(reservation);
     }
+
+    public List<Reservation> findByCustomerUsername(String username) {
+        return reservationRepository.findByCustomerUsername(username);
+    }
+
 }
