@@ -1,6 +1,6 @@
 package com.project.Restaurant.PostComment;
 
-import com.project.Restaurant.Member.Member;
+import com.project.Restaurant.Member.consumer.Customer;
 import com.project.Restaurant.Post.Post;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -22,7 +22,7 @@ public class PostComment {
   private LocalDateTime localDateTime;
 
   @ManyToOne
-  private Member author;
+  private Customer customer;
 
   @ManyToOne
   private Post post;

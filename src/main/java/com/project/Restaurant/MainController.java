@@ -18,18 +18,8 @@ public class MainController {
 
   @GetMapping("/guide")
   public String guide() {
-    return "guide";
+    return "Guide/guide";
   }
-
-//  @GetMapping("/member/login")
-//  public String login() {
-//    return "login";
-//  }
-//
-//  @GetMapping("/member/signup")
-//  public String membersignup() {
-//    return "signup";
-//  }
 
   @GetMapping("/food/regist")
   public String foodregist() {

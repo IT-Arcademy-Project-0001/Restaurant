@@ -4,8 +4,9 @@ import lombok.Getter;
 
 @Getter
 public enum MemberRole {
+
     ADMIN("관리자"),
-    SELLER("영업주"),
+    OWNER("사장님"),
     CUSTOMER("소비자");
 
     MemberRole(String value) {

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="ko" layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/member_form.css">
+</head>
+<body>
+<div layout:fragment="content">
+    <div>
+        <h1 th:text="${member.getNickname()} + ' 님의 마이페이지'"></h1>
+    </div>
+    <div>
+        <h2 th:text="${member.getNickname()} + '님의 권한 : ' + ${authority.getAuthority()} + ' 입니다.'"></h2>
+    </div>
+</div>
+</body>
+</html>

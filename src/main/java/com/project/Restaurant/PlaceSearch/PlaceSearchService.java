@@ -1,8 +1,10 @@
 package com.project.Restaurant.PlaceSearch;
 
 import com.project.Restaurant.DataNotFoundException;
-import com.project.Restaurant.Place.Place;
-import com.project.Restaurant.Place.PlaceRepository;
+import com.project.Restaurant.Place.Customer.PlaceCustRepository;
+import com.project.Restaurant.Place.Customer.PlaceCustomer;
+import com.project.Restaurant.Place.Owner.PlaceOwner;
+import com.project.Restaurant.Place.Owner.PlaceRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,47 +17,61 @@ import java.util.Optional;
 @Service
 public class PlaceSearchService {
 
-  private final PlaceRepository placeRepository;
+  private final PlaceCustRepository placeCustRepository;
+  private final PlaceRepository placeOwnerRepository;
 
-//  private final FavoriteRepository favoriteRepository;
-
-  public Place getPlace(Long id) {
+  public PlaceCustomer getPlace(Long id) {
     // JpaRepository의 기능을 이용하여 기사번호 id에 맞는 기사를 찾아 가져오는 것임
-    Optional<Place> place = this.placeRepository.findById(id);
-    if (place.isPresent()) {
-      return place.get();
+    Optional<PlaceCustomer> placeCustomer = this.placeCustRepository.findById(id);
+    if (placeCustomer.isPresent()) {
+      return placeCustomer.get();
     } else {
       throw new DataNotFoundException("article not found");
     }
   }
 
-  public List<PlaceSearch> searchPlace(Double latclick1, Double lngclick1) {
+  public List<PlaceSearch> searchPlace(Double currentLat, Double currentLng) {
 
-    List<Place> placeResults = placeRepository.findAll();
-//    List<Favorite> favoriteResults = favoriteRepository.findAll();
+    List<PlaceCustomer> placeResults1 = placeCustRepository.findAll();
+    List<PlaceOwner> placeResults2 = placeOwnerRepository.findAll();
 
-    // 하버사인 공식에 의해 출발지를 기준으로 반경 5km 이내의 장소만 출력 (5km 성인기준 1시간 15분 정도 소요)
-    Integer radius = 5;
+    // 하버사인 공식에 의해 현재 보고 있는 맵중심을 기준으로 반경 2km 이내의 장소만 출력
+    // 카카오 기준으로는 30km 이내만 도보 길안내를 알려줌. (5km 성인기준 1시간 15분 정도 소요)
+    double radius = 30;
 
     List<PlaceSearch> searchResults = new ArrayList<>();
 
-    for (Place place : placeResults) {
-      PlaceSearch ps = new PlaceSearch();
-      ps.setStore(place.getStore());
-      ps.setStoreAddress(place.getStoreAddress());
-      // ... 나머지 필드 설정
+    for (PlaceCustomer place : placeResults1) {
 
-      searchResults.add(ps);
+      double distance = calculateDistance(currentLat, currentLng, place.getLatitude(), place.getLongitude());
+
+      PlaceSearch ps = new PlaceSearch();
+
+      if (distance < radius) {
+        ps.setStore(place.getStore());
+        ps.setLocationLat(String.valueOf(place.getLatitude()));
+        ps.setLocationLng(String.valueOf(place.getLongitude()));
+        // ... 나머지 필드 설정
+        searchResults.add(ps);
+      }
     }
 
-//    for (Favorite favorite : favorite2Results) {
-//      PlaceSearch psf = new PlaceSearch();
-//      psf.setStore(favorite.getStore());
-//      psf.setStoreAddress(favorite.getStoreAddress());
-//      // ... 나머지 필드 설정
-//
-//      searchResults.add(psf);
-//    }
+    for (PlaceOwner place2 : placeResults2) {
+
+      double distance = calculateDistance(currentLat, currentLng, place2.getLatitude(), place2.getLongitude());
+
+      PlaceSearch psf = new PlaceSearch();
+
+      if (distance < radius) {
+        psf.setStore(place2.getStore());
+        psf.setLocationLat(String.valueOf(place2.getLatitude()));
+        psf.setLocationLng(String.valueOf(place2.getLongitude()));
+        // ... 나머지 필드 설정
+        searchResults.add(psf);
+      }
+    }
+
+    System.out.println(searchResults.size());
 
     return searchResults;
   }
@@ -70,5 +86,6 @@ public class PlaceSearchService {
             * Math.sin(dLng / 2) * Math.sin(dLng / 2);
     double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     return earthRadius * c;
+
   }
 }

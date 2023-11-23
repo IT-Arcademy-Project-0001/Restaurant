@@ -1,0 +1,77 @@
+<html layout:decorate="~{layout}">
+<div layout:fragment="content" class="container my-3">
+    <link rel="stylesheet" href="/style.css">
+    <table class="table">
+        <thead class="table-dark">
+        <tr class="text-center">
+            <th style="width:15%">번호</th>
+            <th style="width:35%">제목</th>
+            <th style="width:10%">작성자</th>
+            <th style="width:40%">작성일시</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="text-center" th:each="post, loop : ${paging.content}">
+            <td th:text="${paging.getTotalElements - (paging.number * paging.size) - loop.index}"></td>
+            <td class="text-start">
+                <a th:href="@{|/post/detail/${post.id}|}" th:text="${post.title}"></a>
+                <span class="text-danger small ms-2" th:if="${#lists.size(post.postCommentList) > 0}">
+     [<span class="comment-text" th:text="${#lists.size(post.postCommentList)}"></span>]
+</span>
+            </td>
+            <td><span th:if="${post.author != null}" th:text="${post.author.memberNickName}"></span></td>
+            <td th:text="${#temporals.format(post.localDateTime, 'yyyy-MM-dd HH:mm')}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- 페이징처리 시작 -->
+    <div th:if="${!paging.isEmpty()}">
+        <ul class="pagination justify-content-center">
+            <!-- 추가: 맨 처음으로 가는 버튼 -->
+            <li class="page-item" th:classappend="${paging.number > 0} ? '' : 'disabled'">
+                <a class="page-link" th:href="@{|?page=0|}">
+                    <span>처음</span>
+                </a>
+            </li>
+
+            <li class="page-item" th:classappend="${!paging.hasPrevious} ? 'disabled'">
+                <a class="page-link"
+                   th:href="@{|?page=${paging.number-1}|}">
+                    <span>이전</span>
+                </a>
+            </li>
+
+            <!-- 페이지 번호 링크 -->
+            <li th:each="i : ${#numbers.sequence(paging.number - (paging.number % 10), (paging.number + (9 - (paging.number % 10))) < paging.totalPages ? (paging.number + (9 - (paging.number % 10))) : paging.totalPages - 1)}"
+                class="page-item">
+                <a th:text="${i+1}" class="page-link" th:href="@{|?page=${i}|}"
+                   th:classappend="${i == paging.number} ? 'active'"></a>
+            </li>
+
+
+            <li class="page-item" th:classappend="${!paging.hasNext} ? 'disabled'">
+                <a class="page-link" th:href="@{|?page=${paging.number+1}|}">
+                    <span>다음</span>
+                </a>
+            </li>
+
+
+            <!-- 추가: 맨 끝으로 가는 버튼 -->
+            <li class="page-item" th:classappend="${paging.number < paging.totalPages - 1} ? '' : 'disabled'">
+                <a class="page-link" th:href="@{|?page=${paging.totalPages - 1}|}">
+                    <span>마지막</span>
+                </a>
+            </li>
+
+
+        </ul>
+    </div>
+    <!-- 페이징처리 끝 -->
+
+
+    <div class="d-flex justify-content-end">
+        <a th:href="@{/post/create}" class="btn btn-primary">글쓰기</a>
+    </div>
+</div>
+</html>
