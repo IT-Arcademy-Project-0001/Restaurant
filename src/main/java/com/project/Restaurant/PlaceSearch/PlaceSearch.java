@@ -1,6 +1,6 @@
 package com.project.Restaurant.PlaceSearch;
 
-import com.project.Restaurant.Place.Place;
+//import com.project.Restaurant.Place.Place;
 import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

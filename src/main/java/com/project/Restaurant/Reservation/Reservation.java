@@ -1,7 +1,7 @@
 package com.project.Restaurant.Reservation;
 
 import com.project.Restaurant.Member.Member;
-import com.project.Restaurant.Place.Place;
+//import com.project.Restaurant.Place.Place;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,8 +25,8 @@ public class Reservation {
     private Member member;
 
 
-    @ManyToOne
-    private Place place;
+//    @ManyToOne
+//    private Place place;
 
     private String ownerId;
     private String store;

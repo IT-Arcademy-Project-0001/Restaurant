@@ -38,9 +38,9 @@ public class MemberSecurityService implements UserDetailsService {
         } else {
             authorities.add(new SimpleGrantedAuthority(MemberRole.CUSTOMER.getValue()));
         }
-        if (!member.getPlaceList().isEmpty()) {
-            authorities.add(new SimpleGrantedAuthority((MemberRole.SELLER.getValue())));
-        }
+//        if (!member.getPlaceList().isEmpty()) {
+//            authorities.add(new SimpleGrantedAuthority((MemberRole.SELLER.getValue())));
+//        }
         return new User(member.getUsername(), member.getPassword(), authorities);
     }
 }

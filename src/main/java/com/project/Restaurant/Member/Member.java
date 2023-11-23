@@ -1,6 +1,6 @@
 package com.project.Restaurant.Member;
 
-import com.project.Restaurant.Place.Place;
+//import com.project.Restaurant.Place.Place;
 import com.project.Restaurant.Post.Post;
 import com.project.Restaurant.Reservation.Reservation;
 import jakarta.persistence.*;
@@ -32,8 +32,8 @@ public class Member {
 
   private LocalDateTime signupDate; //  유저가입일
 
-  @OneToMany(mappedBy = "member")
-  private List<Place> placeList;
+//  @OneToMany(mappedBy = "member")
+//  private List<Place> placeList;
 
   @OneToMany(mappedBy = "author", cascade = CascadeType.REMOVE)
   private List<Post> postList;

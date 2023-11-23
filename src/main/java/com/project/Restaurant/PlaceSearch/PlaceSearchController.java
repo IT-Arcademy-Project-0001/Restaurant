@@ -1,6 +1,6 @@
 package com.project.Restaurant.PlaceSearch;
 
-import com.project.Restaurant.Place.Place;
+//import com.project.Restaurant.Place.Place;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -19,7 +19,7 @@ import java.util.Map;
 @RequestMapping("/place")
 public class PlaceSearchController {
 
-  private final PlaceSearchService placeSearchService;
+//  private final PlaceSearchService placeSearchService;
 
   @GetMapping("/search")
   public String targetSearch(Model model, PlaceSearchForm placeSearchForm) {
@@ -37,9 +37,9 @@ public class PlaceSearchController {
     Double targetLat = Double.valueOf(placeSearchForm.getLatclick1());
     Double targetLng = Double.valueOf(placeSearchForm.getLngclick1());
 
-    List<PlaceSearch> searchResult = this.placeSearchService.searchPlace(targetLat, targetLng);
+//    List<PlaceSearch> searchResult = this.placeSearchService.searchPlace(targetLat, targetLng);
 
-    model.addAttribute("searchresult", searchResult);
+//    model.addAttribute("searchresult", searchResult);
 
     return "PlaceSearch/place_search";
   }

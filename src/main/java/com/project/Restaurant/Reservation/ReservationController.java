@@ -3,6 +3,8 @@ package com.project.Restaurant.Reservation;
 import com.project.Restaurant.Member.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -51,10 +53,13 @@ public class ReservationController {
 
     @GetMapping("/reservation/list")
     public String list(Model model) {
-        List<Reservation> reservationsList = this.reservationService.findAll();
-        model.addAttribute("reservationList", reservationsList);
-        return "reservation_list";
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication != null && authentication.isAuthenticated()) {
+            List<Reservation> reservationsList = this.reservationService.findAll();
+            model.addAttribute("reservationList", reservationsList);
+            return "reservation_list";
+        } else {
+            return "redirect:/login";
+        }
     }
-
-
 }
