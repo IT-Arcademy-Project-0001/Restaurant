@@ -121,4 +121,10 @@ public class CustomerController {
         }
         return "member/login_form";
     }
+
+  }
+  @GetMapping("/login")
+  public String login() {
+    return "member/login_form";
+  }
 }

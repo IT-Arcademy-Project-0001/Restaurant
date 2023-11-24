@@ -95,4 +95,14 @@ public class PostController {
         this.postService.delete(post);
         return "redirect:/post/list";
     }
+
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/likes/{id}")
+    public String postLikes(Principal principal, @PathVariable("id") Long id) {
+        Post post = this.postService.getPost(id);
+        Customer customer = this.customerService.findByusername(principal.getName());
+        this.postService.likes(post, customer);
+        return String.format("redirect:/post/detail/%s", id);
+    }
 }
