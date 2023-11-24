@@ -16,7 +16,7 @@ public class PostCommentService {
 
     private final PostCommentRepository postCommentRepository;
 
-    public void create(Post post, String content, Customer author){
+    public PostComment create(Post post, String content, Customer author){
 
         PostComment postComment = new PostComment();
         postComment.setContent(content);
@@ -25,6 +25,7 @@ public class PostCommentService {
         postComment.setAuthor(author);
 
         this.postCommentRepository.save(postComment);
+        return postComment;
     }
 
     public PostComment getpostComment(Long id) {

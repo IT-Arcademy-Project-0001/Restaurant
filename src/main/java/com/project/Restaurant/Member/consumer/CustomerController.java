@@ -90,4 +90,8 @@ public class CustomerController {
       }
     }
   }
+  @GetMapping("/login")
+  public String login() {
+    return "member/login_form";
+  }
 }

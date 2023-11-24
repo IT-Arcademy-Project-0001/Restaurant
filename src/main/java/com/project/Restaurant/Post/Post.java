@@ -5,9 +5,11 @@ import com.project.Restaurant.PostComment.PostComment;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -26,6 +28,7 @@ public class Post {
 
   private LocalDateTime localDateTime;
 
+
   @ManyToOne
   private Customer author;
 
@@ -34,4 +37,6 @@ public class Post {
 
   private LocalDateTime modifyDate;
 
+  @ManyToMany
+  Set<Customer> likes;
 }

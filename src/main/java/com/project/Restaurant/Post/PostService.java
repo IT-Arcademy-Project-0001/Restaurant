@@ -56,4 +56,8 @@ public class PostService {
         this.postRepository.delete(post);
     }
 
+    public void likes(Post post, Customer customer) {
+        post.getLikes().add(customer);
+        this.postRepository.save(post);
+    }
 }

@@ -31,6 +31,11 @@ public class PostCommentController {
     @PostMapping("/create/{id}")
     public String createComment(Model model, @PathVariable("id") Long id,
                                 @Valid PostCommentForm postCommentForm, BindingResult bindingResult, Principal principal){
+
+//        if (principal == null) {
+//            return "redirect:/member/login";
+//        }
+
         Post post = this.postService.getPost(id);
         Customer customer = this.customerService.findByusername(principal.getName());
 

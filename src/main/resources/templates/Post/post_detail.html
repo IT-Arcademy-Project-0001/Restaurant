@@ -18,6 +18,11 @@
                 </div>
             </div>
             <div class="my-3">
+                <a href="javascript:void(0);" class="recommend btn btn-sm btn-outline-secondary"
+                   th:data-uri="@{|/post/likes/${post.id}|}">
+                    좋아요
+                    <span class="badge rounded-pill bg-success" th:text="${#lists.size(post.likes)}"></span>
+                </a>
                 <a th:href="@{|/post/modify/${post.id}|}" class="btn btn-sm btn-outline-secondary"
                    sec:authorize="isAuthenticated()"
                    th:if="${post.author != null and #authentication.getPrincipal().getUsername() == post.author.username}"
@@ -110,10 +115,17 @@
                 };
             });
         });
+
+
+        const recommend_elements = document.getElementsByClassName("recommend");
+        Array.from(recommend_elements).forEach(function(element) {
+            element.addEventListener('click', function() {
+                if(confirm("정말로 추천하시겠습니까?")) {
+                    location.href = this.dataset.uri;
+                };
+            });
+        });
     </script>
 
-    <div>
-        <button onclick="likePost()">좋아요</button>
-    </div>
 </div>
 </html>
