@@ -16,32 +16,34 @@ import java.util.List;
 @Entity
 public class Customer {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-  @Column(unique = true)
-  private String username;    //  유저아이디
+    @Column(unique = true)
+    private String username;    //  유저아이디
 
-  @Column(unique = true)
-  private String nickname;  //  유저닉네임
+    @Column(unique = true)
+    private String nickname;  //  유저닉네임
 
-  @Column(unique = true)
-  private String email;   //  유저이메일
+    @Column(unique = true)
+    private String email;   //  유저이메일
 
-  @Column(columnDefinition = "TEXT")
-  private String password;    //  유저비밀번호
+    @Column(columnDefinition = "TEXT")
+    private String password;    //  유저비밀번호
 
-  private LocalDateTime signupDate; //  유저가입일
+    private LocalDateTime signupDate; //  유저가입일
 
-  private Boolean memberActivation; //  유저활성화
+    private Boolean memberActivation; //  유저활성화
 
-  @OneToMany(mappedBy = "customer")
-  private List<PlaceCustomer> placeCustomerList;
+    private String authority;   //  유저권한
 
-  @OneToMany(mappedBy = "author")
-  private List<Post> postList;
+    @OneToMany(mappedBy = "customer")
+    private List<PlaceCustomer> placeCustomerList;
 
-  @OneToMany(mappedBy = "customer", cascade = CascadeType.REMOVE)
-  private List<Reservation> reservationList;
+    @OneToMany(mappedBy = "author")
+    private List<Post> postList;
+
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.REMOVE)
+    private List<Reservation> reservationList;
 }
