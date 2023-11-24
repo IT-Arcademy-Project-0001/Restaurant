@@ -26,22 +26,54 @@ padding: 0px;
 }
 
 .map_wrap {
-    position:relative;
-    width:100%;
+    position:absolute;
+    width: 90%;
+    height:93%;
+}
+
+.map{
+    width:102%;
     height:100%;
+    left : 21%;
+    position:relative;
+    overflow:hidden;
+}
+
+.search-label{
+    position : absolute;
+    left : 87%;
+    top : 25%;
+}
+
+.option {
+    position: absolute;
+    z-index: 2; /* map보다 위에 표시되도록 설정 */
+    top : 10px;
+    margin-left : 31px;
+    border : 2px solid rgb(25, 206, 96);
+    border-radius: 5px;
+}
+
+.popup_open_btn{
+    position: absolute;
+    z-index: 3;
+    top : 91%;
+    left : 13%;
+    background : none;
 }
 
 #menu_wrap {
-    top:0;
+    position:absolute;
+    top:30px;
     left:0;
     right:0;
     bottom:0;
-    width:90%;
-    height:550px;
+    width:275px;
     margin: 30px;
     padding:5px;
     overflow-y: auto;
     background:rgba(255, 255, 255, 0.7);
+    border : 2px solid rgb(25, 206, 96);
     z-index: 1;
     font-size:10px;
     border-radius: 10px;
@@ -134,79 +166,53 @@ padding: 0px;
     color:#777;
 }
 
-
-ul, li{
-  list-style:none;
-  margin:0;
-  padding:0;
+#my_modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    z-index: 1000;
+    boxShadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    height : 700px;
+    border-radius: 10px;
 }
 
-a{
-  text-decoration:none;
-  color:inherit;
+#my_modal.active {
+    display: block;
 }
 
-.main-wrap {
-  margin : 0;
-  padding : 0;
+.locationList {
+    background : azure;
+    height : 659px;
+    width : 410px;
+    border-radius: 10px;
+    overflow-y : auto;
 }
 
-.content-wrap {
-  display : flex;
-}
-
-.locationlist {
-    background : white;
-    width : 30%;
-    height : 750px;
-}
 .mapside {
-    background : bisque;
-    width : 70%;
-    height : 750px;
+    height : 800px;
 }
 
-.wrap {
-	position:absoulte;
-	height:280px;
-	width:160px;
-	border: solid #F2F2F2 2px;
-	border-radius: 15px;
-	background: #fff;
+.mb-3 {
+    border: 1px solid rgba(0,0,0,.87);
+    border-radius: 10px;
 }
 
-.classimg {
-	height : 160px;
-	width : 160px;
+.form-control{
+    height : 30px;
+    font-size : 15px;
+    margin : 0px;
+    overflow : auto;
+    word-break:break-all;
 }
-
-.classinfo {
-	padding:5px;
+.registBtn{
+    background : #289AFF;
+    color : white;
+    border-radius: 10px;
+    width : 200px;
+    height : 30px;
 }
-
-.classtitle {
-	display: inline-block;
-	white-space: normal;
-	overflow:hidden;
-	text-overflow: ellipsis;
-	line-height:1.5;
-	height:3.0em
-}
-
-.classbutton {
-    text-align:center;
-}
-
-.classpay {
-	display: inline-block;
-	line-height:1.5
-}
-
-.classse {
-	display: inline-block;
-	float:right;
-	line-height:1.5;
-}
-
 
 </style>

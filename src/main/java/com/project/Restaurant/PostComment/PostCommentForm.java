@@ -9,7 +9,6 @@ import lombok.Setter;
 @Setter
 public class PostCommentForm {
 
-
     @NotEmpty(message = "내용입력")
     private String content;
 }

@@ -19,12 +19,12 @@ public class PlaceCustController {
 
     @GetMapping("/map")
     public String map() {
-        return "map";
+        return "Place/Map";
     }
 
     @PostMapping("/map/add")
     public String customeradd(Model model, @RequestParam String placename, @RequestParam String locationaddress, @RequestParam String locationdetailedaddress
-                              , @RequestParam String category, @RequestParam Double locationlat, @RequestParam Double locationlng, @RequestParam String memo)  // 매장 이름, 매장 주소, 매장 상세주소, 매장 카테고리, 위도, 경도, 메모
+            , @RequestParam String category, @RequestParam Double locationlat, @RequestParam Double locationlng, @RequestParam String memo)  // 매장 이름, 매장 주소, 매장 상세주소, 매장 카테고리, 위도, 경도, 메모
     {
         boolean isPlaceExists = placeCustService.checkPlaceExists(locationaddress, locationdetailedaddress, locationlat, locationlng);
 
@@ -37,9 +37,6 @@ public class PlaceCustController {
 
         return "redirect:/place/map";
     }
-    @GetMapping("/map/regist")
-    public String regist() {
-        return "mapregist";
-    }
+
 
 }

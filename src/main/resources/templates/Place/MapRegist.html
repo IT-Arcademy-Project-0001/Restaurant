@@ -2,8 +2,11 @@
 <html lang="ko" layout:decorate="~{layout}">
 <head>
     <meta charset="UTF-8">
+
+    <link rel="stylesheet" href="/Map/MapRegist.css">
+
     <title> 카카오지도 장소등록 </title>
-    <link rel="stylesheet" href="/MapRegist.css">
+
     <style>
         button {
             border: none;
@@ -46,7 +49,10 @@
                     </label>
                 </div>
                 <label class="regist_label" > 영업시간 </label>
-                <nav th:replace="~{MapRegistOpentime :: navbarFragment}"></nav>
+
+                <nav th:replace="~{Place/MapRegistOpentime :: navbarFragment}"></nav>
+                <label class="regist_label" > 웹사이트 </label>
+                <input type="text" class="regist_text" id ="webSite" placeholder="웹사이트주소를 작성해주세요.">
 
             </div>
         </div>
@@ -123,7 +129,9 @@
                 var keyword = document.getElementById('search').value;
 
                 if (!keyword.replace(/^\s+|\s+$/g, '')) {
-                    alert('키워드를 입력해주세요!');
+
+<!--                    alert('주소를 입력해주세요!');-->
+
                     return false;
                 }
 

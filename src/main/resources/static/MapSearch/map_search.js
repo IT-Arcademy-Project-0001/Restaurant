@@ -1,30 +1,78 @@
-// 마커를 담을 배열입니다
-var markers = [];
+var markers = []; // // 마커를 담을 배열입니다
 
-var lat = document.getElementById("latclick1").value;
-var lng = document.getElementById("lngclick1").value;
-
-// 사용자가 목적지 탐색시 지정했던 장소의 위도와 경도의 존재 여부를 확인하고
-// 그렇지 않다면 삼항 연산자를 사용해, 지도 중심의 기본값(현재 유성온천역)을 설정합니다.
-// 이 값은 향후 사용자의 홈값 또는 GPS 값으로 대체될 수 있습니다.
+var currCategory = ''; // 현재 선택된 카테고리를 가지고 있을 변수입니다
 
 var defaultLat = 36.353720; // 기본 위도 값
 var defaultLng = 127.341445; // 기본 경도 값
 
-lat = lat ? parseFloat(lat) : defaultLat;
-lng = lng ? parseFloat(lng) : defaultLng;
-
 var mapContainer = document.getElementById('map'), // 지도를 표시할 div
     mapOption = {
-        center: new kakao.maps.LatLng(lat, lng),
-        level: 4 // 지도의 확대 레벨
+        center: new kakao.maps.LatLng(defaultLat, defaultLng),
+        level: 5 // 지도의 확대 레벨
     };
+
+// HTML5의 geolocation으로 사용할 수 있는지 확인합니다
+if (navigator.geolocation) {
+
+    // GeoLocation을 이용해서 접속 위치를 얻어옵니다
+    navigator.geolocation.getCurrentPosition(function(position) {
+
+        var lat = position.coords.latitude, // 위도
+            lon = position.coords.longitude; // 경도
+
+        var locPosition = new kakao.maps.LatLng(lat, lon); // geolocation으로 얻어온 좌표
+        map.setCenter(locPosition);
+
+        // 마커와 인포윈도우를 표시합니다 (사실상 제거해도 상관없음)
+        var message = '<div style="text-align: center; padding:5px;">현재 GPS 위치입니다</div>'; // 인포윈도우에 표시될 내용입니다
+        currentDisplayMarker(locPosition, message);
+
+      }, function(error) {
+
+      // GeoLocation 허용하지 않았을 때.
+            alert('GPS 기능이 활성화되지 않았습니다.');
+            var locPosition = new kakao.maps.LatLng(36.353720, 127.341445) // 임의 위치의 지도의 중심좌표 (현재 유성온천역, 향후 서울역)
+            map.setCenter(locPosition);
+
+      });
+}
+
+// 현재 GPS상 위치표시용 마커  (사실상 제거해도 상관없음)
+function currentDisplayMarker(locPosition, message) {
+
+    // 마커를 생성합니다
+    var marker = new kakao.maps.Marker({
+        map: map,
+        position: locPosition
+    });
+
+    var iwContent = message; // 인포윈도우에 표시할 내용
+
+    // 인포윈도우를 생성합니다
+    var infowindow = new kakao.maps.InfoWindow({
+        content : iwContent
+    });
+
+    // 인포윈도우를 마커위에 표시합니다
+    infowindow.open(map, marker);
+
+    // 지도 중심좌표를 접속위치로 변경합니다
+    map.setCenter(locPosition);
+}
 
 // 지도를 생성합니다
 var map = new kakao.maps.Map(mapContainer, mapOption);
 
 // 장소 검색 객체를 생성합니다
 var ps = new kakao.maps.services.Places();
+
+// 지도에 idle 이벤트를 등록합니다
+kakao.maps.event.addListener(map, 'idle', mySearchPlaces);
+
+
+
+// 각 카테고리에 클릭 이벤트를 등록합니다
+addCategoryClickEvent();
 
 // 검색 결과 목록이나 마커를 클릭했을 때 장소명을 표출할 인포윈도우를 생성합니다 (마커기준 z방향으로 1떨어진 위치)
 var infowindow = new kakao.maps.InfoWindow({zIndex:1});
@@ -64,6 +112,38 @@ function searchPlaces() {
 
     // 장소검색 객체를 통해 키워드로 장소검색을 요청합니다
     ps.keywordSearch(keyword, placesSearchCB);
+}
+
+// idle 갱신 = 자체 DB도 갱신
+function mySearchPlaces() {
+
+    $.ajax({
+        url: '/place/search',
+        type: 'GET',
+        dataType: 'json',
+        data: { // 쿼리 문자열로 변환, URL에 포함시켜 서버로 전달.
+                latitude: map.getCenter().getLat(),
+                longitude: map.getCenter().getLng()
+           },
+        success: function (data) {
+
+            // 카테고리 종류에 따른
+             var order = document.getElementById(currCategory).getAttribute('data-order');
+
+            // 서버에서 받아온 데이터를 이용하여 마커 생성
+            data.forEach(searchResult2 => {
+
+                // 마커를 생성하고 지도에 표시합니다
+                var marker = addMarkerCategory(new kakao.maps.LatLng(searchResult2.locationLat, searchResult2.locationLng), order);
+
+                markers.push(marker); // removeMarker()에서는 markers 배열을 삭제하므로 생성된 marker를 밀어넣어야 한다.
+            });
+        },
+        error: function (error) {
+            console.error('Error:', error);
+        }
+    });
+
 }
 
 // 장소검색이 완료됐을 때 호출되는 콜백함수 입니다
@@ -227,7 +307,7 @@ function getListItem(index, places) {
 }
 
 
-// 마커를 생성하고 지도 위에 마커를 표시하는 함수입니다
+// 장소검색으로 마커를 생성하고 지도 위에 마커를 표시하는 함수입니다
 function addMarker(position, idx, title) {
     var imageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png', // 마커 이미지 url, 스프라이트 이미지를 씁니다
         imageSize = new kakao.maps.Size(36, 37),  // 마커 이미지의 크기
@@ -235,6 +315,27 @@ function addMarker(position, idx, title) {
             spriteSize : new kakao.maps.Size(36, 691), // 스프라이트 이미지의 크기
             spriteOrigin : new kakao.maps.Point(0, (idx*46)+10), // 스프라이트 이미지 중 사용할 영역의 좌상단 좌표
             offset: new kakao.maps.Point(13, 37) // 마커 좌표에 일치시킬 이미지 내에서의 좌표
+        },
+        markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imgOptions),
+            marker = new kakao.maps.Marker({
+            position: position, // 마커의 위치
+            image: markerImage
+        });
+
+    marker.setMap(map); // 지도 위에 마커를 표출합니다
+    markers.push(marker);  // 배열에 생성된 마커를 추가합니다
+
+    return marker;
+}
+
+// 마커를 생성하고 지도 위에 마커를 표시하는 함수입니다
+function addMarkerCategory(position, order) {
+    var imageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_category.png', // 마커 이미지 url, 스프라이트 이미지를 씁니다
+        imageSize = new kakao.maps.Size(27, 28),  // 마커 이미지의 크기
+        imgOptions =  {
+            spriteSize : new kakao.maps.Size(72, 208), // 스프라이트 이미지의 크기
+            spriteOrigin : new kakao.maps.Point(46, (order*36)), // 스프라이트 이미지 중 사용할 영역의 좌상단 좌표
+            offset: new kakao.maps.Point(11, 28) // 마커 좌표에 일치시킬 이미지 내에서의 좌표
         },
         markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imgOptions),
             marker = new kakao.maps.Marker({
@@ -297,7 +398,7 @@ function displaysimpleInfowindow(marker, title) {
 function displayInfowindow(marker, pname, praddress, paddress) {
 
      var content = '<div class = "wrap">' +
-                '		       <div class = "classimg"><img src = "/samplelogo.jpg" width="160" height="160"></div>' +
+                '		       <div class = "classimg"><img src = "/MapSearch/samplelogo.jpg" width="160" height="160"></div>' +
                          '        <div class="classinfo">' +
                             '            <div class="classtitle">' + pname + '</div>' +
                             '            <div class="classfounder">' + paddress + '</div>' +
@@ -336,3 +437,47 @@ function removeAllChildNods(el) {
         el.removeChild (el.lastChild);
     }
 }
+
+// 각 카테고리에 클릭 이벤트를 등록합니다
+function addCategoryClickEvent() {
+    var category = document.getElementById('category'),
+        children = category.children;
+
+    for (var i=0; i<children.length; i++) {
+        children[i].onclick = onClickCategory;
+    }
+}
+
+function onClickCategory() {
+    var id = this.id,
+    className = this.className;
+
+    if (className === 'on') {
+        currCategory = '';
+        changeCategoryClass();
+        removeMarker();
+        alert('선택취소했습니다');
+    } else {
+        currCategory = id;
+        changeCategoryClass(this);
+        mySearchPlaces();
+        alert('선택했습니다');
+    }
+}
+
+// 클릭된 카테고리에만 클릭된 스타일을 적용하는 함수입니다
+function changeCategoryClass(el) {
+    var category = document.getElementById('category'),
+        children = category.children,
+        i;
+
+    for ( i=0; i<children.length; i++ ) {
+        children[i].className = '';
+    }
+
+    if (el) {
+        el.className = 'on';
+    }
+}
+
+

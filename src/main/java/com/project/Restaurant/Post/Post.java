@@ -1,6 +1,6 @@
 package com.project.Restaurant.Post;
 
-import com.project.Restaurant.Member.Member;
+import com.project.Restaurant.Member.consumer.Customer;
 import com.project.Restaurant.PostComment.PostComment;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -18,7 +18,7 @@ public class Post {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(nullable = false ,length = 30)
+  @Column(nullable = false, length = 30)
   private String title;
 
   @Column(nullable = false, columnDefinition = "TEXT")
@@ -27,8 +27,11 @@ public class Post {
   private LocalDateTime localDateTime;
 
   @ManyToOne
-  private Member author;
+  private Customer author;
 
   @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
   private List<PostComment> postCommentList;
+
+  private LocalDateTime modifyDate;
+
 }
