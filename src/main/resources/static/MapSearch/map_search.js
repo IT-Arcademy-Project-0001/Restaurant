@@ -319,7 +319,8 @@ function getListItem(index, places) {
 
 
 // 장소검색으로 마커를 생성하고 지도 위에 마커를 표시하는 함수입니다
-function addMarker(position, idx, title) {
+function addMarker(position, idx
+) {
     var imageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png', // 마커 이미지 url, 스프라이트 이미지를 씁니다
         imageSize = new kakao.maps.Size(36, 37),  // 마커 이미지의 크기
         imgOptions =  {
@@ -334,7 +335,9 @@ function addMarker(position, idx, title) {
         });
 
     marker.setMap(map); // 지도 위에 마커를 표출합니다
-    markers.push(marker);  // 배열에 생성된 마커를 추가합니다
+
+    markersCategory[0] = markersCategory[0] || [];
+    markersCategory[0].push(marker);  // 배열에 생성된 마커를 추가합니다
 
     return marker;
 }
@@ -478,28 +481,38 @@ function onClickCategory() {
 
     if (className === 'on') {
         currCategory = '';
-        changeCategoryClass();
+//        changeCategoryClass();
         removeMarkerCategory(orderNumber);
         alert('선택취소했습니다');
     } else {
         currCategory = id;
-        changeCategoryClass(this);
+//        changeCategoryClass(this);
         mySearchPlaces();
         alert('선택했습니다');
     }
+
+     toggleCategoryClass(this);
+
 }
 
-// 클릭된 카테고리에만 클릭된 스타일을 적용하는 함수입니다
-function changeCategoryClass(el) {
-    var category = document.getElementById('category'),
-        children = category.children,
-        i;
+//// 클릭된 카테고리에만 클릭된 스타일을 적용하는 함수입니다
+//function changeCategoryClass(el) {
+//    var category = document.getElementById('category'),
+//        children = category.children,
+//        i;
+//
+//    for ( i=0; i<children.length; i++ ) {
+//        children[i].className = '';
+//    }
+//
+//    if (el) {
+//        el.className = 'on';
+//    }
+//}
 
-    for ( i=0; i<children.length; i++ ) {
-        children[i].className = '';
-    }
-
+// 클릭된 카테고리에 스타일을 토글하는 함수입니다
+function toggleCategoryClass(el) {
     if (el) {
-        el.className = 'on';
+        el.classList.toggle('on');
     }
 }
