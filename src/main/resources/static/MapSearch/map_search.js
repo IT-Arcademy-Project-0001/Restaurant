@@ -1,6 +1,17 @@
+var markersCategory = {}; // // 카테고리로 검색한 마커를 담을 객체입니다
+
+//위의 선언을 통해 아래와 같은 객체 내부에 동적인 배열구성이 가능해진다.
+//markersCategory[1] = [];
+//markersCategory[2] = [];
+//markersCategory[3] = [];
+//...
+
 var markers = []; // // 마커를 담을 배열입니다
 
 var currCategory = ''; // 현재 선택된 카테고리를 가지고 있을 변수입니다
+
+// 카테고리 분류번호의 초기값 입니다.
+
 
 var defaultLat = 36.353720; // 기본 위도 값
 var defaultLng = 127.341445; // 기본 경도 값
@@ -115,7 +126,11 @@ function searchPlaces() {
 }
 
 // idle 갱신 = 자체 DB도 갱신
+
 function mySearchPlaces() {
+
+    var elementDo = document.getElementById(currCategory);
+    var dataOrder = elementDo ? parseInt(elementDo.getAttribute('data-order'), 10) || 0 : 0;
 
     $.ajax({
         url: '/place/search',
@@ -123,21 +138,17 @@ function mySearchPlaces() {
         dataType: 'json',
         data: { // 쿼리 문자열로 변환, URL에 포함시켜 서버로 전달.
                 latitude: map.getCenter().getLat(),
-                longitude: map.getCenter().getLng()
-           },
+                longitude: map.getCenter().getLng(),
+                order: dataOrder
+            },
         success: function (data) {
+             // 서버에서 받아온 데이터를 이용하여 마커 생성
 
-            // 카테고리 종류에 따른
-             var order = document.getElementById(currCategory).getAttribute('data-order');
+                data.forEach(searchResult2 => {
+                    // 마커를 생성하고 지도에 표시합니다
+                    var marker = addMarkerCategory(new kakao.maps.LatLng(searchResult2.locationLat, searchResult2.locationLng), dataOrder);
+                });
 
-            // 서버에서 받아온 데이터를 이용하여 마커 생성
-            data.forEach(searchResult2 => {
-
-                // 마커를 생성하고 지도에 표시합니다
-                var marker = addMarkerCategory(new kakao.maps.LatLng(searchResult2.locationLat, searchResult2.locationLng), order);
-
-                markers.push(marker); // removeMarker()에서는 markers 배열을 삭제하므로 생성된 marker를 밀어넣어야 한다.
-            });
         },
         error: function (error) {
             console.error('Error:', error);
@@ -344,7 +355,10 @@ function addMarkerCategory(position, order) {
         });
 
     marker.setMap(map); // 지도 위에 마커를 표출합니다
-    markers.push(marker);  // 배열에 생성된 마커를 추가합니다
+
+    // markersCategory[order]가 없으면 빈 배열로 초기화
+    markersCategory[order] = markersCategory[order] || [];
+    markersCategory[order].push(marker);  // 배열에 생성된 마커를 추가합니다
 
     return marker;
 }
@@ -355,6 +369,15 @@ function removeMarker() {
         markers[i].setMap(null);
     }
     markers = [];
+}
+
+function removeMarkerCategory(order) {
+    if (markersCategory[order]) {
+        for (var i = 0; i < markersCategory[order].length; i++) {
+            markersCategory[order][i].setMap(null);
+        }
+        markersCategory[order] = [];
+    }
 }
 
 // 검색결과 목록 하단에 페이지번호를 표시는 함수입니다
@@ -451,11 +474,12 @@ function addCategoryClickEvent() {
 function onClickCategory() {
     var id = this.id,
     className = this.className;
+    orderNumber = parseInt(this.getAttribute('data-order'));
 
     if (className === 'on') {
         currCategory = '';
         changeCategoryClass();
-        removeMarker();
+        removeMarkerCategory(orderNumber);
         alert('선택취소했습니다');
     } else {
         currCategory = id;
@@ -479,5 +503,3 @@ function changeCategoryClass(el) {
         el.className = 'on';
     }
 }
-
-
