@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title> 그린워커에 오신 것을 환영합니다 </title>
-    <link rel="stylesheet" href="/place_search.css">
+    <link rel="stylesheet" href="/MapSearch/map_search.css">
 </head>
 <body>
 <div layout:fragment="content">
@@ -31,19 +31,12 @@
                                     <div id="pagination"></div>
                                 </div>
                                 <div id="menu_wrap2" style="display: block;">
-                                    <img src="/search_main.jpg" class="img-fluid" alt="...">
+                                    <img src="/MapSearch/search_main.jpg" class="img-fluid" alt="...">
                                     <h2 class="text-center my-3">원하는 장소를 검색하세요</h2>
                                 </div>
                             </div>
                             <div class="tab-pane fade p-3" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">
-                                <div class="form-floating mb-3">
-                                    <input type="text" class="form-control" placeholder="출발지" id="pstarting" th:field="*{pstarting}" th:value="${pstarting} ?: ''" readonly>
-                                    <label for="pstarting">출발지를 입력해주세요</label>
-                                    <input type="hidden" th:field="*{pname1}" th:value="${pname1 ?: ''}">
-                                    <input type="hidden" th:field="*{paddress1}" th:value="${paddress1} ?: ''">
-                                    <input type="hidden" th:field="*{latclick1}" th:value="${latclick1} ?: ''">
-                                    <input type="hidden" th:field="*{lngclick1}" th:value="${lngclick1} ?: ''">
-                                </div>
+                                     <h2 class="text-center my-3">기능 추가 가능</h2>
                             </div>
                         </div>
                     </form>
@@ -54,94 +47,29 @@
 
                     <div class="map_wrap">
                         <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
+                        <ul id="category">
+                            <li id="BK9" data-order="0">
+                                <span class="category_bg bank"></span>
+                                검색
+                            </li>
+                            <li id="MT1" data-order="1">
+                                <span class="category_bg mart"></span>
+                                식당
+                            </li>
+                            <li id="PM9" data-order="2">
+                                <span class="category_bg pharmacy"></span>
+                                추천
+                            </li>
+                        </ul>
                     </div>
 
                     <script type="text/javascript"
                             src="//dapi.kakao.com/v2/maps/sdk.js?appkey=c643afa51aa20879e433287a3b49c7a7&libraries=services"></script>
+                    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
-                    <!-- 타임리프 변수를 자바스크립트 내부에서 사용하기 위해 th:inline="javascript"를 선언합니다. -->
                     <!-- 카카오지도 키워드 검색  -->
-                    <script th:inline="javascript" src="/keyword_map_search.js"></script>
+                    <script src="/MapSearch/map_search.js"></script>
 
-                    <script th:inline="javascript">
-                        // **** 유저가 입력한 searchresult가 존재한다면 해당값들을 다중 마커로 표시하는 함수입니다. ****
-
-                        // 유저 검색결과용 커스텀 오버레이 생성
-                        var overlay = new kakao.maps.CustomOverlay({
-                            clickable: true,
-                            yAnchor: 1.2
-                        });
-
-                        // 커스텀 마커 이미지 적용
-                        var imageSrc = '/marker_red.png', // 마커이미지의 주소입니다
-                        imageSize = new kakao.maps.Size(64, 69), // 마커이미지의 크기입니다
-                        imageOption = {offset: new kakao.maps.Point(27, 69)}; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
-
-                        // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
-                        var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption)
-
-                        /*[# th:each="searchResult : ${searchresult}"]*/
-
-                        var marker = new kakao.maps.Marker({
-                            map: map,
-                            position: new kakao.maps.LatLng('[[${searchResult.locationLat}]]', '[[${searchResult.locationLng}]]'),
-                            image: markerImage // 마커이미지 설정
-                        });
-
-                        // 클로저를 만들어 주지 않으면 마지막 마커에만 이벤트가 등록됩니다
-                        (function(marker, overlay, id, locationCategory, locationName, locationAddress, locationLat, locationLng) {
-
-
-                        // 마커를 클릭하면 발생하는 이벤트
-                        kakao.maps.event.addListener(marker, 'click', function() {
-                            displayoverlay(marker, id, locationCategory, locationName, locationAddress, locationLat, locationLng);
-                        });
-
-                        // 마우스로 지도를 누르면 발생하는 이벤트
-                        // 커스텀 오버레이 창 닫기
-                        kakao.maps.event.addListener(map, 'click', function() {
-                            overlay.setMap(null);
-                        });
-
-                        })(marker, overlay, [[${searchResult.id}]], [[${searchResult.locationCategory}]], [[${searchResult.locationName}]],
-                        [[${searchResult.locationAddress}]], [[${searchResult.locationLat}]], [[${searchResult.locationLng}]]);
-
-                        /*[/]*/
-
-                        function displayoverlay(marker, id, locationCategory, locationName, locationAddress, locationLat, locationLng) {
-
-                             // 커스텀 오버레이 UI
-                            var content = '<div class = "wrap">' +
-                            '		       <a href="/targetinfo/' + id + '" target="_blank">' +
-                                '					<div class = "classimg"><img src = "/target_mark.png" width="160" height="150" style="border-top-left-radius:15px; border-top-right-radius:15px;"></div>' +
-                            '              </a>' +
-                                           '        <div class="classinfo">' +
-                                            '            <div class="classtitle">' + locationName + '</div>' +
-                                            '            <div class="classfounder">' + locationAddress + '</div>' +
-                                            '            <div class="classpay">' + locationCategory + '</div>' +
-                                            '            <div class="classbutton"><button type = "button" id = "selectdestination"> 목표지점설정 </button></div>' +
-                                         '        </div>' +
-                                '			   </div>';
-
-
-
-
-                            overlay.setContent(content);
-                            overlay.setPosition(new kakao.maps.LatLng(locationLat, locationLng));
-                            overlay.setMap(map);
-
-                            document.getElementById("selectdestination").addEventListener('click', gettarget);
-                            function gettarget(){
-                                     document.getElementById('pdestination').value = locationName + "(" + locationAddress + ")";
-                                     document.getElementById('pname2').value = locationName;
-                                     document.getElementById('paddress2').value = locationAddress;
-                                     document.getElementById('latclick2').value = locationLat;
-                                     document.getElementById('lngclick2').value = locationLng;
-                            }
-                        }
-
-
-                    </script>
                 </div>
             </div>
         </div>

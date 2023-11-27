@@ -18,37 +18,7 @@ public class MainController {
 
   @GetMapping("/guide")
   public String guide() {
-    return "guide";
-  }
-
-//  @GetMapping("/member/login")
-//  public String login() {
-//    return "login";
-//  }
-//
-//  @GetMapping("/member/signup")
-//  public String membersignup() {
-//    return "signup";
-//  }
-
-  @GetMapping("/food/regist")
-  public String foodregist() {
-    return "foodregist";
-  }
-
-  @GetMapping("/food/search")
-  public String foodsearch() {
-    return "foodsearch";
-  }
-
-  @GetMapping("/reservation")
-  public String reservation() {
-    return "reservation";
-  }
-
-  @GetMapping("/community")
-  public String community() {
-    return "community";
+    return "Guide/guide";
   }
 
 }

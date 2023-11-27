@@ -1,8 +1,14 @@
 package com.project.Restaurant.Place.Owner;
 
+import com.project.Restaurant.Member.owner.Owner;
+import com.project.Restaurant.Place.Comment.PlaceOwnerComment;
+import com.project.Restaurant.Place.Operate.PlaceOperate;
+import com.project.Restaurant.Reservation.Reservation;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.List;
 
 
 @Entity
@@ -26,7 +32,7 @@ public class PlaceOwner {
     private Double longitude;         // 경도
 
     private String callNum;           // 전화번호
-    private String time;           // 매장 영업시간
+    //    private String time;           // 매장 영업시간  >> PlaceOperate 테이블 생성
     private String link;            // 매장 웹사이트
     private String menu;            // 매장 메뉴
     private String menuImg;        // 메뉴 이미지
@@ -37,5 +43,14 @@ public class PlaceOwner {
     private String storeCategory;  // 매장 카테고리 ( ex. 음식점, 카페, 술집, )
 
     private String storeMemo;      // 추가 안내사항 작성
+
+    @ManyToOne
+    private Owner owner;
+
+    @OneToMany(mappedBy="placeOwner", cascade = CascadeType.REMOVE)
+    private List<Reservation> reservationList;
+
+    @OneToMany(mappedBy="placeOwner", cascade = CascadeType.REMOVE)
+    private List<PlaceOwnerComment> placeOwnerCommentList;
 
 }

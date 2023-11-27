@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title> 카카오지도 장소등록 </title>
+    <link rel="stylesheet" href="/Map/MapRegistOpentime.css">
+</head>
+<body>
+<nav th:fragment="navbarFragment" >
+<div>
+    <div class="time_modal">
+<!--        <div th:each="OperateList, iterStat : ${placeOperateList}">-->
+<!--            <div th:text="${OperateList.openTime + ', ' + OperateList.closeTime}"></div>-->
+<!--            <input type="hidden" name="day" th:id="'day_' + ${iterStat.index}" th:value="${OperateList.day}">-->
+<!--            <input type="hidden" name="openTime" th:id="'openTime_' + ${iterStat.index}" th:value="${OperateList.openTime}">-->
+<!--            <input type="hidden" name="closeTime" th:id="'closeTime_' + ${iterStat.index}" th:value="${OperateList.closeTime}">-->
+<!--&lt;!&ndash;            <input type="button" th:data-iter-index="${iterStat.index}" onclick="articleMessage(this)" style="background : yellow;">&ndash;&gt;-->
+<!--        </div>-->
+
+        <input type="text" class="regist_text"  id="popup_open_btn" placeholder="매장의 영업시간, 휴무일을 작성해주세요.">
+
+        <div id="time_modal" style="overflow : auto; max-height : 61%;">
+            <div class="time_array" style="margin : 15px;">
+                <form id="targetCreateForm" name="targetCreateForm" action="/place/map/regist/owner/time" method="post">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                    <span style="font-size : 20px; font-weight : bold; justify-content: center;  align-items: center; display: flex;"> 영업시간 </span>
+                    <button class="modal_close_btn"
+                            style="margin-left : 95%; font-size : 13px; font-weight : bold;">X
+                    </button>
+                    <div th:if="${message != null}" th:text="${message}" class="message" style="color : red; font-weight : bold; margin-top : 2px;"></div>
+                    <div class="time_table" style="text-align : center;" >
+                        <div style="margin-top: 17px;">
+                            <script>
+                                var daysOfWeek = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
+                            </script>
+
+                            <script th:inline="javascript">
+                                var operateList = [[${placeOperateList}]];
+
+                                for (var i = 0; i < daysOfWeek.length; i++) {
+
+                                    document.write(`
+                                        <div>
+                                            <input type="hidden" name="operateDtoList[${i}].day" value="${daysOfWeek[i]}">
+                                            <span type="text" data-value="${daysOfWeek[i]}" id="${daysOfWeek[i]}"style="font-size: 16px; font-weight: bold;">${daysOfWeek[i].toUpperCase()}</span>
+                                            <div style="margin-bottom: 8px;">
+                                                <input type="radio" name="${daysOfWeek[i]}" onclick="toggleDayContainer(${i+1})"/>
+                                                <span>영업일</span>
+                                                <input type="radio" name="${daysOfWeek[i]}" onclick="toggleDayContainer(${i+1})"/>
+                                                <span>휴무일</span>
+                                                <div class="time_click" id="timeClickContainer_${i + 1}" style="display: none;">
+                                                    <input class="time" name = "operateDtoList[${i}].openTime" id="${daysOfWeek[i]}_str_time" type="time" value="${operateList[i].openTime}">
+                                                    ~
+                                                    <input class="time" name = "operateDtoList[${i}].closeTime" id="${daysOfWeek[i]}_end_time" type="time" value="${operateList[i].closeTime}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    `);
+                                }
+                            </script>
+                        </div>
+                    </div>
+                    <div style="margin-top : 5%;">
+                        <button type="button" style="margin-left : 15%;" class="registBtn" onclick="registPlace()">등록</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function registPlace(){
+        this.document.getElementById("targetCreateForm").submit();
+    };
+
+    function toggleDayContainer(num) {
+        var timeClickContainer = document.getElementById("timeClickContainer_" + num);
+        var str_time = document.getElementById(daysOfWeek[num - 1] + "_str_time");
+        var end_time = document.getElementById(daysOfWeek[num - 1] + "_end_time");
+
+        if (timeClickContainer.style.display === "block") {
+            closeDayContainer(timeClickContainer, str_time, end_time);
+        } else {
+            openDayContainer(timeClickContainer);
+        }
+    }
+
+    function openDayContainer(container) {
+        container.style.display = "block";
+    }
+
+    function closeDayContainer(container, str_time, end_time) {
+        container.style.display = "none";
+        str_time.value = "";
+        end_time.value = "";
+    }
+
+
+    function modal(id) {
+            var zIndex = 9999;
+            var modal = document.getElementById(id);
+
+            // 모달 div 뒤에 희끄무레한 레이어
+            var bg = document.createElement('div');
+            bg.setStyle({
+                position: 'fixed',
+                zIndex: zIndex,
+                left: '0px',
+                top: '0px',
+                width: '100%',
+                height: '100%',
+                overflow: 'auto',
+                // 레이어 색갈은 여기서 바꾸면 됨
+                backgroundColor: 'rgba(0,0,0,0.4)'
+            });
+            document.body.append(bg);
+
+            // 모달이 열릴 때 내용을 저장
+            originalModalContent = modal.innerHTML;
+
+            // 닫기 버튼 처리, 시꺼먼 레이어와 모달 div 지우기
+            modal.querySelector('.modal_close_btn').addEventListener('click', function() {
+                bg.remove();
+                modal.innerHTML = originalModalContent;
+                modal.style.display = 'none';
+            });
+
+            modal.setStyle({
+                position: 'fixed',
+                display: 'block',
+                boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
+
+                // 시꺼먼 레이어 보다 한칸 위에 보이기
+                zIndex: zIndex + 1,
+
+                // div center 정렬
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                msTransform: 'translate(-50%, -50%)',
+                webkitTransform: 'translate(-50%, -50%)'
+            });
+        }
+
+    // Element 에 style 한번에 오브젝트로 설정하는 함수 추가
+    Element.prototype.setStyle = function(styles) {
+        for (var k in styles) this.style[k] = styles[k];
+        return this;
+    };
+
+    document.getElementById('popup_open_btn').addEventListener('click', function() {
+        // 모달창 띄우기
+        modal('time_modal');
+    });
+
+</script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script>
+        function articleMessage(input) {
+        console.log('start');
+        var index = input.getAttribute('data-iter-index');
+        console.log(index);
+        var a = $('#day_' + index).val();
+<!--        var a1 = $('#openTime_' + index).val();-->
+        var test = $('#openTime_0').text();
+        console.log($('#openTime_0'));
+        console.log('end');
+}
+
+    </script>
+</nav>
+</body>
+</html>
