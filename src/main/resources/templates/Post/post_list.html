@@ -76,7 +76,7 @@
         </ul>
     </div>
     <!-- 페이징처리 끝 -->
-    <form th:action="@{/post/list}" method="get" id="paginationForm">
+    <form th:action="@{/post/list}" method="get" id="searchForm">
         <input type="hidden" id="kw" name="kw" th:value="${kw}">
         <input type="hidden" id="page" name="page" th:value="${paging.number}">
     </form>
@@ -84,13 +84,10 @@
 
     <div class="col-md-6 offset-md-6">
         <!-- 오른쪽 열에 검색 엔진과 찾기 버튼을 배치 -->
-        <form th:action="@{/post/list}" method="get" id="searchForm">
             <div class="input-group">
                 <input type="text" id="search_kw" class="form-control" th:value="${kw}">
                 <button class="btn btn-outline-secondary" type="submit" id="btn_search">찾기</button>
             </div>
-            <input type="hidden" id="page" name="page" th:value="${paging.number}">
-        </form>
 
         <!-- 오른쪽 열 아래에 질문 등록하기 버튼을 배치 -->
         <div class="text-md-right mt-4 mt-md-2">
@@ -99,9 +96,7 @@
     </div>
 
 </div>
-</body>
-
-<script layout:fragment="script" type='text/javascript'>
+<script>
     const page_elements = document.getElementsByClassName("page-link");
     Array.from(page_elements).forEach(function(element) {
         element.addEventListener('click', function() {
@@ -116,5 +111,5 @@
         document.getElementById('searchForm').submit();
     });
 </script>
-
+</body>
 </html>
