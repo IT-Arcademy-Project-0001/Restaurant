@@ -1,5 +1,6 @@
 package com.project.Restaurant.Post;
 
+import com.project.Restaurant.CommentAnswer.Answer;
 import com.project.Restaurant.Member.consumer.Customer;
 import com.project.Restaurant.PostComment.PostComment;
 import jakarta.persistence.*;
@@ -35,12 +36,15 @@ public class Post {
   @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
   private List<PostComment> postCommentList;
 
+  @OneToMany(cascade = CascadeType.REMOVE)
+  private List<Answer> answerList;
+
   private LocalDateTime modifyDate;
 
   @ManyToMany
   Set<Customer> likes;
 
-  @Column(columnDefinition = "integer default 0", nullable = false)
+  @Column(columnDefinition = "Integer default 0")
   private Long view;
 
 }

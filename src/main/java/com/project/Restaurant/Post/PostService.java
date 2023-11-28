@@ -52,20 +52,28 @@ public class PostService {
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.desc("localDateTime"));
         Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
-        return this.postRepository.findAllByKeyword(kw, pageable);
-    }
+
+        Specification<Post> spec = search(kw);
+        return this.postRepository.findAll(spec, pageable);
+
 
     public Post getPost(Long id) {
-        Optional<Post> post = this.postRepository.findById(id);
-        if (post.isPresent()) {
-            Post post1 = post.get();
+        Optional<Post> optionalPost = this.postRepository.findById(id);
+        if (optionalPost.isPresent()) {
+            Post post1 = optionalPost.get();
+
+            // 조회수가 null인 경우 0으로 초기화
+            if (post1.getView() == null) {
+                post1.setView(0L);
+            }
+
             post1.setView(post1.getView() + 1);
-            this.postRepository.save(post1);
-            return post1;
+            return this.postRepository.save(post1);
         } else {
-            throw new DataNotFoundException("question not found");
+            throw new DataNotFoundException("Question not found");
         }
     }
+
 
     public void create(String title, String content, Customer customer) {
         Post p = new Post();
