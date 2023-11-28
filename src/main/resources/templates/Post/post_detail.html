@@ -27,8 +27,6 @@
                     <span class="badge rounded-pill bg-success" th:text="${#lists.size(post.likes)}"></span>
                 </a>
 
-
-
                 <a th:href="@{|/post/modify/${post.id}|}" class="btn btn-sm btn-outline-secondary"
                    sec:authorize="isAuthenticated()"
                    th:if="${post.customer != null and #authentication.getPrincipal().getUsername() == post.customer.username}"
@@ -68,6 +66,11 @@
                     추천
                     <span class="badge rounded-pill bg-success" th:text="${#lists.size(postcomment.likes)}"></span>
                 </a>
+
+                <a th:href="@{|/answer/create/${postcomment.id}|}" class="btn btn-sm btn-outline-secondary"
+                   sec:authorize="isAuthenticated()"
+                   th:text="답변"></a>
+
                 <a th:href="@{|/comment/modify/${postcomment.id}|}" class="btn btn-sm btn-outline-secondary"
                    sec:authorize="isAuthenticated()"
                    th:if="${postcomment.customer != null and #authentication.getPrincipal().getUsername() == postcomment.customer.username}"
