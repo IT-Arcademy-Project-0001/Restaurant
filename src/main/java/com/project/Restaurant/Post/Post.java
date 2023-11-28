@@ -5,6 +5,7 @@ import com.project.Restaurant.PostComment.PostComment;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -42,5 +43,5 @@ public class Post {
   @Column(columnDefinition = "integer default 0", nullable = false)
   private Long view;
 
-
 }
+

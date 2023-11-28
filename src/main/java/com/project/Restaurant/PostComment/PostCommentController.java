@@ -32,8 +32,6 @@ public class PostCommentController {
     public String createComment(Model model, @PathVariable("id") Long id,
                                 @Valid PostCommentForm postCommentForm, BindingResult bindingResult, Principal principal){
 
-
-
         Post post = this.postService.getPost(id);
         Customer customer = this.customerService.findByusername(principal.getName());
 

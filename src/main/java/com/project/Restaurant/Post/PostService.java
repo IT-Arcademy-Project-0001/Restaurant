@@ -93,5 +93,4 @@ public class PostService {
         post.getLikes().add(customer);
         this.postRepository.save(post);
     }
-
 }

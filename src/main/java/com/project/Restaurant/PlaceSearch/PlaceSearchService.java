@@ -30,7 +30,7 @@ public class PlaceSearchService {
     }
   }
 
-  public List<PlaceSearch> searchPlace(Double currentLat, Double currentLng) {
+  public List<PlaceSearch> searchPlace(Double currentLat, Double currentLng, Integer order) {
 
     List<PlaceCustomer> placeResults1 = placeCustRepository.findAll();
     List<PlaceOwner> placeResults2 = placeOwnerRepository.findAll();
@@ -39,37 +39,43 @@ public class PlaceSearchService {
     // 카카오 기준으로는 30km 이내만 도보 길안내를 알려줌. (5km 성인기준 1시간 15분 정도 소요)
     double radius = 30;
 
+
     List<PlaceSearch> searchResults = new ArrayList<>();
 
-    for (PlaceCustomer place : placeResults1) {
+    if (order == 1){
+      for (PlaceCustomer place : placeResults1) {
 
-      double distance = calculateDistance(currentLat, currentLng, place.getLatitude(), place.getLongitude());
+        double distance = calculateDistance(currentLat, currentLng, place.getLatitude(), place.getLongitude());
 
-      PlaceSearch ps = new PlaceSearch();
+        PlaceSearch ps = new PlaceSearch();
 
-      if (distance < radius) {
-        ps.setStore(place.getStore());
-        ps.setLocationLat(String.valueOf(place.getLatitude()));
-        ps.setLocationLng(String.valueOf(place.getLongitude()));
-        // ... 나머지 필드 설정
-        searchResults.add(ps);
+        if (distance < radius) {
+          ps.setStore(place.getStore());
+          ps.setLocationLat(String.valueOf(place.getLatitude()));
+          ps.setLocationLng(String.valueOf(place.getLongitude()));
+          // ... 나머지 필드 설정
+          searchResults.add(ps);
+        }
+      }
+    } else if (order == 2) {
+
+      for (PlaceOwner place2 : placeResults2) {
+
+        double distance = calculateDistance(currentLat, currentLng, place2.getLatitude(), place2.getLongitude());
+
+        PlaceSearch psf = new PlaceSearch();
+
+        if (distance < radius) {
+          psf.setStore(place2.getStore());
+          psf.setLocationLat(String.valueOf(place2.getLatitude()));
+          psf.setLocationLng(String.valueOf(place2.getLongitude()));
+          // ... 나머지 필드 설정
+          searchResults.add(psf);
+        }
       }
     }
 
-    for (PlaceOwner place2 : placeResults2) {
-
-      double distance = calculateDistance(currentLat, currentLng, place2.getLatitude(), place2.getLongitude());
-
-      PlaceSearch psf = new PlaceSearch();
-
-      if (distance < radius) {
-        psf.setStore(place2.getStore());
-        psf.setLocationLat(String.valueOf(place2.getLatitude()));
-        psf.setLocationLng(String.valueOf(place2.getLongitude()));
-        // ... 나머지 필드 설정
-        searchResults.add(psf);
-      }
-    }
+    System.out.println(searchResults);
 
     return searchResults;
   }

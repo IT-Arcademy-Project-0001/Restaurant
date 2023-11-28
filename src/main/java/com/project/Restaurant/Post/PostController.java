@@ -107,6 +107,4 @@ public class PostController {
         this.postService.likes(post, customer);
         return String.format("redirect:/post/detail/%s", id);
     }
-
-
 }

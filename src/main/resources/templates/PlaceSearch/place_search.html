@@ -11,9 +11,8 @@
         <div class="content-wrap">
             <div class="locationlist p-3">
                 <div>
-                    <form th:action="@{/place/search}" th:object="${placeSearchForm}" method="post">
                         <div class="input-group mb-3">
-                            <input type="text" class="form-control" placeholder="검색어를 입력해주세요" aria-describedby="basic-addon2" id="keyword" name="keyword" th:field="*{keyword}" th:value="${keyword} ?: ''" size="15" >
+                            <input type="text" class="form-control" placeholder="검색어를 입력해주세요" aria-describedby="basic-addon2" id="keyword" name="keyword" value=" " size="15" >
                             <button class="btn btn-primary" id="searchkeyword" type = "button"> 검색하기 </button>
                         </div>
                         <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
@@ -21,7 +20,10 @@
                                 <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true"> 검색 </button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false"> 기타 </button>
+                                <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false"> 식당 </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="pills-favorite-tab" data-bs-toggle="pill" data-bs-target="#pills-favorite" type="button" role="tab" aria-controls="pills-favorite" aria-selected="false"> 추천 </button>
                             </li>
                         </ul>
                         <div class="tab-content" id="pills-tabContent">
@@ -36,10 +38,12 @@
                                 </div>
                             </div>
                             <div class="tab-pane fade p-3" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">
-                                     <h2 class="text-center my-3">기능 추가 가능</h2>
+                                     <h2 class="text-center my-3">식당 리스트(표시자체는 모두)</h2>
+                            </div>
+                            <div class="tab-pane fade p-3" id="pills-favorite" role="tabpanel" aria-labelledby="pills-favorite-tab" tabindex="0">
+                                    <h2 class="text-center my-3">추천 리스트(표시자체는 모두)</h2>
                             </div>
                         </div>
-                    </form>
                 </div>
             </div>
             <div class="mapside">

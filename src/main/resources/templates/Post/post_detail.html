@@ -19,12 +19,14 @@
             </div>
             <div class="my-3">
 
+
                 <a href="javascript:void(0);" class="recommend btn btn-sm btn-outline-secondary"
                    th:data-uri="@{|/post/likes/${post.id}|}"
                    th:data-is-like="${post.likes.contains(currentUser)}">
                     좋아요
                     <span class="badge rounded-pill bg-success" th:text="${#lists.size(post.likes)}"></span>
                 </a>
+
 
 
                 <a th:href="@{|/post/modify/${post.id}|}" class="btn btn-sm btn-outline-secondary"
@@ -139,6 +141,8 @@
                 };
             });
         });
+
+
     </script>
 
 </div>
