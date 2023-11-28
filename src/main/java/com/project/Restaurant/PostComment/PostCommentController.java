@@ -32,9 +32,7 @@ public class PostCommentController {
     public String createComment(Model model, @PathVariable("id") Long id,
                                 @Valid PostCommentForm postCommentForm, BindingResult bindingResult, Principal principal){
 
-//        if (principal == null) {
-//            return "redirect:/member/login";
-//        }
+
 
         Post post = this.postService.getPost(id);
         Customer customer = this.customerService.findByusername(principal.getName());
@@ -44,15 +42,17 @@ public class PostCommentController {
             return "Post/post_detail";
         }
 
-        this.postCommentService.create(post, postCommentForm.getContent(), customer);
-        return String.format("redirect:/post/detail/%s", id);
+        PostComment postComment = this.postCommentService.create(post,
+                postCommentForm.getContent(), customer);
+        return String.format("redirect:/post/detail/%s#postcomment_%s",
+                postComment.getPost().getId(), postComment.getId());
     }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/modify/{id}")
     public String answerModify(PostCommentForm postCommentForm, @PathVariable("id") Long id, Principal principal) {
         PostComment postComment = this.postCommentService.getpostComment(id);
-        if (!postComment.getAuthor().getUsername().equals(principal.getName())) {
+        if (!postComment.getCustomer().getUsername().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
         postCommentForm.setContent(postComment.getContent());
@@ -67,23 +67,34 @@ public class PostCommentController {
             return "Post/postcomment_form";
         }
         PostComment postComment = this.postCommentService.getpostComment(id);
-        if (!postComment.getAuthor().getUsername().equals(principal.getName())) {
+        if (!postComment.getCustomer().getUsername().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
         this.postCommentService.modify(postComment, postCommentForm.getContent());
-        return String.format("redirect:/post/detail/%s", postComment.getPost().getId());
+        return String.format("redirect:/post/detail/%s#postcomment_%s",
+                postComment.getPost().getId(), postComment.getId());
     }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/delete/{id}")
     public String answerDelete(Principal principal, @PathVariable("id") Long id) {
         PostComment postComment = this.postCommentService.getpostComment(id);
-        if (!postComment.getAuthor().getUsername().equals(principal.getName())) {
+        if (!postComment.getCustomer().getUsername().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제권한이 없습니다.");
         }
         this.postCommentService.delete(postComment);
         return String.format("redirect:/post/detail/%s", postComment.getPost().getId());
     }
 
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/likes/{id}")
+    public String answerVote(Principal principal, @PathVariable("id") Long id) {
+        PostComment postComment = this.postCommentService.getpostComment(id);
+        Customer customer = this.customerService.findByusername(principal.getName());
+        this.postCommentService.likes(postComment, customer);
+        return String.format("redirect:/post/detail/%s#postcomment_%s",
+                postComment.getPost().getId(), postComment.getId());
+    }
 }
 

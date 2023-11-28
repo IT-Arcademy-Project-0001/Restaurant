@@ -5,7 +5,6 @@ import com.project.Restaurant.PostComment.PostComment;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -30,7 +29,7 @@ public class Post {
 
 
   @ManyToOne
-  private Customer author;
+  private Customer customer;
 
   @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
   private List<PostComment> postCommentList;
@@ -39,4 +38,9 @@ public class Post {
 
   @ManyToMany
   Set<Customer> likes;
+
+  @Column(columnDefinition = "integer default 0", nullable = false)
+  private Long view;
+
+
 }
