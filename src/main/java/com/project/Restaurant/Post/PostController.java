@@ -26,9 +26,11 @@ public class PostController {
     private final CustomerService customerService;
 
     @GetMapping("/list")
-    public String list(Model model, @RequestParam(value = "page", defaultValue = "0") int page){
-        Page<Post> paging = this.postService.getList(page);
+    public String list(Model model, @RequestParam(value = "page", defaultValue = "0") int page,
+                       @RequestParam(value = "kw", defaultValue = "") String kw){
+        Page<Post> paging = this.postService.getList(page, kw);
         model.addAttribute("paging", paging);
+        model.addAttribute("kw", kw);
         return "Post/post_list";
     }
 
@@ -62,7 +64,7 @@ public class PostController {
     @GetMapping("/modify/{id}")
     public String postModify(PostForm postForm, @PathVariable("id") Long id, Principal principal) {
         Post post = this.postService.getPost(id);
-        if(!post.getAuthor().getUsername().equals(principal.getName())) {
+        if(!post.getCustomer().getUsername().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
         postForm.setTitle(post.getTitle());
@@ -72,13 +74,13 @@ public class PostController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/modify/{id}")
-    public String questionModify(@Valid PostForm postForm, BindingResult bindingResult,
+    public String postModify(@Valid PostForm postForm, BindingResult bindingResult,
                                  Principal principal, @PathVariable("id") Long id) {
         if (bindingResult.hasErrors()) {
             return "Post/post_form";
         }
         Post post = this.postService.getPost(id);
-        if (!post.getAuthor().getUsername().equals(principal.getName())) {
+        if (!post.getCustomer().getUsername().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
         this.postService.modify(post, postForm.getTitle(), postForm.getContent());
@@ -89,7 +91,7 @@ public class PostController {
     @GetMapping("/delete/{id}")
     public String postDelete(Principal principal, @PathVariable("id") Long id) {
         Post post = this.postService.getPost(id);
-        if (!post.getAuthor().getUsername().equals(principal.getName())) {
+        if (!post.getCustomer().getUsername().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제권한이 없습니다.");
         }
         this.postService.delete(post);

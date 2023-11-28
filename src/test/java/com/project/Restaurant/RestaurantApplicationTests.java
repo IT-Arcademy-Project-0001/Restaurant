@@ -11,6 +11,6 @@ class RestaurantApplicationTests {
 
 
 	@Test
-	void contextLoads() {
+	void testJpa() {
 	}
 }

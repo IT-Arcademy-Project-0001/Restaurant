@@ -41,7 +41,7 @@ public class Customer {
     @OneToMany(mappedBy = "customer")
     private List<PlaceCustomer> placeCustomerList;
 
-    @OneToMany(mappedBy = "author")
+    @OneToMany(mappedBy = "customer")
     private List<Post> postList;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.REMOVE)
