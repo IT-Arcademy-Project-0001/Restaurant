@@ -121,5 +121,4 @@ public class CustomerController {
         }
         return "member/login_form";
     }
-
 }

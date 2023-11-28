@@ -16,13 +16,14 @@ public class PostCommentService {
 
     private final PostCommentRepository postCommentRepository;
 
-    public PostComment create(Post post, String content, Customer author){
+    public PostComment create(Post post, String content, Customer customer){
+
 
         PostComment postComment = new PostComment();
         postComment.setContent(content);
         postComment.setLocalDateTime(LocalDateTime.now());
         postComment.setPost(post);
-        postComment.setAuthor(author);
+        postComment.setCustomer(customer);
 
         this.postCommentRepository.save(postComment);
         return postComment;
@@ -45,6 +46,11 @@ public class PostCommentService {
 
     public void delete(PostComment postComment) {
         this.postCommentRepository.delete(postComment);
+    }
+
+    public void likes(PostComment postComment, Customer customer) {
+        postComment.getLikes().add(customer);
+        this.postCommentRepository.save(postComment);
     }
 
 }
