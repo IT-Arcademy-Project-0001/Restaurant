@@ -1,0 +1,51 @@
+<!-- customer_list.html -->
+<!-- reservation_list.html -->
+<!DOCTYPE html>
+<html lang="ko" layout:decorate="~{layout}" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>예약 목록</title>
+</head>
+<body>
+<div layout:fragment="content">
+<div>
+
+    <h2>예약 목록</h2>
+
+    <!-- 예약 목록을 표시하는 테이블 -->
+
+    <table class="table">
+        <thead class="table-dark">
+        <tr>
+            <th>주문번호</th>
+            <th>가게이름</th>
+            <th>사장이름</th>
+            <th>손님이름</th>
+            <th>예약상태</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="reservation : ${reservationList}">
+            <!-- 각 열에 예약 정보 표시 -->
+            <td th:text="${reservation.id}"></td>
+            <!-- 'placeOwner'에서 'store'를 직접 가져오는 대신 'place'를 사용하도록 수정 -->
+            <td th:text="${reservation.placeOwner.store}"></td>
+            <!-- 'placeOwner'에서 'owner'를 직접 가져오는 대신 'place.owner'를 사용하도록 수정 -->
+            <td th:text="${reservation.placeOwner.owner.username}"></td>
+            <!-- 'customer'에서 'username'을 직접 가져오도록 수정 -->
+            <td th:text="${reservation.customer.username}"></td>
+            <td>
+                <!-- 예약 상태에 따라 다른 내용을 표시하는 if문 -->
+                <span th:if="${reservation.status == '0'}">요청중</span>
+                <span th:if="${reservation.status == '1'}">승인됨</span>
+                <span th:if="${reservation.status == '2'}">완료됨</span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+</body>
+</html>
