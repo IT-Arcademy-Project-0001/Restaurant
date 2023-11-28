@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+
 @RequiredArgsConstructor
 @Service
 public class ReservationService {
@@ -16,7 +18,6 @@ public class ReservationService {
     private final ReservationRepository reservationRepository;
     private final PlaceService placeService;
     private final OwnerService ownerService;
-
 
 
     public List<Reservation> findAll() {
@@ -45,8 +46,14 @@ public class ReservationService {
         reservationRepository.save(reservation);
     }
 
-//    public List<Reservation> findByPlaceOwnerUsername(String username) {
-//        PlaceOwner placeOwner = findByPlaceOwner(findByPlaceOwnerUsername(username)).findByUsername(username);
-//        return reservationRepository.findByPlaceOwner(placeOwner);
-//
+    @Transactional
+    public void completeReservation(Long reservationId) {
+        Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(() -> new IllegalArgumentException("해당 예약이 존재하지 않습니다."));
+        reservation.setStatus("2");
+        reservationRepository.save(reservation);
+    }
+
+
+
+
 }

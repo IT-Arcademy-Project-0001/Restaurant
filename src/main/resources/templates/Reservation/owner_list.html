@@ -12,12 +12,13 @@
 
     <!-- 예약 목록을 표시하는 테이블 -->
     <table class="table">
-        <thead class="table-dark">
+        <thead class="table-success">
         <tr>
             <th>예약 번호</th>
             <th>가게 이름</th>
             <th>손님 이름</th>
             <th>예약 상태</th>
+            <th>예약 입력</th>
         </tr>
         </thead>
         <tbody>
@@ -29,17 +30,16 @@
             <td>
                 <span th:if="${reservation.status == '0'}">요청중</span>
                 <span th:if="${reservation.status == '1'}">승인됨</span>
-                <span th:if="${reservation.status == '2'}">완료됨</span>
-            <td>
-                <span th:text="${session.reservationStatus}"></span>
-            </td>
+                <span th:if="${reservation.status == '2'}">완료됨(결제완료)</span>
+<!--            <td>-->
+<!--                <span th:text="${session.reservationStatus}"></span>-->
+<!--            </td>-->
             <td>
                 <form th:if="${reservation.status == '0'}" th:action="@{/reservation/accept}" method="post">
                     <!-- 예약 ID를 input hidden 필드로 추가 -->
                     <input type="hidden" name = "reservationid" th:value="${reservation.id}"/>
                     <input type="submit" value="수락" />
                 </form>
-
             </td>
         </tr>
         </tbody>

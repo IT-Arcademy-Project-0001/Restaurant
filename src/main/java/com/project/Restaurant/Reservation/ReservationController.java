@@ -6,6 +6,7 @@ import com.project.Restaurant.Member.owner.OwnerService;
 import com.project.Restaurant.Place.Owner.PlaceOwner;
 import com.project.Restaurant.Place.Owner.PlaceService;
 import jakarta.servlet.http.HttpSession;
+import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,7 @@ import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
@@ -78,22 +80,6 @@ public class ReservationController {
         return "Reservation/owner_list";
     }
 
-    @PostMapping("/reservation/accept")
-    public String acceptReservation(Model model,
-            @RequestParam("reservationid") Long reservationId
-    ) {
-
-        // 예약 수락 비즈니스 로직 호출
-        reservationService.acceptReservation(reservationId);
-
-        // 세션에 상태 정보 저장 (예: "ACCEPTED")
-        model.addAttribute("reservationStatus", "ACCEPTED");
-
-
-        return "redirect:/reservation/ownerList";
-
-    }
-
     @GetMapping("/reservation/customerList")
     public String customerList(Model model, Principal principal) {
         if (principal == null) {
@@ -109,19 +95,44 @@ public class ReservationController {
         return "Reservation/customer_list";
     }
 
-    private boolean isCustomerLoggedIn(Principal principal) {
-        if (principal != null && principal instanceof Authentication) {
-            Authentication authentication = (Authentication) principal;
-            return authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_CUSTOMER"));
-        }
-        return false;
+    @PostMapping("/reservation/accept")
+    public String acceptReservation(Model model,
+                                    @RequestParam("reservationid") Long reservationId
+    ) {
+
+        // 예약 수락 비즈니스 로직 호출
+        reservationService.acceptReservation(reservationId);
+
+        // 세션에 상태 정보 저장 (예: "ACCEPTED")
+        model.addAttribute("reservationStatus", "ACCEPTED");
+
+
+        return "redirect:/reservation/ownerList";
+
     }
 
-    private boolean isOwnerLoggedIn(Principal principal) {
-        if (principal != null && principal instanceof Authentication) {
-            Authentication authentication = (Authentication) principal;
-            return authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_OWNER"));
+    @PostMapping("/reservation/complete")
+    public String completeReservation(Model model, @RequestParam("reservationId") Long reservationId) {
+        reservationService.completeReservation(reservationId);
+        model.addAttribute("reservationStatus", "COMPLETE");
+        return "redirect:/reservation/customerList";
         }
-        return false;
+
+
+
+        private boolean isCustomerLoggedIn (Principal principal){
+            if (principal != null && principal instanceof Authentication) {
+                Authentication authentication = (Authentication) principal;
+                return authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_CUSTOMER"));
+            }
+            return false;
+        }
+
+        private boolean isOwnerLoggedIn (Principal principal){
+            if (principal != null && principal instanceof Authentication) {
+                Authentication authentication = (Authentication) principal;
+                return authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_OWNER"));
+            }
+            return false;
+        }
     }
-}
