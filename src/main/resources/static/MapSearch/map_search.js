@@ -10,9 +10,6 @@ var markers = []; // // 마커를 담을 배열입니다
 
 var currCategory = ''; // 현재 선택된 카테고리를 가지고 있을 변수입니다
 
-// 카테고리 분류번호의 초기값 입니다.
-
-
 var defaultLat = 36.353720; // 기본 위도 값
 var defaultLng = 127.341445; // 기본 경도 값
 
@@ -80,8 +77,6 @@ var ps = new kakao.maps.services.Places();
 // 지도에 idle 이벤트를 등록합니다
 kakao.maps.event.addListener(map, 'idle', mySearchPlaces);
 
-
-
 // 각 카테고리에 클릭 이벤트를 등록합니다
 addCategoryClickEvent();
 
@@ -89,7 +84,11 @@ addCategoryClickEvent();
 var infowindow = new kakao.maps.InfoWindow({zIndex:1});
 var simpleinfowindow = new kakao.maps.InfoWindow({zIndex:1});
 
-document.getElementById("searchkeyword").addEventListener("click", toggleMenuWrap);
+document.getElementById("searchkeyword").addEventListener("click", function() {
+    toggleMenuWrap();
+    // 키워드로 장소를 검색합니다.
+    searchPlaces();
+});
 
 // 메뉴 스타일 토글 함수
 function toggleMenuWrap() {
@@ -108,9 +107,6 @@ function toggleMenuWrap() {
     }
 }
 
-// 키워드로 장소를 검색합니다
-document.getElementById("searchkeyword").addEventListener("click", searchPlaces);
-
 // 키워드 검색을 요청하는 함수입니다
 function searchPlaces() {
 
@@ -121,12 +117,21 @@ function searchPlaces() {
         return false;
     }
 
+    // 장소 검색시 "검색" 버튼이 눌러지게 하기 위한 함수
+    initPressSearchButton();
+
     // 장소검색 객체를 통해 키워드로 장소검색을 요청합니다
     ps.keywordSearch(keyword, placesSearchCB);
 }
 
-// idle 갱신 = 자체 DB도 갱신
+function initPressSearchButton() {
+    var searchButton = document.getElementById('BK9');
+    if (!searchButton.classList.contains('on')) {
+           searchButton.classList.add('on');
+        }
+}
 
+// idle 이벤트 (ajax 실시간 갱신으로 자체 DB 업데이트)
 function mySearchPlaces() {
 
     var elementDo = document.getElementById(currCategory);
@@ -142,9 +147,9 @@ function mySearchPlaces() {
                 order: dataOrder
             },
         success: function (data) {
-             // 서버에서 받아온 데이터를 이용하여 마커 생성
-
+                // 서버에서 받아온 데이터를 이용하여 마커 생성
                 data.forEach(searchResult2 => {
+
                     // 마커를 생성하고 지도에 표시합니다
                     var marker = addMarkerCategory(new kakao.maps.LatLng(searchResult2.locationLat, searchResult2.locationLng), dataOrder);
                 });
@@ -194,8 +199,15 @@ function displayPlaces(places) {
     // 검색 결과 목록에 추가된 기존 항목들을 제거합니다
     removeAllChildNods(listEl);
 
-    // 지도에 표시되고 있는 기존 마커를 제거합니다
+    // 지도에 표시되고 있는 기존 마커를 제거합니다 (초기화 로직 포함)
     removeMarker();
+
+    // 기존 검색장소의 마커를 제거 후 초기화 합니다. (순서 중요, 마커위치 정보를 제거해버리면 마커를 제거할 수 없게됨)
+    // ajax에 의해 식당과 추천 장소는 지속적으로 갱신되지만, 검색장소는 검색한 시점에서 배열이 저장되므로 검색이후 삭제되면 빈배열로 남음.
+    // 기존 removeMarker()에서 처럼 마커제거와 초기화 로직을 모두 실행하기 어려움. 하드코딩으로 구현하였음.
+    // 페이지네이션에 displayPlaces 함수 실행이 포함되어 있으며 그 시점에서 페이지에 담긴 마커와 장소정보를 제거 및 초기화하게됨.
+    removeMarkerCategory(1);
+    markersCategory[1] = [];
 
     for ( var i=0; i < places.length; i++ ) {
 
@@ -251,16 +263,6 @@ function displayPlaces(places) {
 
                // 2. 길찾기 Get쿼리 추가 (탐험하기로 통합)
 
-            };
-
-            // 아이템 리스트에 마우스를 올리면 발생하는 이벤트
-            itemEl.onmouseover =  function () {
-                displaysimpleInfowindow(marker, pname);
-            };
-
-            // 아이템 리스트에서 마우스를 제거하면 발생하는 이벤트
-            itemEl.onmouseout =  function () {
-                simpleinfowindow.close();
             };
 
         })(map, marker, places[i].place_name, places[i].road_address_name, places[i].address_name, places[i].y, places[i].x);
@@ -367,6 +369,7 @@ function removeMarkerCategory(order) {
     }
 }
 
+
 // 검색을 통해 배열에 추가된 마커들을 지도에 표시하거나 삭제하는 함수입니다
 function setSearchMarkers(map) {
     if (markersCategory[1]) {
@@ -376,7 +379,7 @@ function setSearchMarkers(map) {
     }
 }
 
-// "마커 보이기" 버튼을 클릭하면 호출되어 배열에 추가된 마커를 지도에 표시하는 함수입니다
+// "마커 보이기" 버튼을 클릭하면 호출되어 배열에 추가된 마커를 지도에 표시하는 함수입니다. (검색버튼을 눌렀을때, 검색배열만)
 function showMarkers(orderNumber) {
     if (orderNumber === 1) {
         setSearchMarkers(map);
@@ -468,6 +471,7 @@ function onClickCategory() {
         currCategory = '';
 //        changeCategoryClass();
         removeMarkerCategory(orderNumber);
+        removeMarker();
     } else {
         currCategory = id;
 //        changeCategoryClass(this);
@@ -476,6 +480,13 @@ function onClickCategory() {
         showMarkers(orderNumber);
     }
      toggleCategoryClass(this);
+}
+
+// 클릭된 카테고리에 스타일을 토글하는 함수입니다
+function toggleCategoryClass(el) {
+    if (el) {
+        el.classList.toggle('on');
+    }
 }
 
 //// 클릭된 카테고리에만 클릭된 스타일을 적용하는 함수입니다
@@ -492,10 +503,3 @@ function onClickCategory() {
 //        el.className = 'on';
 //    }
 //}
-
-// 클릭된 카테고리에 스타일을 토글하는 함수입니다
-function toggleCategoryClass(el) {
-    if (el) {
-        el.classList.toggle('on');
-    }
-}
