@@ -1,4 +1,3 @@
-<!-- reservation_list.html -->
 <!DOCTYPE html>
 <html lang="ko" layout:decorate="~{layout}" xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -9,13 +8,10 @@
 </head>
 <body>
 <div layout:fragment="content">
-
-    <!-- 사용자가 인증되었는지 확인 -->
     <div>
         <h2>예약 목록</h2>
 
         <!-- 예약 목록을 표시하는 테이블 -->
-
         <table class="table">
             <thead class="table-dark">
             <tr>
@@ -24,26 +20,41 @@
                 <th>사장이름</th>
                 <th>손님이름</th>
                 <th>예약상태</th>
+                <th>작업</th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="reservation : ${reservationList}">
                 <!-- 각 열에 예약 정보 표시 -->
                 <td th:text="${reservation.id}"></td>
+                <!-- 'placeOwner'에서 'store'를 직접 가져오는 대신 'place'를 사용하도록 수정 -->
                 <td th:text="${reservation.placeOwner.store}"></td>
+                <!-- 'placeOwner'에서 'owner'를 직접 가져오는 대신 'place.owner'를 사용하도록 수정 -->
                 <td th:text="${reservation.placeOwner.owner.username}"></td>
+                <!-- 'customer'에서 'username'을 직접 가져오도록 수정 -->
                 <td th:text="${reservation.customer.username}"></td>
                 <td>
                     <!-- 예약 상태에 따라 다른 내용을 표시하는 if문 -->
                     <span th:if="${reservation.status == '0'}">요청중</span>
                     <span th:if="${reservation.status == '1'}">승인됨</span>
                     <span th:if="${reservation.status == '2'}">완료됨</span>
+
+                    <!-- 예약이 완료되었을 때 결제 버튼 표시 -->
+                    <form th:if="${reservation.status == '1'}" th:action="@{/reservation/complete}" method="post">
+                        <!-- 예약 ID를 input hidden 필드로 추가 -->
+                        <input type="hidden" name="reservationId" th:value="${reservation.id}"/>
+                        <input type="submit" value="결제"/>
+                    </form>
                 </td>
             </tr>
             </tbody>
         </table>
-    </div>
 
+        <!-- 결제 성공 메시지 표시 -->
+        <div th:if="${paymentStatus == 'SUCCESS'}" class="alert alert-success" role="alert">
+            결제가 성공적으로 완료되었습니다.
+        </div>
+    </div>
 </div>
 </body>
 </html>

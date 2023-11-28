@@ -42,7 +42,7 @@ public class PlaceSearchService {
 
     List<PlaceSearch> searchResults = new ArrayList<>();
 
-    if (order == 1){
+    if (order == 2){
       for (PlaceCustomer place : placeResults1) {
 
         double distance = calculateDistance(currentLat, currentLng, place.getLatitude(), place.getLongitude());
@@ -57,7 +57,7 @@ public class PlaceSearchService {
           searchResults.add(ps);
         }
       }
-    } else if (order == 2) {
+    } else if (order == 3) {
 
       for (PlaceOwner place2 : placeResults2) {
 
@@ -74,9 +74,6 @@ public class PlaceSearchService {
         }
       }
     }
-
-    System.out.println(searchResults);
-
     return searchResults;
   }
 
