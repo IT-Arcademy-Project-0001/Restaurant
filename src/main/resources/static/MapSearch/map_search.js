@@ -80,8 +80,6 @@ var ps = new kakao.maps.services.Places();
 // 지도에 idle 이벤트를 등록합니다
 kakao.maps.event.addListener(map, 'idle', mySearchPlaces);
 
-
-
 // 각 카테고리에 클릭 이벤트를 등록합니다
 addCategoryClickEvent();
 
@@ -89,7 +87,11 @@ addCategoryClickEvent();
 var infowindow = new kakao.maps.InfoWindow({zIndex:1});
 var simpleinfowindow = new kakao.maps.InfoWindow({zIndex:1});
 
-document.getElementById("searchkeyword").addEventListener("click", toggleMenuWrap);
+document.getElementById("searchkeyword").addEventListener("click", function() {
+    toggleMenuWrap();
+    // 키워드로 장소를 검색합니다.
+    searchPlaces();
+});
 
 // 메뉴 스타일 토글 함수
 function toggleMenuWrap() {
@@ -108,9 +110,6 @@ function toggleMenuWrap() {
     }
 }
 
-// 키워드로 장소를 검색합니다
-document.getElementById("searchkeyword").addEventListener("click", searchPlaces);
-
 // 키워드 검색을 요청하는 함수입니다
 function searchPlaces() {
 
@@ -121,12 +120,20 @@ function searchPlaces() {
         return false;
     }
 
+    initPressSearchButton();
+
     // 장소검색 객체를 통해 키워드로 장소검색을 요청합니다
     ps.keywordSearch(keyword, placesSearchCB);
 }
 
-// idle 갱신 = 자체 DB도 갱신
+function initPressSearchButton() {
+    var searchButton = document.getElementById('BK9');
+    if (!searchButton.classList.contains('on')) {
+           searchButton.classList.add('on');
+        }
+}
 
+// idle 갱신 = 자체 DB도 갱신
 function mySearchPlaces() {
 
     var elementDo = document.getElementById(currCategory);
@@ -253,16 +260,6 @@ function displayPlaces(places) {
 
             };
 
-            // 아이템 리스트에 마우스를 올리면 발생하는 이벤트
-            itemEl.onmouseover =  function () {
-                displaysimpleInfowindow(marker, pname);
-            };
-
-            // 아이템 리스트에서 마우스를 제거하면 발생하는 이벤트
-            itemEl.onmouseout =  function () {
-                simpleinfowindow.close();
-            };
-
         })(map, marker, places[i].place_name, places[i].road_address_name, places[i].address_name, places[i].y, places[i].x);
 
         fragment.appendChild(itemEl);
@@ -376,7 +373,7 @@ function setSearchMarkers(map) {
     }
 }
 
-// "마커 보이기" 버튼을 클릭하면 호출되어 배열에 추가된 마커를 지도에 표시하는 함수입니다
+// "마커 보이기" 버튼을 클릭하면 호출되어 배열에 추가된 마커를 지도에 표시하는 함수입니다. (검색버튼을 눌렀을때, 검색배열만)
 function showMarkers(orderNumber) {
     if (orderNumber === 1) {
         setSearchMarkers(map);
@@ -478,6 +475,13 @@ function onClickCategory() {
      toggleCategoryClass(this);
 }
 
+// 클릭된 카테고리에 스타일을 토글하는 함수입니다
+function toggleCategoryClass(el) {
+    if (el) {
+        el.classList.toggle('on');
+    }
+}
+
 //// 클릭된 카테고리에만 클릭된 스타일을 적용하는 함수입니다
 //function changeCategoryClass(el) {
 //    var category = document.getElementById('category'),
@@ -492,10 +496,3 @@ function onClickCategory() {
 //        el.className = 'on';
 //    }
 //}
-
-// 클릭된 카테고리에 스타일을 토글하는 함수입니다
-function toggleCategoryClass(el) {
-    if (el) {
-        el.classList.toggle('on');
-    }
-}
