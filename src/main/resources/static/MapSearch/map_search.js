@@ -230,20 +230,6 @@ function displayPlaces(places) {
                 displayInfowindow(marker, pname, praddress, paddress);
 
                 // 2. 주소 정보들을 text 영역으로 전송 (hidden 사용)
-                if (praddress) {
-                document.getElementById('fulladdress').value = pname + "(" + praddress + ")";
-                } else {
-                document.getElementById('fulladdress').value = pname + "(" + paddress + ")";
-                }
-
-                document.getElementById('pname').value = pname;
-                if (praddress) {
-                    document.getElementById('paddress').value = praddress;
-                } else {
-                    document.getElementById('paddress').value = paddress;
-                }
-                document.getElementById('latclick').value = plat;
-                document.getElementById('lngclick').value = plng;
 
                 // 2. 길찾기 Get쿼리 추가 (탐험하기로 통합)
 
@@ -319,8 +305,7 @@ function getListItem(index, places) {
 
 
 // 장소검색으로 마커를 생성하고 지도 위에 마커를 표시하는 함수입니다
-function addMarker(position, idx
-) {
+function addMarker(position, idx) {
     var imageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png', // 마커 이미지 url, 스프라이트 이미지를 씁니다
         imageSize = new kakao.maps.Size(36, 37),  // 마커 이미지의 크기
         imgOptions =  {
@@ -336,8 +321,8 @@ function addMarker(position, idx
 
     marker.setMap(map); // 지도 위에 마커를 표출합니다
 
-    markersCategory[0] = markersCategory[0] || [];
-    markersCategory[0].push(marker);  // 배열에 생성된 마커를 추가합니다
+    markersCategory[1] = markersCategory[1] || [];
+    markersCategory[1].push(marker);  // 배열에 생성된 마커를 추가합니다
 
     return marker;
 }
@@ -379,8 +364,28 @@ function removeMarkerCategory(order) {
         for (var i = 0; i < markersCategory[order].length; i++) {
             markersCategory[order][i].setMap(null);
         }
-        markersCategory[order] = [];
     }
+}
+
+// 검색을 통해 배열에 추가된 마커들을 지도에 표시하거나 삭제하는 함수입니다
+function setSearchMarkers(map) {
+    if (markersCategory[1]) {
+        for (var i = 0; i < markersCategory[1].length; i++) {
+            markersCategory[1][i].setMap(map);
+        }
+    }
+}
+
+// "마커 보이기" 버튼을 클릭하면 호출되어 배열에 추가된 마커를 지도에 표시하는 함수입니다
+function showMarkers(orderNumber) {
+    if (orderNumber === 1) {
+        setSearchMarkers(map);
+    }
+}
+
+// "마커 감추기" 버튼을 클릭하면 호출되어 배열에 추가된 마커를 지도에서 삭제하는 함수입니다 (현재 선언은 했으나 미사용)
+function hideMarkers() {
+    setSearchMarkers(null);
 }
 
 // 검색결과 목록 하단에 페이지번호를 표시는 함수입니다
@@ -422,7 +427,6 @@ function displaysimpleInfowindow(marker, title) {
 
 // 마커를 클릭했을 때 호출되는 함수입니다
 function displayInfowindow(marker, pname, praddress, paddress) {
-
      var content = '<div class = "wrap">' +
                 '		       <div class = "classimg"><img src = "/MapSearch/samplelogo.jpg" width="160" height="160"></div>' +
                          '        <div class="classinfo">' +
@@ -434,27 +438,8 @@ function displayInfowindow(marker, pname, praddress, paddress) {
                             '           </div>' +
                          '        </div>' +
                 '			   </div>';
-
     infowindow.setContent(content);
     infowindow.open(map, marker);
-
-    document.getElementById("selectstarting").addEventListener('click', getstarting);
-    function getstarting(){
-             document.getElementById('pstarting').value = document.getElementById('fulladdress').value;
-             document.getElementById('pname1').value = document.getElementById('pname').value;
-             document.getElementById('paddress1').value = document.getElementById('paddress').value;
-             document.getElementById('latclick1').value = document.getElementById('latclick').value;
-             document.getElementById('lngclick1').value = document.getElementById('lngclick').value;
-    }
-
-    document.getElementById("selectdestination").addEventListener('click', getdestination);
-    function getdestination(){
-             document.getElementById('pdestination').value = document.getElementById('fulladdress').value;
-             document.getElementById('pname2').value = document.getElementById('pname').value;
-             document.getElementById('paddress2').value = document.getElementById('paddress').value;
-             document.getElementById('latclick2').value = document.getElementById('latclick').value;
-             document.getElementById('lngclick2').value = document.getElementById('lngclick').value;
-    }
 }
 
  // 검색결과 목록의 자식 Element를 제거하는 함수입니다
@@ -483,16 +468,14 @@ function onClickCategory() {
         currCategory = '';
 //        changeCategoryClass();
         removeMarkerCategory(orderNumber);
-        alert('선택취소했습니다');
     } else {
         currCategory = id;
 //        changeCategoryClass(this);
+//        recoverMarkerCategory();
         mySearchPlaces();
-        alert('선택했습니다');
+        showMarkers(orderNumber);
     }
-
      toggleCategoryClass(this);
-
 }
 
 //// 클릭된 카테고리에만 클릭된 스타일을 적용하는 함수입니다

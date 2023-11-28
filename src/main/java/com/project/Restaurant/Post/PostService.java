@@ -52,8 +52,6 @@ public class PostService {
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.desc("localDateTime"));
         Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
-
-        Specification<Post> spec = search(kw);
         return this.postRepository.findAllByKeyword(kw, pageable);
     }
 
