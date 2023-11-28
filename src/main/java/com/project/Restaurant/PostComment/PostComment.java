@@ -24,7 +24,7 @@ public class PostComment {
   private LocalDateTime localDateTime;
 
   @ManyToOne
-  private Customer author;
+  private Customer customer;
 
   @ManyToOne
   private Post post;

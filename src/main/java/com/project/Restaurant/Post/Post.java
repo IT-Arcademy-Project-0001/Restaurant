@@ -30,7 +30,7 @@ public class Post {
 
 
   @ManyToOne
-  private Customer author;
+  private Customer customer;
 
   @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
   private List<PostComment> postCommentList;
@@ -39,4 +39,9 @@ public class Post {
 
   @ManyToMany
   Set<Customer> likes;
+
+  @Column(columnDefinition = "integer default 0", nullable = false)
+  private Long view;
+
 }
+
