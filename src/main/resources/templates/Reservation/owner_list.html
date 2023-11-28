@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ko" layout:decorate="~{layout}">
+<head>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <meta charset="UTF-8">
+    <title>Owner Reservation List</title>
+</head>
+<body>
+<div layout:fragment="content">
+
+    <h2>예약 목록</h2>
+
+    <!-- 예약 목록을 표시하는 테이블 -->
+    <table class="table">
+        <thead class="table-success">
+        <tr>
+            <th>예약 번호</th>
+            <th>가게 이름</th>
+            <th>손님 이름</th>
+            <th>예약 상태</th>
+            <th>예약 입력</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- 반복문을 통해 사장의 예약 목록을 표시 -->
+        <tr th:each="reservation : ${reservationOwnerList}">
+            <td th:text="${reservation.id}"></td>
+            <td th:text="${reservation.placeOwner.store}"></td>
+            <td th:text="${reservation.customer.username}"></td>
+            <td>
+                <span th:if="${reservation.status == '0'}">요청중</span>
+                <span th:if="${reservation.status == '1'}">승인됨</span>
+                <span th:if="${reservation.status == '2'}">완료됨(결제완료)</span>
+<!--            <td>-->
+<!--                <span th:text="${session.reservationStatus}"></span>-->
+<!--            </td>-->
+            <td>
+                <form th:if="${reservation.status == '0'}" th:action="@{/reservation/accept}" method="post">
+                    <!-- 예약 ID를 input hidden 필드로 추가 -->
+                    <input type="hidden" name = "reservationid" th:value="${reservation.id}"/>
+                    <input type="submit" value="수락" />
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<!--<script>-->
+<!--    function acceptReservation(reservationId) {-->
+<!--        // CSRF 토큰 가져오기-->
+<!--        var csrfToken = $("meta[name='_csrf']").attr("content");-->
+<!--        var csrfHeader = $("meta[name='_csrf_header']").attr("content");-->
+
+<!--        // Ajax를 사용하여 수락 요청을 서버에 보냄-->
+<!--        $.ajax({-->
+<!--            url: `/reservation/accept`,-->
+<!--            type: 'POST',-->
+<!--            data: {-->
+<!--                "reservationId": reservationId-->
+<!--            },-->
+<!--            beforeSend: function (xhr) {-->
+<!--                // CSRF 토큰을 요청 헤더에 추가-->
+<!--                xhr.setRequestHeader(csrfHeader, csrfToken);-->
+<!--            },-->
+<!--            success: function () {-->
+<!--                // 성공한 경우, 페이지를 새로고침-->
+<!--                location.reload();-->
+<!--            },-->
+<!--            error: function (error) {-->
+<!--                console.error(error);-->
+<!--                alert('수락 중 오류가 발생했습니다.');-->
+<!--            }-->
+<!--        });-->
+<!--    }-->
+<!--</script>-->
+</body>
+</html>
