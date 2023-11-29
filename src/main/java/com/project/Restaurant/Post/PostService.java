@@ -55,6 +55,7 @@ public class PostService {
 
         Specification<Post> spec = search(kw);
         return this.postRepository.findAll(spec, pageable);
+    }
 
 
     public Post getPost(Long id) {

@@ -131,11 +131,28 @@ function initPressSearchButton() {
         }
 }
 
+
 // idle 이벤트 (ajax 실시간 갱신으로 자체 DB 업데이트)
 function mySearchPlaces() {
 
-    var elementDo = document.getElementById(currCategory);
-    var dataOrder = elementDo ? parseInt(elementDo.getAttribute('data-order'), 10) || 0 : 0;
+  categoryOrderNumber = []; // 초기화
+
+  var categoryParents = document.getElementById('category'),
+      children = categoryParents.children;
+
+  for (var i = 0; i < children.length; i++) {
+      var child = children[i];
+      if (child.classList.contains('on')) {
+          var orderNumber = parseInt(child.getAttribute('data-order'));
+          categoryOrderNumber.push(orderNumber);
+      }
+  }
+
+  console.log("categoryOrderNumber", categoryOrderNumber);
+
+   // 순서가 중요하다. 먼저 배열에 담긴 마커를 지우고, 배열을 지워야 한다.
+    removeMarkerAllCategory(categoryOrderNumber);
+    initializeMarkerCategory(categoryOrderNumber);
 
     $.ajax({
         url: '/place/search',
@@ -144,14 +161,55 @@ function mySearchPlaces() {
         data: { // 쿼리 문자열로 변환, URL에 포함시켜 서버로 전달.
                 latitude: map.getCenter().getLat(),
                 longitude: map.getCenter().getLng(),
-                order: dataOrder
+                order: categoryOrderNumber
             },
         success: function (data) {
+
+          var contentCustom = '<div class="wrapInfo">' +
+                                        '    <div class="info">' +
+                                        '        <div class="title">' +
+                                        '            카카오 스페이스닷원' +
+                                        '        </div>' +
+                                        '        <div class="body">' +
+                                        '            <div class="img">' +
+                                        '                <img src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/thumnail.png" width="73" height="70">' +
+                                        '           </div>' +
+                                        '            <div class="desc">' +
+                                        '                <div class="ellipsis">제주특별자치도 제주시 첨단로 242</div>' +
+                                        '                <div class="jibun ellipsis">(우) 63309 (지번) 영평동 2181</div>' +
+                                        '                <div><a href="https://www.kakaocorp.com/main" target="_blank" class="link">홈페이지</a></div>' +
+                                        '            </div>' +
+                                        '        </div>' +
+                                        '    </div>' +
+                                        '</div>';
+
                 // 서버에서 받아온 데이터를 이용하여 마커 생성
                 data.forEach(searchResult2 => {
 
                     // 마커를 생성하고 지도에 표시합니다
-                    var marker = addMarkerCategory(new kakao.maps.LatLng(searchResult2.locationLat, searchResult2.locationLng), dataOrder);
+                    var marker = addMarkerCategory(new kakao.maps.LatLng(searchResult2.locationLat, searchResult2.locationLng), searchResult2.categoryOrder);
+
+                    // 마커 위에 커스텀오버레이를 표시합니다
+                    // 마커를 중심으로 커스텀 오버레이를 표시하기위해 CSS를 이용해 위치를 설정했습니다
+                    var overlay = new kakao.maps.CustomOverlay({
+                                            content: contentCustom,
+                                            position: marker.getPosition()
+                                        });
+
+                    (function(map, marker) {
+
+                     // 마커를 클릭했을 때 커스텀 오버레이를 표시합니다
+                       kakao.maps.event.addListener(marker, 'click', function() {
+                           overlay.setMap(map);
+                       });
+
+                       // 맵을 클릭했을 때의 이벤트를 등록합니다.
+                       kakao.maps.event.addListener(map, 'click', function() {
+                           overlay.setMap(null);
+                       });
+
+                    })(map, marker);
+
                 });
 
         },
@@ -206,10 +264,11 @@ function displayPlaces(places) {
     // ajax에 의해 식당과 추천 장소는 지속적으로 갱신되지만, 검색장소는 검색한 시점에서 배열이 저장되므로 검색이후 삭제되면 빈배열로 남음.
     // 기존 removeMarker()에서 처럼 마커제거와 초기화 로직을 모두 실행하기 어려움. 하드코딩으로 구현하였음.
     // 페이지네이션에 displayPlaces 함수 실행이 포함되어 있으며 그 시점에서 페이지에 담긴 마커와 장소정보를 제거 및 초기화하게됨.
-    removeMarkerCategory(1);
-    markersCategory[1] = [];
 
-    for ( var i=0; i < places.length; i++ ) {
+    removeMarkerCategory(0);
+    markersCategory[0] = [];
+
+    for (var i=0; i < places.length; i++ ) {
 
         // 마커를 생성하고 지도에 표시합니다
         var placePosition = new kakao.maps.LatLng(places[i].y, places[i].x),
@@ -322,15 +381,14 @@ function addMarker(position, idx) {
         });
 
     marker.setMap(map); // 지도 위에 마커를 표출합니다
-
-    markersCategory[1] = markersCategory[1] || [];
-    markersCategory[1].push(marker);  // 배열에 생성된 마커를 추가합니다
+    markersCategory[0].push(marker);  // 배열에 생성된 마커를 추가합니다
 
     return marker;
 }
 
 // 마커를 생성하고 지도 위에 마커를 표시하는 함수입니다
 function addMarkerCategory(position, order) {
+
     var imageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_category.png', // 마커 이미지 url, 스프라이트 이미지를 씁니다
         imageSize = new kakao.maps.Size(27, 28),  // 마커 이미지의 크기
         imgOptions =  {
@@ -345,12 +403,20 @@ function addMarkerCategory(position, order) {
         });
 
     marker.setMap(map); // 지도 위에 마커를 표출합니다
-
-    // markersCategory[order]가 없으면 빈 배열로 초기화
-    markersCategory[order] = markersCategory[order] || [];
     markersCategory[order].push(marker);  // 배열에 생성된 마커를 추가합니다
 
     return marker;
+}
+
+// 마커 카테고리별 배열을 초기화합니다.
+function initializeMarkerCategory(orders) {
+    for (var i = 0; i < orders.length; i++) {
+        var currentOrder = orders[i];
+        // 만약 currentOrder가 0이 아닌 경우에만 초기화를 진행  (카카오 API 검색 배열인 orders[0]은 초기화를 제외)
+        if (currentOrder !== 0) {
+            markersCategory[currentOrder] = markersCategory[currentOrder] || [];
+        }
+    }
 }
 
 // 지도 위에 표시되고 있는 마커를 모두 제거합니다
@@ -361,34 +427,38 @@ function removeMarker() {
     markers = [];
 }
 
+// idle 이벤트(반경)에 따른 카테고리 구분없이 마커를 제거합니다.
+// 만약 검색탭 외의 나머지 값을 모두 선택해도 orders에는 1,2가 전달되어 식당과 추천을 모두 지웁니다.
+
+function removeMarkerAllCategory(orders) {
+    for (var i = 0; i < orders.length; i++) {
+        var currentOrder = orders[i];
+        if (currentOrder !== 0) {
+            if (markersCategory[currentOrder]) {
+                for (var j = 0; j < markersCategory[currentOrder].length; j++) {
+                    markersCategory[currentOrder][j].setMap(null);
+                }
+            }
+        }
+    }
+}
+
+// 버튼을 눌렀을 때 배열에 추가된 마커들을 지도에 표시하는 함수입니다.
+function showMarkers(order) {
+    if (markersCategory[order]) {
+        for (var i = 0; i < markersCategory[order].length; i++) {
+            markersCategory[order][i].setMap(map);
+        }
+    }
+}
+
+// 카테고리별 개별 마커를 제거합니다.
 function removeMarkerCategory(order) {
     if (markersCategory[order]) {
         for (var i = 0; i < markersCategory[order].length; i++) {
             markersCategory[order][i].setMap(null);
         }
     }
-}
-
-
-// 검색을 통해 배열에 추가된 마커들을 지도에 표시하거나 삭제하는 함수입니다
-function setSearchMarkers(map) {
-    if (markersCategory[1]) {
-        for (var i = 0; i < markersCategory[1].length; i++) {
-            markersCategory[1][i].setMap(map);
-        }
-    }
-}
-
-// "마커 보이기" 버튼을 클릭하면 호출되어 배열에 추가된 마커를 지도에 표시하는 함수입니다. (검색버튼을 눌렀을때, 검색배열만)
-function showMarkers(orderNumber) {
-    if (orderNumber === 1) {
-        setSearchMarkers(map);
-    }
-}
-
-// "마커 감추기" 버튼을 클릭하면 호출되어 배열에 추가된 마커를 지도에서 삭제하는 함수입니다 (현재 선언은 했으나 미사용)
-function hideMarkers() {
-    setSearchMarkers(null);
 }
 
 // 검색결과 목록 하단에 페이지번호를 표시는 함수입니다
@@ -430,7 +500,7 @@ function displaysimpleInfowindow(marker, title) {
 
 // 마커를 클릭했을 때 호출되는 함수입니다
 function displayInfowindow(marker, pname, praddress, paddress) {
-     var content = '<div class = "wrap">' +
+     var content = '<div class = "wrapSimpleInfo">' +
                 '		       <div class = "classimg"><img src = "/MapSearch/samplelogo.jpg" width="160" height="160"></div>' +
                          '        <div class="classinfo">' +
                             '            <div class="classtitle">' + pname + '</div>' +
@@ -469,13 +539,10 @@ function onClickCategory() {
 
     if (className === 'on') {
         currCategory = '';
-//        changeCategoryClass();
         removeMarkerCategory(orderNumber);
         removeMarker();
     } else {
         currCategory = id;
-//        changeCategoryClass(this);
-//        recoverMarkerCategory();
         mySearchPlaces();
         showMarkers(orderNumber);
     }
