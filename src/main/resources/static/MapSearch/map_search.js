@@ -479,27 +479,50 @@ function displayInfowindow(marker, pname, praddress, paddress) {
 }
 
 function displayCustomWindow(marker, placeCategory, placeId, placeStore) {
-      var content = '<div class="wrapInfo">' +
-                                    '    <div class="infoC">' +
-                                    '        <div class="title">' + placeStore +
-                                    '            <div class="close" onclick="closeOverlay()" title="닫기"></div>' +
-                                    '        </div>' +
-                                    '        <div class="body">' +
-                                    '            <div class="img">' +
-                                    '                <img src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/thumnail.png" width="73" height="70">' +
-                                    '           </div>' +
-                                    '            <div class="desc">' +
-                                    '                <div class="ellipsis"> 메인주소 </div>' +
-                                    '                <div class="jibun ellipsis"> 상세주소 ' +
-                                    '                <div><a href="/place/' + placeCategory + '/' + placeId + '" target="_blank" class="link"> 상세페이지 </a></div>' +
-                                    '            </div>' +
-                                    '        </div>' +
-                                    '    </div>' +
-                                    '</div>';
+        var content = '<div class="wrapInfo">' +
+                                '    <div class="infoC">' +
+                                '        <div class="title">' + placeStore +
+                                '            <div class="close" onclick="closeOverlay()" title="닫기"></div>' +
+                                '        </div>' +
+                                '        <div class="body">' +
+                                '            <div class="img">' +
+                                '                <img src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/thumnail.png" width="73" height="70">' +
+                                '           </div>' +
+                                '            <div class="desc">' +
+                                '                <div class="ellipsis"> 메인주소 </div>' +
+                                '                <div class="jibun ellipsis"> 상세주소 ' +
+                                '                <div><a href="/place/' + placeCategory + '/' + placeId + '" target="_blank" class="link"> 상세페이지 </a></div>' +
+                                '            </div>' +
+                                '        </div>' +
+                                '    </div>' +
+                                '</div>';
 
+        var content2 = '<div class="wrapInfo">' +
+                                '    <div class="infoC">' +
+                                '        <div class="title">' + placeStore +
+                                '            <div class="close" onclick="closeOverlay()" title="닫기"></div>' +
+                                '        </div>' +
+                                '        <div class="body">' +
+                                '            <div class="img">' +
+                                '                <img src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/thumnail.png" width="73" height="70">' +
+                                '           </div>' +
+                                '            <div class="desc">' +
+                                '                <div class="ellipsis"> 메인주소 </div>' +
+                                '                <div class="jibun ellipsis"> 상세주소 ' +
+                                '            </div>' +
+                                '        </div>' +
+                                '    </div>' +
+                                '</div>';
+
+        // placeCategory에 따라 setContent 결정
+        if (placeCategory === 1) {
             customInfo.setContent(content);
-            customInfo.setMap(map);
-            customInfo.setPosition(marker);
+        } else if (placeCategory === 2) {
+            customInfo.setContent(content2);
+        }
+
+        customInfo.setMap(map);
+        customInfo.setPosition(marker);
 }
 
 function closeOverlay() {

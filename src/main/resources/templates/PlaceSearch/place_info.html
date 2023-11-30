@@ -13,7 +13,9 @@
                     <div class="card shadow-sm">
                         <div class="card-header bg-transparent text-center">
                             <img class="profile_img" height="300" width="350" src="/MapSearch/target_mark.png" alt="student dp">
-                            <h3> 이름난 맛집 </h3>
+                            <div>
+                                <span th:text = "${placeOwner.store}"></span>
+                            </div>
                         </div>
                         <div class="card-body">
                             <p class="mb-0"><strong class="pr-1">주소 :</strong> 대전시 유성구 315번지 26 </p>
