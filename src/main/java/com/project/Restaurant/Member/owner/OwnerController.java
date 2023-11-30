@@ -27,7 +27,7 @@ public class OwnerController {
 
     @GetMapping("/login")
     public String login() {
-        return "member/login_form";
+        return "member/loginForm/ownerLoginForm";
     }
 
     @PostMapping("/signup")

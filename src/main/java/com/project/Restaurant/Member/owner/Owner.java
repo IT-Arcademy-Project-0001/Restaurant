@@ -38,4 +38,8 @@ public class Owner {
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.REMOVE)
     private List<PlaceOwner> placeOwnerList;
+
+    private String provider;
+
+    private String providerId;
 }

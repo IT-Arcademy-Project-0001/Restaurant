@@ -22,19 +22,11 @@ public class CustomerDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        System.out.println("유저");
         Optional<Customer> _customer = customerRepository.findByusername(username);
         if (_customer.isEmpty()) {
             throw new UsernameNotFoundException("사용자를 찾을수 없습니다.");
         }
         Customer customer = _customer.get();
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        if ("admin".equals(username)) {
-            authorities.add(new SimpleGrantedAuthority(MemberRole.ADMIN.getValue()));
-        } else {
-            authorities.add(new SimpleGrantedAuthority(MemberRole.CUSTOMER.getValue()));
-        }
-        return new User(customer.getUsername(), customer.getPassword(), authorities);
+        return new CustomerDetails(customer);
     }
-
 }
