@@ -44,6 +44,7 @@ public class PlaceSearchService {
     for (PlaceCustomer place : placeResults1) {
       if (order != null && order.contains(1) && calculateDistance(currentLat, currentLng, place.getLatitude(), place.getLongitude()) < radius) {
         PlaceSearch ps = new PlaceSearch();
+        ps.setId(place.getId());
         ps.setStore(place.getStore());
         ps.setLocationLat(String.valueOf(place.getLatitude()));
         ps.setLocationLng(String.valueOf(place.getLongitude()));
@@ -56,6 +57,7 @@ public class PlaceSearchService {
     for (PlaceOwner place2 : placeResults2) {
       if (order != null && order.contains(2) && calculateDistance(currentLat, currentLng, place2.getLatitude(), place2.getLongitude()) < radius) {
         PlaceSearch psf = new PlaceSearch();
+        psf.setId(place2.getId());
         psf.setStore(place2.getStore());
         psf.setLocationLat(String.valueOf(place2.getLatitude()));
         psf.setLocationLng(String.valueOf(place2.getLongitude()));

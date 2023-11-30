@@ -19,7 +19,7 @@ public class PlaceCustController {
 
     @GetMapping("/map")
     public String map() {
-        return "Map";
+        return "Place/Map";
     }
 
     @PostMapping("/map/add")

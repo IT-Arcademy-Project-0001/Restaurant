@@ -85,9 +85,9 @@ addCategoryClickEvent();
 // 검색 결과 목록이나 마커를 클릭했을 때 장소명을 표출할 인포윈도우를 생성합니다 (마커기준 z방향으로 1떨어진 위치)
 var infowindow = new kakao.maps.InfoWindow({zIndex:1});
 var simpleinfowindow = new kakao.maps.InfoWindow({zIndex:1});
+var customInfo = new kakao.maps.CustomOverlay({clickable: true, yAnchor:1.3, zIndex:1});
 
 document.getElementById("searchkeyword").addEventListener("click", function() {
-    toggleMenuWrap();
     // 키워드로 장소를 검색합니다.
     searchPlaces();
 });
@@ -119,9 +119,6 @@ function searchPlaces() {
         return false;
     }
 
-    // 장소 검색시 "검색" 버튼이 눌러지게 하기 위한 함수
-    initPressSearchButton();
-
     // 장소검색 객체를 통해 키워드로 장소검색을 요청합니다
     ps.keywordSearch(keyword, placesSearchCB);
 }
@@ -136,7 +133,6 @@ function initPressSearchButton() {
 
 // idle 이벤트 (ajax 실시간 갱신으로 자체 DB 업데이트)
 function mySearchPlaces() {
-
 
   console.log("categoryOrderNumber", categoryOrderNumber);
 
@@ -155,25 +151,6 @@ function mySearchPlaces() {
             },
         success: function (data) {
 
-          var contentCustom = '<div class="wrapInfo">' +
-                                        '    <div class="info">' +
-                                        '        <div class="title">' +
-                                        '            카카오 스페이스닷원' +
-                                        '        </div>' +
-                                        '        <div class="body">' +
-                                        '            <div class="img">' +
-                                        '                <img src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/thumnail.png" width="73" height="70">' +
-                                        '           </div>' +
-                                        '            <div class="desc">' +
-                                        '                <div class="ellipsis">제주특별자치도 제주시 첨단로 242</div>' +
-                                        '                <div class="jibun ellipsis">(우) 63309 (지번) 영평동 2181</div>' +
-                                        '                <div><a href="https://www.kakaocorp.com/main" target="_blank" class="link">홈페이지</a></div>' +
-                                        '            </div>' +
-                                        '        </div>' +
-                                        '    </div>' +
-                                        '</div>';
-
-
 
                 // 서버에서 받아온 데이터를 이용하여 마커 생성
                 data.forEach(searchResult2 => {
@@ -181,26 +158,25 @@ function mySearchPlaces() {
                     // 마커를 생성하고 지도에 표시합니다
                     var marker = addMarkerCategory(new kakao.maps.LatLng(searchResult2.locationLat, searchResult2.locationLng), searchResult2.categoryOrder);
 
+                    var markerCustomInfo = new kakao.maps.LatLng(searchResult2.locationLat, searchResult2.locationLng);
                     // 마커 위에 커스텀오버레이를 표시합니다
                     // 마커를 중심으로 커스텀 오버레이를 표시하기위해 CSS를 이용해 위치를 설정했습니다
-                    var overlay = new kakao.maps.CustomOverlay({
-                                            content: contentCustom,
-                                            position: marker.getPosition()
-                                        });
 
-                    (function(map, marker) {
+                    (function(map, markerCustomInfo, placeCategory, placeId, placeStore) {
 
                      // 마커를 클릭했을 때 커스텀 오버레이를 표시합니다
                        kakao.maps.event.addListener(marker, 'click', function() {
-                           overlay.setMap(map);
+                           displayCustomWindow(markerCustomInfo, placeCategory, placeId, placeStore);
                        });
 
                        // 맵을 클릭했을 때의 이벤트를 등록합니다.
                        kakao.maps.event.addListener(map, 'click', function() {
-                           overlay.setMap(null);
+                           customInfo.setMap(null);
                        });
 
-                    })(map, marker);
+                       // 커스텀 오버레이를 닫기 위해 호출되는 함수입니다
+
+                    })(map, markerCustomInfo, searchResult2.categoryOrder, searchResult2.id, searchResult2.store);
 
                 });
 
@@ -215,6 +191,12 @@ function mySearchPlaces() {
 // 장소검색이 완료됐을 때 호출되는 콜백함수 입니다
 function placesSearchCB(data, status, pagination) {
     if (status === kakao.maps.services.Status.OK) {
+
+        // 장소 검색이 정상적으로 진행되었을 때 장소 검색 리스트를 보여주기 위한 함수
+        toggleMenuWrap();
+
+        // 장소 검색이 정상적으로 되었을 때 "검색" 탭이 눌러지게 하기 위한 함수
+        initPressSearchButton();
 
         // 정상적으로 검색이 완료됐으면
         // 검색 목록과 마커를 표출합니다
@@ -494,6 +476,34 @@ function displayInfowindow(marker, pname, praddress, paddress) {
                 '			   </div>';
     infowindow.setContent(content);
     infowindow.open(map, marker);
+}
+
+function displayCustomWindow(marker, placeCategory, placeId, placeStore) {
+      var content = '<div class="wrapInfo">' +
+                                    '    <div class="infoC">' +
+                                    '        <div class="title">' + placeStore +
+                                    '            <div class="close" onclick="closeOverlay()" title="닫기"></div>' +
+                                    '        </div>' +
+                                    '        <div class="body">' +
+                                    '            <div class="img">' +
+                                    '                <img src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/thumnail.png" width="73" height="70">' +
+                                    '           </div>' +
+                                    '            <div class="desc">' +
+                                    '                <div class="ellipsis"> 메인주소 </div>' +
+                                    '                <div class="jibun ellipsis"> 상세주소 ' +
+                                    '                <div><a href="/place/' + placeCategory + '/' + placeId + '" target="_blank" class="link"> 상세페이지 </a></div>' +
+                                    '            </div>' +
+                                    '        </div>' +
+                                    '    </div>' +
+                                    '</div>';
+
+            customInfo.setContent(content);
+            customInfo.setMap(map);
+            customInfo.setPosition(marker);
+}
+
+function closeOverlay() {
+   customInfo.setMap(null);
 }
 
  // 검색결과 목록의 자식 Element를 제거하는 함수입니다
