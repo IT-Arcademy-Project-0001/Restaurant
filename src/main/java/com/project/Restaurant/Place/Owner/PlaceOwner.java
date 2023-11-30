@@ -2,6 +2,7 @@ package com.project.Restaurant.Place.Owner;
 
 import com.project.Restaurant.Member.owner.Owner;
 import com.project.Restaurant.Place.Comment.PlaceOwnerComment;
+import com.project.Restaurant.Place.Menu.PlaceMenu;
 import com.project.Restaurant.Place.Operate.PlaceOperate;
 import com.project.Restaurant.Reservation.Reservation;
 import jakarta.persistence.*;
@@ -23,7 +24,7 @@ public class PlaceOwner {
     @Column(nullable = false)
     private String store;           // 매장 이름
     private String storeImg;       // 매장 이미지
-    private String storeAddress;    // 매장 위치 (도로명 주소 또는 지번주소 )
+    private String storeAddress;    // 매장 주소 (도로명 주소 또는 지번주소 )
 
     @Column(nullable = false)
     private Double latitude;          // 위도
@@ -44,6 +45,12 @@ public class PlaceOwner {
 
     private String storeMemo;      // 추가 안내사항 작성
 
+    @OneToMany(mappedBy = "placeOwner")
+    private List<PlaceOperate> placeOperateList;
+
+    @OneToMany(mappedBy = "placeOwner")
+    private List<PlaceMenu> placeMenuList;
+
     @ManyToOne
     private Owner owner;
 
@@ -53,4 +60,24 @@ public class PlaceOwner {
     @OneToMany(mappedBy="placeOwner", cascade = CascadeType.REMOVE)
     private List<PlaceOwnerComment> placeOwnerCommentList;
 
+    public PlaceOwnerDto convertDto() {
+
+        PlaceOwnerDto dto = new PlaceOwnerDto();
+        dto.setId(id);
+        dto.setLink(link);
+        dto.setLatitude(latitude);
+        dto.setLongitude(longitude);
+        dto.setMenu(menu);
+        dto.setCallNum(callNum);
+        dto.setMenuImg(menu);
+        dto.setStore(store);
+        dto.setStoreAddress(storeAddress);
+        dto.setPost(post);
+        dto.setTag(tag);
+        dto.setStoreCategory(storeCategory);
+        dto.setStoreMemo(storeMemo);
+        dto.setStoreImg(storeImg);
+
+        return dto;
+    }
 }
