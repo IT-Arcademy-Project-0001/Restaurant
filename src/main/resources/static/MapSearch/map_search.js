@@ -8,6 +8,8 @@ var markersCategory = {}; // // 카테고리로 검색한 마커를 담을 객�
 
 var markers = []; // // 마커를 담을 배열입니다
 
+var categoryOrderNumber = []; // 복수의 마커 data-order를 담을 배열입니다.
+
 var currCategory = ''; // 현재 선택된 카테고리를 가지고 있을 변수입니다
 
 var defaultLat = 36.353720; // 기본 위도 값
@@ -135,24 +137,12 @@ function initPressSearchButton() {
 // idle 이벤트 (ajax 실시간 갱신으로 자체 DB 업데이트)
 function mySearchPlaces() {
 
-  categoryOrderNumber = []; // 초기화
-
-  var categoryParents = document.getElementById('category'),
-      children = categoryParents.children;
-
-  for (var i = 0; i < children.length; i++) {
-      var child = children[i];
-      if (child.classList.contains('on')) {
-          var orderNumber = parseInt(child.getAttribute('data-order'));
-          categoryOrderNumber.push(orderNumber);
-      }
-  }
 
   console.log("categoryOrderNumber", categoryOrderNumber);
 
-   // 순서가 중요하다. 먼저 배열에 담긴 마커를 지우고, 배열을 지워야 한다.
-    removeMarkerAllCategory(categoryOrderNumber);
-    initializeMarkerCategory(categoryOrderNumber);
+  // 순서가 중요하다. 먼저 배열에 담긴 마커를 지우고, 배열을 지워야 한다.
+  removeMarkerAllCategory(categoryOrderNumber);
+  initializeMarkerCategory(categoryOrderNumber);
 
     $.ajax({
         url: '/place/search',
@@ -182,6 +172,8 @@ function mySearchPlaces() {
                                         '        </div>' +
                                         '    </div>' +
                                         '</div>';
+
+
 
                 // 서버에서 받아온 데이터를 이용하여 마커 생성
                 data.forEach(searchResult2 => {
@@ -256,9 +248,6 @@ function displayPlaces(places) {
 
     // 검색 결과 목록에 추가된 기존 항목들을 제거합니다
     removeAllChildNods(listEl);
-
-    // 지도에 표시되고 있는 기존 마커를 제거합니다 (초기화 로직 포함)
-    removeMarker();
 
     // 기존 검색장소의 마커를 제거 후 초기화 합니다. (순서 중요, 마커위치 정보를 제거해버리면 마커를 제거할 수 없게됨)
     // ajax에 의해 식당과 추천 장소는 지속적으로 갱신되지만, 검색장소는 검색한 시점에서 배열이 저장되므로 검색이후 삭제되면 빈배열로 남음.
@@ -412,19 +401,11 @@ function addMarkerCategory(position, order) {
 function initializeMarkerCategory(orders) {
     for (var i = 0; i < orders.length; i++) {
         var currentOrder = orders[i];
-        // 만약 currentOrder가 0이 아닌 경우에만 초기화를 진행  (카카오 API 검색 배열인 orders[0]은 초기화를 제외)
+        // 만약 currentOrder가 0이 아닌 경우에만 초기화를 진행  (카카오 API 검색 배열인 orders[0]은 초기화를 제외 = ajax 미연동)
         if (currentOrder !== 0) {
-            markersCategory[currentOrder] = markersCategory[currentOrder] || [];
+            markersCategory[currentOrder] = [];
         }
     }
-}
-
-// 지도 위에 표시되고 있는 마커를 모두 제거합니다
-function removeMarker() {
-    for ( var i = 0; i < markers.length; i++ ) {
-        markers[i].setMap(null);
-    }
-    markers = [];
 }
 
 // idle 이벤트(반경)에 따른 카테고리 구분없이 마커를 제거합니다.
@@ -537,14 +518,22 @@ function onClickCategory() {
     className = this.className;
     orderNumber = parseInt(this.getAttribute('data-order'));
 
+    // 중복 체크 (배열 초기화 없이 중복된 값만 배제, 배열 순서 자체는 상관없기 때문에 가능, 배열초기화 만이 능사가 아니다.)
+    var index = categoryOrderNumber.indexOf(orderNumber);
+    if (index !== -1) {
+        // 중복된 값이 이미 있다면 해당 값 제거
+        categoryOrderNumber.splice(index, 1);
+    }
+
     if (className === 'on') {
         currCategory = '';
         removeMarkerCategory(orderNumber);
-        removeMarker();
     } else {
         currCategory = id;
+        categoryOrderNumber.push(orderNumber);
+        console.log("categoryOrderNumberOnClick", categoryOrderNumber);
         mySearchPlaces();
-        showMarkers(orderNumber);
+        showMarkers(0);
     }
      toggleCategoryClass(this);
 }
