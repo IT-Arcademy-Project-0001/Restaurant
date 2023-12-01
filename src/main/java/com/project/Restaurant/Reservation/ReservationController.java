@@ -4,6 +4,7 @@ import com.project.Restaurant.Member.consumer.Customer;
 import com.project.Restaurant.Member.consumer.CustomerService;
 import com.project.Restaurant.Member.owner.Owner;
 import com.project.Restaurant.Member.owner.OwnerService;
+import com.project.Restaurant.Place.Customer.PlaceCustService;
 import com.project.Restaurant.Place.Owner.PlaceOwner;
 import com.project.Restaurant.Place.Owner.PlaceService;
 import jakarta.servlet.http.HttpSession;
@@ -36,13 +37,12 @@ public class ReservationController {
 
     private final ReservationService reservationService;
     private final OwnerService ownerService;
-    private final PlaceService placeService;
     private final CustomerService customerService;
-
-
+    private final PlaceService placeService;
 
     @PostMapping("/reservation/request")
     public String Request(@RequestParam("placeOwnerId") Long placeOwnerId, Principal principal) {
+
 
         PlaceOwner placeOwner = this.placeService.findById(placeOwnerId);;
         Customer customer = this.customerService.findByusername(principal.getName());
@@ -58,7 +58,6 @@ public class ReservationController {
 
         return "redirect:/reservation/list";
     }
-
 
     @GetMapping("/reservation/ownerList")
     public String ownerList(Model model, Principal principal) {
