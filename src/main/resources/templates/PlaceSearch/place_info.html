@@ -75,15 +75,11 @@
     <div class = "text-center">
         <form id="reservationForm" method="post">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-            <input type = "hidden" name = "placeOwnerId" th:value = "${placeOwner.id}"/>
-            <div>
-                <input type="button" value="예약하기" onclick="resFormAction(this, ACTIONS_REQUEST)">
+            <input type="hidden" name = "placeOwnerId" th:value = "${placeOwner.id}"/>
+            <div sec:authorize="isAuthenticated()">
+                <input type="button" th:value="예약하기" onclick="resFormAction(this, ACTIONS_REQUEST)">
             </div>
         </form>
-<!--        <form id="reservationForm" method="post" action="/reservation/request">-->
-<!--            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />-->
-<!--            <input type="submit" value="예약하기">-->
-<!--        </form>-->
     </div>
 
     <script>
