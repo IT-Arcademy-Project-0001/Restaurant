@@ -8,6 +8,7 @@
 </head>
 <body>
 <div layout:fragment="content">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
     <div>
         <h2>예약 목록</h2>
 

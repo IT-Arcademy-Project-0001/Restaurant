@@ -18,7 +18,6 @@ public class PlaceService {
     return this.placeRepository.save(placeOwner);
   }
 
-
   public PlaceOwner findById(Long id){
     return this.placeRepository.findById(id).get();
   }
