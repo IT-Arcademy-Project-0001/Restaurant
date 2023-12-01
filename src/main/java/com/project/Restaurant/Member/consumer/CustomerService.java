@@ -1,5 +1,6 @@
 package com.project.Restaurant.Member.consumer;
 
+import com.project.Restaurant.Member.MemberRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

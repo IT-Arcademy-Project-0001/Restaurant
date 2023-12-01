@@ -20,9 +20,6 @@
                     <a sec:authorize="isAnonymous()" th:href="@{/member/login}" class="nav-link">로그인</a>
                     <a sec:authorize="isAuthenticated()" th:href="@{/member/logout}" class="nav-link">로그아웃</a>
                 </li>
-                <li class="nav-item">
-                    <a sec:authorize="isAnonymous()" th:href="@{/member/signup}" class="nav-link">회원가입</a>
-                </li>
                 <li sec:authorize="isAuthenticated()">
                     <a class="nav-link" sec:authorize="hasAuthority('사장님')" th:href="@{/owner/profile}">마이페이지</a>
                     <a class="nav-link" sec:authorize="hasAuthority('소비자')" th:href="@{/customer/profile}">마이페이지</a>
