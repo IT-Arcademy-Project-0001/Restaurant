@@ -29,5 +29,8 @@ public class Reservation {
 
   @ManyToOne
   private PlaceOwner placeOwner;
+
+  @ManyToOne
+  private Owner Owner;
 ///////
 }
