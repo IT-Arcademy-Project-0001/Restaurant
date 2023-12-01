@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -50,11 +51,26 @@ public class ReservationController {
         if (principal == null) {
             return "redirect:/member/login";
         }
+
+        // 예약 리스트를 가져오는 순서...
+        // 로그인한 사람의 정보를 가져오고.
+
         String loggedInUsername = principal.getName();
         Owner owner = ownerService.findByusername(loggedInUsername);
 
-        List<Reservation> reservationOwner = reservationService.findByPlaceOwner(owner.getId());
-        model.addAttribute("reservationOwnerList", reservationOwner);
+        // 그 사람이 소유하고 있는 건물 리스트를 가져오고. (한명의 사장이 복수의 건물을 소유할 수 있음)
+        List<PlaceOwner> placeOwners = placeService.getPlaceOwnersByOwnerId(owner.getId());
+
+        // 각 건물의 고유번호를 가지고 있는 예약 리스트를 담을 리스트
+        List<Reservation> reservationOwnerList = new ArrayList<>();
+
+        // 각 PlaceOwner에 대한 예약을 가져와서 reservationOwnerList에 추가
+        for (PlaceOwner placeOwner : placeOwners) {
+            List<Reservation> reservations = reservationService.findByPlaceOwnerId(placeOwner.getId());
+            reservationOwnerList.addAll(reservations);
+        }
+
+        model.addAttribute("reservationOwnerList", reservationOwnerList);
         return "Reservation/owner_list";
     }
 
