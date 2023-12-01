@@ -21,6 +21,7 @@
             <th>사장 이름</th>
             <th>예약 상태</th>
             <th>예약 입력</th>
+            <th>작업</th>
         </tr>
         </thead>
         <tbody>
@@ -37,6 +38,7 @@
 <!--            <td>-->
 <!--                <span th:text="${session.reservationStatus}"></span>-->
 <!--            </td>-->
+            </td>
             <td>
                 <form th:if="${reservation.status == '0'}" th:action="@{/reservation/accept}" method="post">
                     <!-- 예약 ID를 input hidden 필드로 추가 -->
