@@ -28,6 +28,7 @@
             <td th:text="${reservation.id}"></td>
             <td th:text="${reservation.placeOwner.store}"></td>
             <td th:text="${reservation.customer.username}"></td>
+            <td th:text="${reservation.placeOwner.owner.username}"></td>
             <td>
                 <span th:if="${reservation.status == '0'}">요청중</span>
                 <span th:if="${reservation.status == '1'}">승인됨</span>

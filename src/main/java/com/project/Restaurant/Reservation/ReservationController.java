@@ -43,6 +43,7 @@ public class ReservationController {
     @PostMapping("/reservation/request")
     public String Request(@RequestParam("placeOwnerId") Long placeOwnerId, Principal principal) {
 
+
         PlaceOwner placeOwner = this.placeService.findById(placeOwnerId);;
         Customer customer = this.customerService.findByusername(principal.getName());
 
