@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="ko" layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/member/member_form.css">
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="all">
+        <div class="mb-3">
+            <a th:href="@{/customer/login}" class="btn btn-success">일반 로그인</a>
+            <a th:href="@{/owner/login}" class="btn btn-success">영업주 로그인</a>
+        </div>
+        <div class="mb-3">
+            <a th:href="@{/member/signup}" class="btn btn-success">회원가입</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,7 +1,10 @@
 package com.project.Restaurant.Place.Owner;
 
+import com.project.Restaurant.Member.owner.Owner;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +23,10 @@ public class PlaceService {
 
   public PlaceOwner findById(Long id){
     return this.placeRepository.findById(id).get();
+  }
+
+  public List<PlaceOwner> getPlaceOwnersByOwnerId(Long ownerId) {
+    return placeRepository.findByOwnerId(ownerId);
   }
 
 }

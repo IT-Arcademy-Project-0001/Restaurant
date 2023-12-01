@@ -12,10 +12,13 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     List<Reservation> findByCustomerUsername(String username);
 
-    List<Reservation> findByPlaceOwnerId(Long id);
 
+    List<Reservation> findByPlaceOwner_Id(Long id);
 
 }
+
+//    List<Reservation> findByOwnerIdAndConfirmedIsTrue(String ownerId);
+
 
 
 

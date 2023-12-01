@@ -46,6 +46,7 @@ dependencies {
 	implementation 'org.projectlombok:lombok:1.18.22' // 최신 버전으로 업데이트 가능
 	annotationProcessor 'org.projectlombok:lombok:1.18.22'
 	implementation 'org.commonmark:commonmark:0.21.0'
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'	//	oauth2 의존성 추가
 }
 
 tasks.named('bootBuildImage') {
