@@ -4,6 +4,7 @@ package com.project.Restaurant;
 import com.project.Restaurant.Member.consumer.CustomerDetailsService;
 import com.project.Restaurant.Member.consumer.CustomerOauth2UserService;
 import com.project.Restaurant.Member.consumer.CustomerRepository;
+import com.project.Restaurant.Member.consumer.MyOauth2UserService;
 import com.project.Restaurant.Member.owner.OwnerDetailsService;
 import com.project.Restaurant.Member.owner.OwnerOauth2UserService;
 import com.project.Restaurant.Member.owner.OwnerRepository;
@@ -37,6 +38,7 @@ public class SecurityConfig {
     private final OwnerRepository ownerRepository;
     private final CustomerOauth2UserService customerOauth2UserService;
     private final OwnerOauth2UserService ownerOauth2UserService;
+    private final MyOauth2UserService myOauth2UserService;
 
 
     @Bean
@@ -53,10 +55,10 @@ public class SecurityConfig {
                         .loginPage("/owner/login")
                         .defaultSuccessUrl("/")
                         .permitAll())
-                .oauth2Login(oauth2Login -> oauth2Login
-                        .loginPage("/owner/login")
-                        .defaultSuccessUrl("/")
-                        .userInfoEndpoint(userInfo -> userInfo.userService(ownerOauth2UserService)))
+//                .oauth2Login(oauth2Login -> oauth2Login
+//                        .loginPage("/owner/login")
+//                        .defaultSuccessUrl("/")
+//                        .userInfoEndpoint(userInfo -> userInfo.userService(ownerOauth2UserService)))
                 .logout((logout) -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/member/logout"))
                         .logoutSuccessUrl("/")
@@ -68,7 +70,7 @@ public class SecurityConfig {
     @Order(2)
     public SecurityFilterChain customerFilterChain(HttpSecurity http) throws Exception {
         http
-                .securityMatcher(new AntPathRequestMatcher("/**"))
+                .securityMatcher(new NegatedRequestMatcher(new AntPathRequestMatcher("/owner/**")))
                 .authenticationProvider(customerDaoAuthenticationProvider())
                 .authorizeHttpRequests(authorizeHttpRequests ->
                         authorizeHttpRequests
@@ -81,11 +83,11 @@ public class SecurityConfig {
                 .oauth2Login(oauth2Login -> oauth2Login
                         .loginPage("/customer/login")
                         .defaultSuccessUrl("/")
-                        .userInfoEndpoint(userInfo -> userInfo.userService(customerOauth2UserService)))
+                        .userInfoEndpoint(userInfo -> userInfo.userService(myOauth2UserService)))
                 .logout((logout) -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/member/logout"))
-                        .logoutSuccessUrl("/")
-                        .invalidateHttpSession(true));
+        .logoutSuccessUrl("/")
+        .invalidateHttpSession(true));
         return http.build();
     }
 
