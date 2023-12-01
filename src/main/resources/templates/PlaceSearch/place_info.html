@@ -66,11 +66,40 @@
                     </div>
                 </div>
             </div>
-            <div class = "text-center text-danger mt-3">
-            <h5> 현재 DB가 미연동 되어 있으므로 페이지 자체는 동일하게 렌더링 됩니다. (마커의 장소명은 DB 테이블에 기록된 장소 맞습니다) </h5>
-            </div>
         </div>
     </div>
+
+    <div class = "text-center text-danger mt-3">
+        <h5> 현재 DB가 미연동 되어 있으므로 페이지 자체는 동일하게 렌더링 됩니다. (마커의 장소명은 DB 테이블에 기록된 장소 맞습니다) </h5>
+    </div>
+    <div class = "text-center">
+        <form id="reservationForm" method="post">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+            <input type = "hidden" name = "placeOwnerId" th:value = "${placeOwner.id}"/>
+            <div>
+                <input type="button" value="예약하기" onclick="resFormAction(this, ACTIONS_REQUEST)">
+            </div>
+        </form>
+<!--        <form id="reservationForm" method="post" action="/reservation/request">-->
+<!--            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />-->
+<!--            <input type="submit" value="예약하기">-->
+<!--        </form>-->
+    </div>
+
+    <script>
+        var ACTIONS_REQUEST = {
+            'url' : '/reservation/request',
+            'msg' : '예약하시겠습니까?'
+        };
+
+        function resFormAction(input, action) {
+            if(confirm(action.msg)) {
+                input.form.action = action.url;
+                input.form.submit();
+            }
+        }
+    </script>
+
 </div>
 </body>
 </html>

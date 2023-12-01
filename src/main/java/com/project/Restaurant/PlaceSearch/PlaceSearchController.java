@@ -51,13 +51,8 @@ public class PlaceSearchController {
   @GetMapping("/{categoryId}/{id}")
   public String detail(Model model,  @PathVariable("categoryId") Long categoryId, @PathVariable("id") Long id) {
 
-     // 카테고리아이디(CategoryId) 해당하는 가게 카테고리 범위 내에서 가게번호(Id)의 정보를 가져오고 해당 엔티티 객체를 model로 반환한다)
-    // 이후 타임리프 문법을 이용해 HTML 상세페이지에서 활용
-    // 향후 서비스&레포지토리로 검색하는 것까지 구현하면 존재하지 않는 카테고리id나, 장소id는 에러 페이지가 뜰 것임
     PlaceOwner placeOwner = this.placeSearchService.getPlace(id);
     model.addAttribute("placeOwner", placeOwner);
-
-    System.out.println(placeOwner.getStore());
 
     return "PlaceSearch/place_info";
   }
