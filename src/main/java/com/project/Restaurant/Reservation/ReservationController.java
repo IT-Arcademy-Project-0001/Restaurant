@@ -17,6 +17,8 @@ import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
+
 @Controller
 @RequiredArgsConstructor
 public class ReservationController {
