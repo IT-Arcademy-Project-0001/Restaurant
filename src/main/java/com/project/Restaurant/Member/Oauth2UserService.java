@@ -1,6 +1,9 @@
-package com.project.Restaurant.Member.consumer;
+package com.project.Restaurant.Member;
 
 import com.project.Restaurant.Member.MemberRole;
+import com.project.Restaurant.Member.consumer.Customer;
+import com.project.Restaurant.Member.consumer.CustomerDetails;
+import com.project.Restaurant.Member.consumer.CustomerRepository;
 import com.project.Restaurant.Member.owner.OwnerOauth2UserService;
 import groovy.util.logging.Slf4j;
 import jakarta.servlet.http.HttpServletRequest;
