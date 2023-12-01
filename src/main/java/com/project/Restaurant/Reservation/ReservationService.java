@@ -39,8 +39,8 @@ public class ReservationService {
         return reservationRepository.findByCustomerUsername(username);
     }
 
-    public List<Reservation> findByPlaceOwner(Long id) {
-        return reservationRepository.findByPlaceOwnerId(id);
+    public List<Reservation> findByPlaceOwnerId(Long id) {
+        return reservationRepository.findByPlaceOwner_Id(id);
     }
 
     @Transactional
