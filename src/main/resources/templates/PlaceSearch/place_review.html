@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ko" layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title> 후기 작성 페이지 </title>
+</head>
+    <body>
+    <div layout:fragment="content">
+        <div class="mx-auto" style="width:60%;">
+            <div class="mb-3 row">
+                <label for="reservationId" class="col-sm-2 col-form-label">예약번호</label>
+                <div class="col-sm-10">
+                    <input type="text" readonly class="form-control-plaintext" id="reservationId" th:value="${reservation.id}">
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label for="placeOwnerStore" class="col-sm-2 col-form-label">상호명</label>
+                <div class="col-sm-10">
+                    <input type="text" readonly class="form-control-plaintext" id="placeOwnerStore" th:value="${reservation.placeOwner.store}">
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label for="placeOwnerName" class="col-sm-2 col-form-label">판매자</label>
+                <div class="col-sm-10">
+                    <input type="text" readonly class="form-control-plaintext" id="placeOwnerName" th:value="${reservation.placeOwner.owner.username}">
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label for="customerName" class="col-sm-2 col-form-label">구매자</label>
+                <div class="col-sm-10">
+                    <input type="text" readonly class="form-control-plaintext" id="customerName" th:value="${reservation.customer.username}">
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="exampleFormControlInput1" class="form-label"> 후기제목 </label>
+                <input type="text" class="form-control" id="exampleFormControlInput1">
+            </div>
+            <div class="mb-3">
+                <label for="exampleFormControlTextarea1" class="form-label"> 후기내용</label>
+                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+            </div>
+        </div>
+    </div>
+</body>

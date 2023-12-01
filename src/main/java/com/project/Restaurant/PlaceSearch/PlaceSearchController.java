@@ -1,5 +1,6 @@
 package com.project.Restaurant.PlaceSearch;
 
+import com.project.Restaurant.Place.Owner.PlaceOwner;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +29,7 @@ public class PlaceSearchController {
   @GetMapping(value = "/search", produces = "application/json")
   @ResponseBody
   public List<PlaceSearch> targetSearchJson(@RequestParam("latitude") Double latitude, @RequestParam("longitude") Double longitude,
-                                            @RequestParam(value = "order", required = false) @NotNull Integer order) {
+                                            @RequestParam(value = "order[]", required = false) List<Integer> order) {
 
     List<PlaceSearch> searchResult = this.placeSearchService.searchPlace(latitude, longitude, order);
 
@@ -45,4 +46,14 @@ public class PlaceSearchController {
 //
 //    return "redirect:/PlaceSearch/place_search";
 //  }
+
+
+  @GetMapping("/{categoryId}/{id}")
+  public String detail(Model model,  @PathVariable("categoryId") Long categoryId, @PathVariable("id") Long id) {
+
+    PlaceOwner placeOwner = this.placeSearchService.getPlace(id);
+    model.addAttribute("placeOwner", placeOwner);
+
+    return "PlaceSearch/place_info";
+  }
 }

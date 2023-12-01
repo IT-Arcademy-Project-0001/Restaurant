@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ko" layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title> 이름난 맛집에 오신 것을 환영합니다 </title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="location-profile py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-transparent text-center">
+                            <img class="profile_img" height="300" width="350" src="/MapSearch/target_mark.png" alt="student dp">
+                            <div>
+                                <span th:text = "${placeOwner.store}"></span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <p class="mb-0"><strong class="pr-1">주소 :</strong> 대전시 유성구 315번지 26 </p>
+                            <p class="mb-0"><strong class="pr-1">상세주소 :</strong> (340-190) 2층 205호 </p>
+                            <p class="mb-0"><strong class="pr-1">주차지원 :</strong> 2시간 주차 무료 </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-8">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-transparent border-0">
+                            <h3 class="mb-0"><i class="far fa-clone pr-1"></i>메뉴판</h3>
+                        </div>
+                        <div class="card-body pt-0">
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th>물냉면</th>
+                                    <td>12,000원</td>
+                                </tr>
+                                <tr>
+                                    <th>비빔냉면</th>
+                                    <td>15,000원</td>
+                                </tr>
+                                <tr>
+                                    <th>막국수</th>
+                                    <td>13,000원</td>
+                                </tr>
+                                <tr>
+                                    <th>고기만두</th>
+                                    <td>8,000원</td>
+                                </tr>
+                                <tr>
+                                    <th>잡채만두</th>
+                                    <td>9,000원</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div style="height: 26px"></div>
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-transparent border-0">
+                            <h3 class="mb-0"><i class="far fa-clone pr-1"></i> 이벤트 진행중 </h3>
+                        </div>
+                        <div class="card-body pt-0">
+                            <p> 오픈기념 이벤트 진행중 </p>
+                            <p> SNS에 인증하시면 추첨을 통해 다양한 경품을 드립니다 </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class = "text-center text-danger mt-3">
+        <h5> 현재 DB가 미연동 되어 있으므로 페이지 자체는 동일하게 렌더링 됩니다. (마커의 장소명은 DB 테이블에 기록된 장소 맞습니다) </h5>
+    </div>
+    <div class = "text-center">
+        <form id="reservationForm" method="post">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+            <input type="hidden" name = "placeOwnerId" th:value = "${placeOwner.id}"/>
+            <div sec:authorize="isAuthenticated()">
+                <input type="button" th:value="예약하기" onclick="resFormAction(this, ACTIONS_REQUEST)">
+            </div>
+        </form>
+    </div>
+
+    <script>
+        var ACTIONS_REQUEST = {
+            'url' : '/reservation/request',
+            'msg' : '예약하시겠습니까?'
+        };
+
+        function resFormAction(input, action) {
+            if(confirm(action.msg)) {
+                input.form.action = action.url;
+                input.form.submit();
+            }
+        }
+    </script>
+
+</div>
+</body>
+</html>

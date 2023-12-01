@@ -1,33 +1,21 @@
 package com.project.Restaurant.Reservation;
 
+import com.project.Restaurant.Member.consumer.Customer;
 import com.project.Restaurant.Member.consumer.CustomerService;
 import com.project.Restaurant.Member.owner.Owner;
 import com.project.Restaurant.Member.owner.OwnerService;
 import com.project.Restaurant.Place.Owner.PlaceOwner;
 import com.project.Restaurant.Place.Owner.PlaceService;
-import jakarta.servlet.http.HttpSession;
-import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-
-import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 @Controller
 @RequiredArgsConstructor
@@ -35,37 +23,27 @@ public class ReservationController {
 
     private final ReservationService reservationService;
     private final OwnerService ownerService;
+    private final CustomerService customerService;
     private final PlaceService placeService;
 
+    @PostMapping("/reservation/request")
+    public String Request(@RequestParam("placeOwnerId") Long placeOwnerId, Principal principal) {
 
-//        @GetMapping("/reservation/request")
-//        public String Request() {
-//            return "Reservation/reservation_request";
-//        }
-//
-//        @PostMapping("/reservation/request")
-//        public String Request(@RequestParam String store, @RequestParam String customerId,
-//                              @RequestParam String ownerId) {
-//            Reservation reservation = new Reservation();
-//            reservation.setStore(store);
-//            reservation.setCustomerId(customerId);
-//            reservation.setOwnerId(ownerId);
-//            reservation.setReservationTime(LocalDateTime.now());
-//            reservation.setStatus("에약요청");
-//
-//            reservationService.save(reservation);
-//
-//            if ("예약요청".equals(reservation.getStatus())) {
-//                // 예약요청에 대한 추가 로직
-//                // 예: 알림 메일 전송, 알림 메시지 등
-//            } else if ("예약승인".equals(reservation.getStatus())) {
-//                // 예약승인에 대한 추가 로직
-//            } else if ("예약완료".equals(reservation.getStatus())) {
-//                // 예약완료에 대한 추가 로직
-//            }
-//
-//            return "redirect:/reservation/list";
-//        }
+
+        PlaceOwner placeOwner = this.placeService.findById(placeOwnerId);;
+        Customer customer = this.customerService.findByusername(principal.getName());
+
+        Reservation reservation = new Reservation();
+
+        reservation.setReservationTime(LocalDateTime.now());
+        reservation.setStatus("0");
+        reservation.setCustomer(customer);
+        reservation.setPlaceOwner(placeOwner);
+
+        reservationService.save(reservation);
+
+        return "redirect:/reservation/customerList";
+    }
 
     @GetMapping("/reservation/ownerList")
     public String ownerList(Model model, Principal principal) {
@@ -88,7 +66,6 @@ public class ReservationController {
 
         String loggedInUsername = principal.getName(); // 현재 로그인한 사용자의 ID
 
-        // 현재 로그인한 사용자의 ID와 일치하는 예약 목록만 가져오기
         List<Reservation> reservationsList = this.reservationService.findByCustomerUsername(loggedInUsername);
         model.addAttribute("reservationList", reservationsList);
 

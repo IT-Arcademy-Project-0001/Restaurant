@@ -15,8 +15,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     List<Reservation> findByPlaceOwner(PlaceOwner placeOwner);
 
-    Optional<Reservation> findById(Long id);
-
 
 }
 
