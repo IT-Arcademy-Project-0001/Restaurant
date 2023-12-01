@@ -5,6 +5,7 @@ import com.project.Restaurant.Post.Post;
 import com.project.Restaurant.PostComment.PostComment;
 import com.project.Restaurant.Reservation.Reservation;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -46,4 +47,8 @@ public class Customer {
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.REMOVE)
     private List<Reservation> reservationList;
+
+    private String provider;
+
+    private String providerId;
 }
