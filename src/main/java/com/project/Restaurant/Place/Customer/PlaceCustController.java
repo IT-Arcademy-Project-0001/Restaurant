@@ -35,7 +35,7 @@ public class PlaceCustController {
             model.addAttribute("message", "이미 등록된 위치입니다.");
         }
 
-        return "redirect:/place/map";
+        return "redirect:/place/Map";
     }
 
 

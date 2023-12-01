@@ -20,60 +20,55 @@ public class PlaceSearchService {
   private final PlaceCustRepository placeCustRepository;
   private final PlaceRepository placeOwnerRepository;
 
-  public PlaceCustomer getPlace(Long id) {
-    // JpaRepository의 기능을 이용하여 기사번호 id에 맞는 기사를 찾아 가져오는 것임
-    Optional<PlaceCustomer> placeCustomer = this.placeCustRepository.findById(id);
-    if (placeCustomer.isPresent()) {
-      return placeCustomer.get();
+  public PlaceOwner getPlace(Long id) {
+    // JpaRepository의 기능을 이용하여 기사번호 id에 맞는 가게를 찾아 가져오는 것임
+    Optional<PlaceOwner> placeOwner = this.placeOwnerRepository.findById(id);
+    if (placeOwner.isPresent()) {
+      return placeOwner.get();
     } else {
-      throw new DataNotFoundException("article not found");
+      throw new DataNotFoundException("place not found");
     }
   }
 
-  public List<PlaceSearch> searchPlace(Double currentLat, Double currentLng, Integer order) {
+  public List<PlaceSearch> searchPlace(Double currentLat, Double currentLng, List<Integer> order) {
 
-    List<PlaceCustomer> placeResults1 = placeCustRepository.findAll();
-    List<PlaceOwner> placeResults2 = placeOwnerRepository.findAll();
+    List<PlaceOwner> placeResults1 = placeOwnerRepository.findAll();
+    List<PlaceCustomer> placeResults2 = placeCustRepository.findAll();
 
     // 하버사인 공식에 의해 현재 보고 있는 맵중심을 기준으로 반경 2km 이내의 장소만 출력
     // 카카오 기준으로는 30km 이내만 도보 길안내를 알려줌. (5km 성인기준 1시간 15분 정도 소요)
-    double radius = 30;
-
+    double radius = 0.8;
 
     List<PlaceSearch> searchResults = new ArrayList<>();
 
-    if (order == 2){
-      for (PlaceCustomer place : placeResults1) {
-
-        double distance = calculateDistance(currentLat, currentLng, place.getLatitude(), place.getLongitude());
-
+    for (PlaceOwner place : placeResults1) {
+      if (order != null && order.contains(1) && calculateDistance(currentLat, currentLng, place.getLatitude(), place.getLongitude()) < radius) {
         PlaceSearch ps = new PlaceSearch();
-
-        if (distance < radius) {
-          ps.setStore(place.getStore());
-          ps.setLocationLat(String.valueOf(place.getLatitude()));
-          ps.setLocationLng(String.valueOf(place.getLongitude()));
-          // ... 나머지 필드 설정
-          searchResults.add(ps);
-        }
-      }
-    } else if (order == 3) {
-
-      for (PlaceOwner place2 : placeResults2) {
-
-        double distance = calculateDistance(currentLat, currentLng, place2.getLatitude(), place2.getLongitude());
-
-        PlaceSearch psf = new PlaceSearch();
-
-        if (distance < radius) {
-          psf.setStore(place2.getStore());
-          psf.setLocationLat(String.valueOf(place2.getLatitude()));
-          psf.setLocationLng(String.valueOf(place2.getLongitude()));
-          // ... 나머지 필드 설정
-          searchResults.add(psf);
-        }
+        ps.setId(place.getId());
+        ps.setStore(place.getStore());
+        ps.setLocationLat(String.valueOf(place.getLatitude()));
+        ps.setLocationLng(String.valueOf(place.getLongitude()));
+        ps.setCategoryOrder(1); // order 값 설정
+        // ... 나머지 필드 설정
+        searchResults.add(ps);
       }
     }
+
+    for (PlaceCustomer place2 : placeResults2) {
+      if (order != null && order.contains(2) && calculateDistance(currentLat, currentLng, place2.getLatitude(), place2.getLongitude()) < radius) {
+        PlaceSearch psf = new PlaceSearch();
+        psf.setId(place2.getId());
+        psf.setStore(place2.getStore());
+        psf.setLocationLat(String.valueOf(place2.getLatitude()));
+        psf.setLocationLng(String.valueOf(place2.getLongitude()));
+        psf.setCategoryOrder(2); // order 값 설정
+        // ... 나머지 필드 설정
+        searchResults.add(psf);
+      }
+    }
+
+    System.out.println(searchResults);
+
     return searchResults;
   }
 

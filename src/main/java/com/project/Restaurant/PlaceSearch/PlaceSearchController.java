@@ -1,5 +1,6 @@
 package com.project.Restaurant.PlaceSearch;
 
+import com.project.Restaurant.Place.Owner.PlaceOwner;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +29,7 @@ public class PlaceSearchController {
   @GetMapping(value = "/search", produces = "application/json")
   @ResponseBody
   public List<PlaceSearch> targetSearchJson(@RequestParam("latitude") Double latitude, @RequestParam("longitude") Double longitude,
-                                            @RequestParam(value = "order", required = false) @NotNull Integer order) {
+                                            @RequestParam(value = "order[]", required = false) List<Integer> order) {
 
     List<PlaceSearch> searchResult = this.placeSearchService.searchPlace(latitude, longitude, order);
 
@@ -45,4 +46,19 @@ public class PlaceSearchController {
 //
 //    return "redirect:/PlaceSearch/place_search";
 //  }
+
+
+  @GetMapping("/{categoryId}/{id}")
+  public String detail(Model model,  @PathVariable("categoryId") Long categoryId, @PathVariable("id") Long id) {
+
+     // 카테고리아이디(CategoryId) 해당하는 가게 카테고리 범위 내에서 가게번호(Id)의 정보를 가져오고 해당 엔티티 객체를 model로 반환한다)
+    // 이후 타임리프 문법을 이용해 HTML 상세페이지에서 활용
+    // 향후 서비스&레포지토리로 검색하는 것까지 구현하면 존재하지 않는 카테고리id나, 장소id는 에러 페이지가 뜰 것임
+    PlaceOwner placeOwner = this.placeSearchService.getPlace(id);
+    model.addAttribute("placeOwner", placeOwner);
+
+    System.out.println(placeOwner.getStore());
+
+    return "PlaceSearch/place_info";
+  }
 }

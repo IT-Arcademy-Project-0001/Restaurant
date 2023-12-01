@@ -20,4 +20,13 @@ public class PlaceOperate {
 
   @ManyToOne
   private PlaceOwner placeOwner;
+
+  public OperateDto convertDto() {
+    OperateDto operateDto = new OperateDto();
+    operateDto.setDay(this.day);
+    operateDto.setOpenTime(this.openTime);
+    operateDto.setCloseTime(this.closeTime);
+
+    return operateDto;
+  }
 }

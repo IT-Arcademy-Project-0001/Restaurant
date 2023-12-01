@@ -8,6 +8,8 @@ var markersCategory = {}; // // 카테고리로 검색한 마커를 담을 객�
 
 var markers = []; // // 마커를 담을 배열입니다
 
+var categoryOrderNumber = []; // 복수의 마커 data-order를 담을 배열입니다.
+
 var currCategory = ''; // 현재 선택된 카테고리를 가지고 있을 변수입니다
 
 var defaultLat = 36.353720; // 기본 위도 값
@@ -83,9 +85,9 @@ addCategoryClickEvent();
 // 검색 결과 목록이나 마커를 클릭했을 때 장소명을 표출할 인포윈도우를 생성합니다 (마커기준 z방향으로 1떨어진 위치)
 var infowindow = new kakao.maps.InfoWindow({zIndex:1});
 var simpleinfowindow = new kakao.maps.InfoWindow({zIndex:1});
+var customInfo = new kakao.maps.CustomOverlay({clickable: true, yAnchor:1.3, zIndex:1});
 
 document.getElementById("searchkeyword").addEventListener("click", function() {
-    toggleMenuWrap();
     // 키워드로 장소를 검색합니다.
     searchPlaces();
 });
@@ -117,9 +119,6 @@ function searchPlaces() {
         return false;
     }
 
-    // 장소 검색시 "검색" 버튼이 눌러지게 하기 위한 함수
-    initPressSearchButton();
-
     // 장소검색 객체를 통해 키워드로 장소검색을 요청합니다
     ps.keywordSearch(keyword, placesSearchCB);
 }
@@ -131,11 +130,15 @@ function initPressSearchButton() {
         }
 }
 
+
 // idle 이벤트 (ajax 실시간 갱신으로 자체 DB 업데이트)
 function mySearchPlaces() {
 
-    var elementDo = document.getElementById(currCategory);
-    var dataOrder = elementDo ? parseInt(elementDo.getAttribute('data-order'), 10) || 0 : 0;
+  console.log("categoryOrderNumber", categoryOrderNumber);
+
+  // 순서가 중요하다. 먼저 배열에 담긴 마커를 지우고, 배열을 지워야 한다.
+  removeMarkerAllCategory(categoryOrderNumber);
+  initializeMarkerCategory(categoryOrderNumber);
 
     $.ajax({
         url: '/place/search',
@@ -144,14 +147,37 @@ function mySearchPlaces() {
         data: { // 쿼리 문자열로 변환, URL에 포함시켜 서버로 전달.
                 latitude: map.getCenter().getLat(),
                 longitude: map.getCenter().getLng(),
-                order: dataOrder
+                order: categoryOrderNumber
             },
         success: function (data) {
+
+
                 // 서버에서 받아온 데이터를 이용하여 마커 생성
                 data.forEach(searchResult2 => {
 
                     // 마커를 생성하고 지도에 표시합니다
-                    var marker = addMarkerCategory(new kakao.maps.LatLng(searchResult2.locationLat, searchResult2.locationLng), dataOrder);
+                    var marker = addMarkerCategory(new kakao.maps.LatLng(searchResult2.locationLat, searchResult2.locationLng), searchResult2.categoryOrder);
+
+                    var markerCustomInfo = new kakao.maps.LatLng(searchResult2.locationLat, searchResult2.locationLng);
+                    // 마커 위에 커스텀오버레이를 표시합니다
+                    // 마커를 중심으로 커스텀 오버레이를 표시하기위해 CSS를 이용해 위치를 설정했습니다
+
+                    (function(map, markerCustomInfo, placeCategory, placeId, placeStore) {
+
+                     // 마커를 클릭했을 때 커스텀 오버레이를 표시합니다
+                       kakao.maps.event.addListener(marker, 'click', function() {
+                           displayCustomWindow(markerCustomInfo, placeCategory, placeId, placeStore);
+                       });
+
+                       // 맵을 클릭했을 때의 이벤트를 등록합니다.
+                       kakao.maps.event.addListener(map, 'click', function() {
+                           customInfo.setMap(null);
+                       });
+
+                       // 커스텀 오버레이를 닫기 위해 호출되는 함수입니다
+
+                    })(map, markerCustomInfo, searchResult2.categoryOrder, searchResult2.id, searchResult2.store);
+
                 });
 
         },
@@ -165,6 +191,12 @@ function mySearchPlaces() {
 // 장소검색이 완료됐을 때 호출되는 콜백함수 입니다
 function placesSearchCB(data, status, pagination) {
     if (status === kakao.maps.services.Status.OK) {
+
+        // 장소 검색이 정상적으로 진행되었을 때 장소 검색 리스트를 보여주기 위한 함수
+        toggleMenuWrap();
+
+        // 장소 검색이 정상적으로 되었을 때 "검색" 탭이 눌러지게 하기 위한 함수
+        initPressSearchButton();
 
         // 정상적으로 검색이 완료됐으면
         // 검색 목록과 마커를 표출합니다
@@ -199,17 +231,15 @@ function displayPlaces(places) {
     // 검색 결과 목록에 추가된 기존 항목들을 제거합니다
     removeAllChildNods(listEl);
 
-    // 지도에 표시되고 있는 기존 마커를 제거합니다 (초기화 로직 포함)
-    removeMarker();
-
     // 기존 검색장소의 마커를 제거 후 초기화 합니다. (순서 중요, 마커위치 정보를 제거해버리면 마커를 제거할 수 없게됨)
     // ajax에 의해 식당과 추천 장소는 지속적으로 갱신되지만, 검색장소는 검색한 시점에서 배열이 저장되므로 검색이후 삭제되면 빈배열로 남음.
     // 기존 removeMarker()에서 처럼 마커제거와 초기화 로직을 모두 실행하기 어려움. 하드코딩으로 구현하였음.
     // 페이지네이션에 displayPlaces 함수 실행이 포함되어 있으며 그 시점에서 페이지에 담긴 마커와 장소정보를 제거 및 초기화하게됨.
-    removeMarkerCategory(1);
-    markersCategory[1] = [];
 
-    for ( var i=0; i < places.length; i++ ) {
+    removeMarkerCategory(0);
+    markersCategory[0] = [];
+
+    for (var i=0; i < places.length; i++ ) {
 
         // 마커를 생성하고 지도에 표시합니다
         var placePosition = new kakao.maps.LatLng(places[i].y, places[i].x),
@@ -322,15 +352,14 @@ function addMarker(position, idx) {
         });
 
     marker.setMap(map); // 지도 위에 마커를 표출합니다
-
-    markersCategory[1] = markersCategory[1] || [];
-    markersCategory[1].push(marker);  // 배열에 생성된 마커를 추가합니다
+    markersCategory[0].push(marker);  // 배열에 생성된 마커를 추가합니다
 
     return marker;
 }
 
 // 마커를 생성하고 지도 위에 마커를 표시하는 함수입니다
 function addMarkerCategory(position, order) {
+
     var imageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_category.png', // 마커 이미지 url, 스프라이트 이미지를 씁니다
         imageSize = new kakao.maps.Size(27, 28),  // 마커 이미지의 크기
         imgOptions =  {
@@ -345,50 +374,54 @@ function addMarkerCategory(position, order) {
         });
 
     marker.setMap(map); // 지도 위에 마커를 표출합니다
-
-    // markersCategory[order]가 없으면 빈 배열로 초기화
-    markersCategory[order] = markersCategory[order] || [];
     markersCategory[order].push(marker);  // 배열에 생성된 마커를 추가합니다
 
     return marker;
 }
 
-// 지도 위에 표시되고 있는 마커를 모두 제거합니다
-function removeMarker() {
-    for ( var i = 0; i < markers.length; i++ ) {
-        markers[i].setMap(null);
+// 마커 카테고리별 배열을 초기화합니다.
+function initializeMarkerCategory(orders) {
+    for (var i = 0; i < orders.length; i++) {
+        var currentOrder = orders[i];
+        // 만약 currentOrder가 0이 아닌 경우에만 초기화를 진행  (카카오 API 검색 배열인 orders[0]은 초기화를 제외 = ajax 미연동)
+        if (currentOrder !== 0) {
+            markersCategory[currentOrder] = [];
+        }
     }
-    markers = [];
 }
 
+// idle 이벤트(반경)에 따른 카테고리 구분없이 마커를 제거합니다.
+// 만약 검색탭 외의 나머지 값을 모두 선택해도 orders에는 1,2가 전달되어 식당과 추천을 모두 지웁니다.
+
+function removeMarkerAllCategory(orders) {
+    for (var i = 0; i < orders.length; i++) {
+        var currentOrder = orders[i];
+        if (currentOrder !== 0) {
+            if (markersCategory[currentOrder]) {
+                for (var j = 0; j < markersCategory[currentOrder].length; j++) {
+                    markersCategory[currentOrder][j].setMap(null);
+                }
+            }
+        }
+    }
+}
+
+// 버튼을 눌렀을 때 배열에 추가된 마커들을 지도에 표시하는 함수입니다.
+function showMarkers(order) {
+    if (markersCategory[order]) {
+        for (var i = 0; i < markersCategory[order].length; i++) {
+            markersCategory[order][i].setMap(map);
+        }
+    }
+}
+
+// 카테고리별 개별 마커를 제거합니다.
 function removeMarkerCategory(order) {
     if (markersCategory[order]) {
         for (var i = 0; i < markersCategory[order].length; i++) {
             markersCategory[order][i].setMap(null);
         }
     }
-}
-
-
-// 검색을 통해 배열에 추가된 마커들을 지도에 표시하거나 삭제하는 함수입니다
-function setSearchMarkers(map) {
-    if (markersCategory[1]) {
-        for (var i = 0; i < markersCategory[1].length; i++) {
-            markersCategory[1][i].setMap(map);
-        }
-    }
-}
-
-// "마커 보이기" 버튼을 클릭하면 호출되어 배열에 추가된 마커를 지도에 표시하는 함수입니다. (검색버튼을 눌렀을때, 검색배열만)
-function showMarkers(orderNumber) {
-    if (orderNumber === 1) {
-        setSearchMarkers(map);
-    }
-}
-
-// "마커 감추기" 버튼을 클릭하면 호출되어 배열에 추가된 마커를 지도에서 삭제하는 함수입니다 (현재 선언은 했으나 미사용)
-function hideMarkers() {
-    setSearchMarkers(null);
 }
 
 // 검색결과 목록 하단에 페이지번호를 표시는 함수입니다
@@ -430,7 +463,7 @@ function displaysimpleInfowindow(marker, title) {
 
 // 마커를 클릭했을 때 호출되는 함수입니다
 function displayInfowindow(marker, pname, praddress, paddress) {
-     var content = '<div class = "wrap">' +
+     var content = '<div class = "wrapSimpleInfo">' +
                 '		       <div class = "classimg"><img src = "/MapSearch/samplelogo.jpg" width="160" height="160"></div>' +
                          '        <div class="classinfo">' +
                             '            <div class="classtitle">' + pname + '</div>' +
@@ -443,6 +476,57 @@ function displayInfowindow(marker, pname, praddress, paddress) {
                 '			   </div>';
     infowindow.setContent(content);
     infowindow.open(map, marker);
+}
+
+function displayCustomWindow(marker, placeCategory, placeId, placeStore) {
+        var content = '<div class="wrapInfo">' +
+                                '    <div class="infoC">' +
+                                '        <div class="title">' + placeStore +
+                                '            <div class="close" onclick="closeOverlay()" title="닫기"></div>' +
+                                '        </div>' +
+                                '        <div class="body">' +
+                                '            <div class="img">' +
+                                '                <img src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/thumnail.png" width="73" height="70">' +
+                                '           </div>' +
+                                '            <div class="desc">' +
+                                '                <div class="ellipsis"> 메인주소 </div>' +
+                                '                <div class="jibun ellipsis"> 상세주소 ' +
+                                '                <div><a href="/place/' + placeCategory + '/' + placeId + '" target="_blank" class="link"> 상세페이지 </a></div>' +
+                                '            </div>' +
+                                '        </div>' +
+                                '    </div>' +
+                                '</div>';
+
+        var content2 = '<div class="wrapInfo">' +
+                                '    <div class="infoC">' +
+                                '        <div class="title">' + placeStore +
+                                '            <div class="close" onclick="closeOverlay()" title="닫기"></div>' +
+                                '        </div>' +
+                                '        <div class="body">' +
+                                '            <div class="img">' +
+                                '                <img src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/thumnail.png" width="73" height="70">' +
+                                '           </div>' +
+                                '            <div class="desc">' +
+                                '                <div class="ellipsis"> 메인주소 </div>' +
+                                '                <div class="jibun ellipsis"> 상세주소 ' +
+                                '            </div>' +
+                                '        </div>' +
+                                '    </div>' +
+                                '</div>';
+
+        // placeCategory에 따라 setContent 결정
+        if (placeCategory === 1) {
+            customInfo.setContent(content);
+        } else if (placeCategory === 2) {
+            customInfo.setContent(content2);
+        }
+
+        customInfo.setMap(map);
+        customInfo.setPosition(marker);
+}
+
+function closeOverlay() {
+   customInfo.setMap(null);
 }
 
  // 검색결과 목록의 자식 Element를 제거하는 함수입니다
@@ -467,17 +551,22 @@ function onClickCategory() {
     className = this.className;
     orderNumber = parseInt(this.getAttribute('data-order'));
 
+    // 중복 체크 (배열 초기화 없이 중복된 값만 배제, 배열 순서 자체는 상관없기 때문에 가능, 배열초기화 만이 능사가 아니다.)
+    var index = categoryOrderNumber.indexOf(orderNumber);
+    if (index !== -1) {
+        // 중복된 값이 이미 있다면 해당 값 제거
+        categoryOrderNumber.splice(index, 1);
+    }
+
     if (className === 'on') {
         currCategory = '';
-//        changeCategoryClass();
         removeMarkerCategory(orderNumber);
-        removeMarker();
     } else {
         currCategory = id;
-//        changeCategoryClass(this);
-//        recoverMarkerCategory();
+        categoryOrderNumber.push(orderNumber);
+        console.log("categoryOrderNumberOnClick", categoryOrderNumber);
         mySearchPlaces();
-        showMarkers(orderNumber);
+        showMarkers(0);
     }
      toggleCategoryClass(this);
 }
