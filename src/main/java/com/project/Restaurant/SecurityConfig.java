@@ -4,25 +4,20 @@ package com.project.Restaurant;
 import com.project.Restaurant.Member.consumer.CustomerDetailsService;
 import com.project.Restaurant.Member.consumer.CustomerOauth2UserService;
 import com.project.Restaurant.Member.consumer.CustomerRepository;
-import com.project.Restaurant.Member.consumer.MyOauth2UserService;
+import com.project.Restaurant.Member.Oauth2UserService;
 import com.project.Restaurant.Member.owner.OwnerDetailsService;
 import com.project.Restaurant.Member.owner.OwnerOauth2UserService;
 import com.project.Restaurant.Member.owner.OwnerRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthorizationCodeAuthenticationProvider;
-import org.springframework.security.oauth2.client.authentication.OAuth2LoginAuthenticationProvider;
-import org.springframework.security.oauth2.client.endpoint.DefaultAuthorizationCodeTokenResponseClient;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.NegatedRequestMatcher;
@@ -38,7 +33,7 @@ public class SecurityConfig {
     private final OwnerRepository ownerRepository;
     private final CustomerOauth2UserService customerOauth2UserService;
     private final OwnerOauth2UserService ownerOauth2UserService;
-    private final MyOauth2UserService myOauth2UserService;
+    private final Oauth2UserService oauth2UserService;
 
 
     @Bean
@@ -55,10 +50,6 @@ public class SecurityConfig {
                         .loginPage("/owner/login")
                         .defaultSuccessUrl("/")
                         .permitAll())
-//                .oauth2Login(oauth2Login -> oauth2Login
-//                        .loginPage("/owner/login")
-//                        .defaultSuccessUrl("/")
-//                        .userInfoEndpoint(userInfo -> userInfo.userService(ownerOauth2UserService)))
                 .logout((logout) -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/member/logout"))
                         .logoutSuccessUrl("/")
@@ -83,7 +74,7 @@ public class SecurityConfig {
                 .oauth2Login(oauth2Login -> oauth2Login
                         .loginPage("/customer/login")
                         .defaultSuccessUrl("/")
-                        .userInfoEndpoint(userInfo -> userInfo.userService(myOauth2UserService)))
+                        .userInfoEndpoint(userInfo -> userInfo.userService(oauth2UserService)))
                 .logout((logout) -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/member/logout"))
         .logoutSuccessUrl("/")
