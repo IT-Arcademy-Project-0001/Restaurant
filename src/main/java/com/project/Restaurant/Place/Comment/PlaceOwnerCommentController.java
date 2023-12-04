@@ -36,13 +36,14 @@ public class PlaceOwnerCommentController {
   }
 
     @PostMapping("/comment/create")
-    public String placecomment(Model model, @RequestParam("reservationId") Long reservationId, Principal principal,
+    public String placecommentcreate(Model model, @RequestParam("reservationId") Long reservationId, Principal principal,
                                @Valid PlaceOwnerCommentForm placeOwnerCommentForm, BindingResult bindingResult) {
 
       Reservation reservation = this.reservationService.findById(reservationId);
       Customer customer = customerService.findByusername(principal.getName());
 
       if (bindingResult.hasErrors()) {
+        model.addAttribute("reservation", reservation);
         return "PlaceSearch/place_review";
       }
 
