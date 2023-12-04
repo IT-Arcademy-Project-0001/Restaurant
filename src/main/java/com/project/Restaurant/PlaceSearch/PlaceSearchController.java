@@ -28,10 +28,12 @@ public class PlaceSearchController {
 
   @GetMapping(value = "/search", produces = "application/json")
   @ResponseBody
-  public List<PlaceSearch> targetSearchJson(@RequestParam("latitude") Double latitude, @RequestParam("longitude") Double longitude,
+  public List<PlaceSearch> targetSearchJson(Model model, @RequestParam("latitude") Double latitude, @RequestParam("longitude") Double longitude,
                                             @RequestParam(value = "order[]", required = false) List<Integer> order) {
 
     List<PlaceSearch> searchResult = this.placeSearchService.searchPlace(latitude, longitude, order);
+
+    model.addAttribute("placeList", searchResult);
 
     return searchResult;
   }

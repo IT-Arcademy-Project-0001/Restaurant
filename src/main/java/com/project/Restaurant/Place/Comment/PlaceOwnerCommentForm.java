@@ -9,6 +9,8 @@ import lombok.Setter;
 @Setter
 public class PlaceOwnerCommentForm {
 
+  private String reservationId;
+
   @NotBlank(message = "후기 제목은 필수입니다.")
   private String reviewSubject;
 

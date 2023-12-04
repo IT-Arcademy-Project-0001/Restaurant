@@ -8,9 +8,6 @@
     <div layout:fragment="content">
         <form th:action="@{/place/comment/create}" th:object="${placeOwnerCommentForm}" method="post">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-            <div role="alert" th:if="${#fields.hasAnyErrors()}">
-                <div th:replace="~{form_errors :: formErrorsFragment}"></div>
-            </div>
             <div class="mx-auto" style="width:60%;">
                 <div class="mb-3 row">
                     <label for="reservationId" class="col-sm-2 col-form-label">예약번호</label>
@@ -35,6 +32,9 @@
                     <div class="col-sm-10">
                         <input type="text" readonly class="form-control-plaintext" id="customerName" th:value="${reservation.customer.username}">
                     </div>
+                </div>
+                <div role="alert" th:if="${#fields.hasAnyErrors()}">
+                    <div th:replace="~{form_errors :: formErrorsFragment}"></div>
                 </div>
                 <div class="mb-3">
                     <label for="exampleFormControlInput1" class="form-label"> 후기제목 </label>
