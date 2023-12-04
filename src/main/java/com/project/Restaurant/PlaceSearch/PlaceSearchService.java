@@ -37,7 +37,7 @@ public class PlaceSearchService {
 
     // 하버사인 공식에 의해 현재 보고 있는 맵중심을 기준으로 반경 2km 이내의 장소만 출력
     // 카카오 기준으로는 30km 이내만 도보 길안내를 알려줌. (5km 성인기준 1시간 15분 정도 소요)
-    double radius = 0.8;
+    double radius = 8;
 
     List<PlaceSearch> searchResults = new ArrayList<>();
 
