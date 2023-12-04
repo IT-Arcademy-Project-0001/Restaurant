@@ -76,7 +76,7 @@
         <form id="reservationForm" method="post">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
             <input type="hidden" name = "placeOwnerId" th:value = "${placeOwner.id}"/>
-            <div sec:authorize="isAuthenticated()">
+            <div sec:authorize="hasAuthority('소비자')">
                 <input type="button" th:value="예약하기" onclick="resFormAction(this, ACTIONS_REQUEST)">
             </div>
         </form>
