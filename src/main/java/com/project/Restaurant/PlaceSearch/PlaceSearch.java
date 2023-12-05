@@ -12,5 +12,6 @@ public class PlaceSearch {
     private String locationLat;          // 위도
     private String locationLng;         // 경도
     private Integer categoryOrder;
-
+    private String address;
+    private String category;
 }

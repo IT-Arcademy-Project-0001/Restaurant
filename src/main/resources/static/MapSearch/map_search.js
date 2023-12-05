@@ -34,8 +34,7 @@ if (navigator.geolocation) {
         map.setCenter(locPosition);
 
         // 마커와 인포윈도우를 표시합니다 (사실상 제거해도 상관없음)
-        var message = '<div style="text-align: center; padding:5px;">현재 GPS 위치입니다</div>'; // 인포윈도우에 표시될 내용입니다
-        currentDisplayMarker(locPosition, message);
+        currentDisplayMarker(locPosition);
 
       }, function(error) {
 
@@ -48,23 +47,22 @@ if (navigator.geolocation) {
 }
 
 // 현재 GPS상 위치표시용 마커  (사실상 제거해도 상관없음)
-function currentDisplayMarker(locPosition, message) {
+function currentDisplayMarker(locPosition) {
+
+    // 커스텀 마커 이미지 적용
+    var imageSrc = '/MapSearch/yourlocation.png', // 마커이미지의 주소입니다
+    imageSize = new kakao.maps.Size(49, 59), // 마커이미지의 크기입니다
+    imageOption = {offset: new kakao.maps.Point(27, 69)}; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+
+    // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
+    var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption)
 
     // 마커를 생성합니다
     var marker = new kakao.maps.Marker({
         map: map,
-        position: locPosition
+        position: locPosition,
+        image: markerImage // 마커이미지 설정
     });
-
-    var iwContent = message; // 인포윈도우에 표시할 내용
-
-    // 인포윈도우를 생성합니다
-    var infowindow = new kakao.maps.InfoWindow({
-        content : iwContent
-    });
-
-    // 인포윈도우를 마커위에 표시합니다
-    infowindow.open(map, marker);
 
     // 지도 중심좌표를 접속위치로 변경합니다
     map.setCenter(locPosition);
@@ -130,6 +128,8 @@ function initPressSearchButton() {
         }
 }
 
+// HTML을 삽입할 위치를 선택 (예: 특정 테이블의 tbody)
+var tableBody = $('#resList tbody');
 
 // idle 이벤트 (ajax 실시간 갱신으로 자체 DB 업데이트)
 function mySearchPlaces() {
@@ -139,6 +139,9 @@ function mySearchPlaces() {
   // 순서가 중요하다. 먼저 배열에 담긴 마커를 지우고, 배열을 지워야 한다.
   removeMarkerAllCategory(categoryOrderNumber);
   initializeMarkerCategory(categoryOrderNumber);
+
+  // 테이블의 기존 내용을 비움
+  tableBody.empty();
 
     $.ajax({
         url: '/place/search',
@@ -151,9 +154,19 @@ function mySearchPlaces() {
             },
         success: function (data) {
 
-
                 // 서버에서 받아온 데이터를 이용하여 마커 생성
                 data.forEach(searchResult2 => {
+
+                    var row = '<tr>' +
+                                  '<td>' + searchResult2.id + '</td>' +
+                                  '<td>' + searchResult2.store + '</td>' +
+                              '</tr>';
+
+                    // HTML을 삽입할 위치를 선택 (예: 특정 테이블의 tbody)
+                    tableBody = $('#resList tbody');
+
+                    // 동적으로 생성된 HTML을 삽입
+                    tableBody.append(row);
 
                     // 마커를 생성하고 지도에 표시합니다
                     var marker = addMarkerCategory(new kakao.maps.LatLng(searchResult2.locationLat, searchResult2.locationLng), searchResult2.categoryOrder);
@@ -162,11 +175,11 @@ function mySearchPlaces() {
                     // 마커 위에 커스텀오버레이를 표시합니다
                     // 마커를 중심으로 커스텀 오버레이를 표시하기위해 CSS를 이용해 위치를 설정했습니다
 
-                    (function(map, markerCustomInfo, placeCategory, placeId, placeStore) {
+                    (function(map, markerCustomInfo, placeOrder, placeAddress, placeCategory, placeId, placeStore) {
 
                      // 마커를 클릭했을 때 커스텀 오버레이를 표시합니다
                        kakao.maps.event.addListener(marker, 'click', function() {
-                           displayCustomWindow(markerCustomInfo, placeCategory, placeId, placeStore);
+                           displayCustomWindow(markerCustomInfo, placeOrder, placeAddress, placeCategory, placeId, placeStore);
                        });
 
                        // 맵을 클릭했을 때의 이벤트를 등록합니다.
@@ -176,7 +189,7 @@ function mySearchPlaces() {
 
                        // 커스텀 오버레이를 닫기 위해 호출되는 함수입니다
 
-                    })(map, markerCustomInfo, searchResult2.categoryOrder, searchResult2.id, searchResult2.store);
+                    })(map, markerCustomInfo, searchResult2.categoryOrder, searchResult2.address, searchResult2.category, searchResult2.id, searchResult2.store);
 
                 });
 
@@ -360,13 +373,14 @@ function addMarker(position, idx) {
 // 마커를 생성하고 지도 위에 마커를 표시하는 함수입니다
 function addMarkerCategory(position, order) {
 
-    var imageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_category.png', // 마커 이미지 url, 스프라이트 이미지를 씁니다
-        imageSize = new kakao.maps.Size(27, 28),  // 마커 이미지의 크기
+    var imageSrc = '/MapSearch/marker_food.png', // 마커 이미지 url, 스프라이트 이미지를 씁니다
+        imageSize = new kakao.maps.Size(36, 53),  // 마커 이미지의 크기
         imgOptions =  {
-            spriteSize : new kakao.maps.Size(72, 208), // 스프라이트 이미지의 크기
-            spriteOrigin : new kakao.maps.Point(46, (order*36)), // 스프라이트 이미지 중 사용할 영역의 좌상단 좌표
             offset: new kakao.maps.Point(11, 28) // 마커 좌표에 일치시킬 이미지 내에서의 좌표
         },
+
+//        imageOption = {offset: new kakao.maps.Point(27, 69)}; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+
         markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imgOptions),
             marker = new kakao.maps.Marker({
             position: position, // 마커의 위치
@@ -478,7 +492,7 @@ function displayInfowindow(marker, pname, praddress, paddress) {
     infowindow.open(map, marker);
 }
 
-function displayCustomWindow(marker, placeCategory, placeId, placeStore) {
+function displayCustomWindow(marker, placeOrder, placeAddress, placeCategory, placeId, placeStore) {
         var content = '<div class="wrapInfo">' +
                                 '    <div class="infoC">' +
                                 '        <div class="title">' + placeStore +
@@ -489,9 +503,9 @@ function displayCustomWindow(marker, placeCategory, placeId, placeStore) {
                                 '                <img src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/thumnail.png" width="73" height="70">' +
                                 '           </div>' +
                                 '            <div class="desc">' +
-                                '                <div class="ellipsis"> 메인주소 </div>' +
-                                '                <div class="jibun ellipsis"> 상세주소 ' +
-                                '                <div><a href="/place/' + placeCategory + '/' + placeId + '" target="_blank" class="link"> 상세페이지 </a></div>' +
+                                '                <div class="ellipsis">' + placeAddress + '</div>' +
+                                '                <div class="jibun ellipsis">' + placeCategory +
+                                '                <div><a href="/place/' + placeOrder + '/' + placeId + '" target="_blank" class="link"> 상세페이지 </a></div>' +
                                 '            </div>' +
                                 '        </div>' +
                                 '    </div>' +
@@ -515,9 +529,9 @@ function displayCustomWindow(marker, placeCategory, placeId, placeStore) {
                                 '</div>';
 
         // placeCategory에 따라 setContent 결정
-        if (placeCategory === 1) {
+        if (placeOrder === 1) {
             customInfo.setContent(content);
-        } else if (placeCategory === 2) {
+        } else if (placeOrder === 2) {
             customInfo.setContent(content2);
         }
 
@@ -561,6 +575,7 @@ function onClickCategory() {
     if (className === 'on') {
         currCategory = '';
         removeMarkerCategory(orderNumber);
+        tableBody.empty();
     } else {
         currCategory = id;
         categoryOrderNumber.push(orderNumber);
