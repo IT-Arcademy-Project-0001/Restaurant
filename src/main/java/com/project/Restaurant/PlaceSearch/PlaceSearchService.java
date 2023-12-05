@@ -37,7 +37,7 @@ public class PlaceSearchService {
 
     // 하버사인 공식에 의해 현재 보고 있는 맵중심을 기준으로 반경 2km 이내의 장소만 출력
     // 카카오 기준으로는 30km 이내만 도보 길안내를 알려줌. (5km 성인기준 1시간 15분 정도 소요)
-    double radius = 8;
+    double radius = 4;
 
     List<PlaceSearch> searchResults = new ArrayList<>();
 
@@ -49,6 +49,8 @@ public class PlaceSearchService {
         ps.setLocationLat(String.valueOf(place.getLatitude()));
         ps.setLocationLng(String.valueOf(place.getLongitude()));
         ps.setCategoryOrder(1); // order 값 설정
+        ps.setCategory(place.getStoreCategory());
+        ps.setAddress(place.getStoreAddress());
         // ... 나머지 필드 설정
         searchResults.add(ps);
       }
@@ -62,6 +64,8 @@ public class PlaceSearchService {
         psf.setLocationLat(String.valueOf(place2.getLatitude()));
         psf.setLocationLng(String.valueOf(place2.getLongitude()));
         psf.setCategoryOrder(2); // order 값 설정
+        psf.setCategory(place2.getStoreCategory());
+        psf.setAddress(place2.getStoreAddress());
         // ... 나머지 필드 설정
         searchResults.add(psf);
       }
