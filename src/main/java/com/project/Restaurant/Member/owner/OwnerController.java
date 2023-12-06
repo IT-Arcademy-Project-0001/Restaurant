@@ -61,22 +61,6 @@ public class OwnerController {
         return "member/message";
     }
 
-    @GetMapping("/profile")
-    public String customerProfile(Model model, Principal principal) {
-        Owner owner = ownerService.findByusername(principal.getName());
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        GrantedAuthority authority = authentication.getAuthorities().iterator().next();
-        model.addAttribute("member", owner);
-        model.addAttribute("authority", authority);
-        return "member/member_profile";
-    }
-
-    @GetMapping("/profile/test")
-    public String test() {
-
-        return "member/member_profile_layout";
-    }
-
     @PostMapping("/findusername")
     public String findusername(String email, Model model) {
         Owner targetOwner = ownerService.findByEmail(email);

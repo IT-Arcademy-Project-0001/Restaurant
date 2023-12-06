@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.security.Principal;
+
 @RequiredArgsConstructor
 @Controller
 @RequestMapping("/member")
@@ -74,5 +76,13 @@ public class MemberController {
                 return "member/message";
             }
         }
+    }
+
+    @GetMapping("/profileInfo")
+    public String memberProfileInfo(Model model, Principal principal) {
+        Customer customer = customerService.findByusername(principal.getName());
+        String photo = customer.getPhoto();
+        model.addAttribute("photo", photo);
+        return "member/member_profileInfo";
     }
 }

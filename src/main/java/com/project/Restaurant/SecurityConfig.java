@@ -81,8 +81,8 @@ public class SecurityConfig {
                         .userInfoEndpoint(userInfo -> userInfo.userService(oauth2UserService)))
                 .logout((logout) -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/member/logout"))
-        .logoutSuccessUrl("/")
-        .invalidateHttpSession(true));
+                        .logoutSuccessUrl("/")
+                        .invalidateHttpSession(true));
         return http.build();
     }
 

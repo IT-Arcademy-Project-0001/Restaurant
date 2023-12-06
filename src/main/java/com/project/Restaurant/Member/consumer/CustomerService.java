@@ -37,6 +37,7 @@ public class CustomerService {
         customer.setMemberActivation(false);
         customer.setAuthority(MemberRole.CUSTOMER.getValue());
         customer.setCode(getRandomCode());
+        customer.setPhoto("/member/profilePhoto/human.png");
         customerRepository.save(customer);
     }
 

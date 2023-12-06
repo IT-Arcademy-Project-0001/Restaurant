@@ -21,8 +21,7 @@
                     <a sec:authorize="isAuthenticated()" th:href="@{/member/logout}" class="nav-link">로그아웃</a>
                 </li>
                 <li sec:authorize="isAuthenticated()">
-                    <a class="nav-link" sec:authorize="hasAuthority('사장님')" th:href="@{/owner/profile}">마이페이지</a>
-                    <a class="nav-link" sec:authorize="hasAuthority('소비자')" th:href="@{/customer/profile}">마이페이지</a>
+                    <a class="nav-link" th:href="@{/member/profileInfo}">마이페이지</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/place/map">맛집등록</a>

@@ -61,18 +61,6 @@ public class CustomerController {
         return "member/message";
     }
 
-    @GetMapping("/profile")
-    public String customerProfile(Model model, Principal principal) {
-
-        Customer customer = customerService.findByusername(principal.getName());
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        GrantedAuthority authority = authentication.getAuthorities().iterator().next();
-
-        model.addAttribute("member", customer);
-        model.addAttribute("authority", authority);
-        return "member/member_profile";
-    }
-
     @PostMapping("/findusername")
     public String findusername(String email, Model model) {
         Customer targetCustomer = customerService.findByEmail(email);
