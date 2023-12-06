@@ -38,6 +38,7 @@ public class OwnerOauth2UserService extends DefaultOAuth2UserService {
             owner.setProvider(provider);
             owner.setProviderId(providerId);
             owner.setNickname(oAuth2User.getAttribute("name"));
+            owner.setEmail(oAuth2User.getAttribute("email"));
             owner.setAuthority(MemberRole.OWNER.getValue());
             owner.setSignupDate(LocalDateTime.now());
             ownerRepository.save(owner);

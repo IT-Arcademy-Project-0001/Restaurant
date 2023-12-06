@@ -11,7 +11,8 @@
         <form th:action="@{/owner/login}" method="post">
             <div th:if="${param.error}">
                 <div class="alert alert-danger">
-                    사용자ID 또는 비밀번호를 확인해 주세요.
+                    <span th:if="${#strings.contains(param.error, 'disabled')}">회원가입시 발송된 이메일을 통해 이메일 인증을 해주세요</span>
+                    <span th:if="${#strings.contains(param.error, 'credentials')}">아이디 또는 비밀번호를 확인해주세요</span>
                 </div>
             </div>
             <div class="mb-3">

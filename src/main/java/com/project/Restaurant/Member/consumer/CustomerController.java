@@ -1,7 +1,9 @@
 package com.project.Restaurant.Member.consumer;
 
+import com.project.Restaurant.Member.EmailService;
 import com.project.Restaurant.Member.MemberCreateForm;
 import com.project.Restaurant.Member.PasswordResetForm;
+import com.project.Restaurant.Member.owner.Owner;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -23,6 +26,7 @@ import java.security.Principal;
 public class CustomerController {
 
     private final CustomerService customerService;
+    private final EmailService emailService;
 
     @GetMapping("/profile/test")
     public String test() {
@@ -37,7 +41,7 @@ public class CustomerController {
     }
 
     @PostMapping("/signup")
-    public String signup(@Valid MemberCreateForm memberCreateForm, BindingResult bindingResult) {
+    public String signup(@Valid MemberCreateForm memberCreateForm, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             return "member/signup_form";
         }
@@ -58,7 +62,10 @@ public class CustomerController {
             bindingResult.reject("signupFailed", e.getMessage());
             return "member/signup_form";
         }
-        return "redirect:/member/login";
+        emailService.sendEmailCustomer(memberCreateForm.getUsername());
+        String msg = "인증메일이 발송되었습니다!";
+        model.addAttribute("msg", msg);
+        return "member/message";
     }
 
     @GetMapping("/profile")
@@ -87,7 +94,7 @@ public class CustomerController {
     }
 
     @PostMapping("/userNameEmail")
-    public String usernameEmail(String username, String email, Model model, PasswordResetForm passwordResetForm) {
+    public String usernameEmail(String username, String email, Model model) {
         Customer targetCustomer = customerService.findByusername(username);
         String message = "아이디 또는 이메일을 확인해주세요";
         if (targetCustomer == null) {
@@ -98,9 +105,32 @@ public class CustomerController {
                 model.addAttribute("message", message);
                 return "member/username_email_form";
             } else {
-                model.addAttribute("targetMember", targetCustomer);
-                return "member/reset_password_form";
+                String msg = "이메일이 전송되었습니다";
+                model.addAttribute("msg", msg);
+                emailService.sendResetCodeCustomer(targetCustomer);
+                return "member/message";
             }
+        }
+    }
+
+    @GetMapping("/resetPassword/{username}/{code}")
+    public String resetPasswordForm(@PathVariable("code") String code,
+                                    @PathVariable("username") String username,
+                                    PasswordResetForm passwordResetForm,
+                                    Model model) {
+        Customer targetCustomer = customerService.findByusername(username);
+        if (targetCustomer == null) {
+            String msg = "잘못된 접근입니다.";
+            model.addAttribute("msg", msg);
+            return "member/message";
+        }
+        if (targetCustomer.getCode().equals(code)) {
+            model.addAttribute("targetMember", targetCustomer);
+            return "member/reset_password_form";
+        } else {
+            String msg = "인증에 실패했습니다";
+            model.addAttribute("msg", msg);
+            return "member/message";
         }
     }
 
@@ -126,6 +156,6 @@ public class CustomerController {
             model.addAttribute("targetMember", targetCustomer);
             return "member/reset_password_form";
         }
-        return "member/login_form";
+        return "member/loginForm/login_form";
     }
 }

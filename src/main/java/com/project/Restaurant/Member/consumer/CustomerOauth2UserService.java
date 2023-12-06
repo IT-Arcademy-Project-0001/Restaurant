@@ -37,6 +37,7 @@ public class CustomerOauth2UserService extends DefaultOAuth2UserService {
             customer.setProvider(provider);
             customer.setProviderId(providerId);
             customer.setNickname(oAuth2User.getAttribute("name"));
+            customer.setEmail(oAuth2User.getAttribute("email"));
             customer.setAuthority(MemberRole.CUSTOMER.getValue());
             customer.setSignupDate(LocalDateTime.now());
             customerRepository.save(customer);

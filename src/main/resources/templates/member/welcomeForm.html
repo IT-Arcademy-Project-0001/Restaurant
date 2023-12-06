@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="ko" layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/member/member_form.css">
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="all">
+        <h1>인증되었습니다. 아래 로그인버튼을 클릭하여 로그인 후 이용해주세요!</h1>
+        <div class="mb-3">
+            <a th:href="@{/customer/login}" class="btn btn-success">일반 로그인</a>
+            <a th:href="@{/owner/login}" class="btn btn-success">영업주 로그인</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>
