@@ -81,6 +81,6 @@ public class OwnerDetails implements UserDetails, OAuth2User {
     // 계정이 활성화(사용가능)인지 (true: 활성화)
     @Override
     public boolean isEnabled() {
-        return true;
+        return owner.getMemberActivation();
     }
 }

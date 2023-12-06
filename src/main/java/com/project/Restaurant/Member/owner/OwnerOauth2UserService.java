@@ -12,6 +12,7 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -21,6 +22,18 @@ import java.util.Optional;
 public class OwnerOauth2UserService extends DefaultOAuth2UserService {
 
     private final OwnerRepository ownerRepository;
+    private final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"; // 사용할 문자셋
+
+    public String getRandomCode() {
+        SecureRandom random = new SecureRandom();
+        StringBuilder sb = new StringBuilder(6); // 6자리의 코드 생성
+        for (int i = 0; i < 6; i++) {
+            int randomIndex = random.nextInt(CHARACTERS.length());
+            char randomChar = CHARACTERS.charAt(randomIndex);
+            sb.append(randomChar);
+        }
+        return sb.toString();
+    }
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -38,8 +51,10 @@ public class OwnerOauth2UserService extends DefaultOAuth2UserService {
             owner.setProvider(provider);
             owner.setProviderId(providerId);
             owner.setNickname(oAuth2User.getAttribute("name"));
+            owner.setEmail(oAuth2User.getAttribute("email"));
             owner.setAuthority(MemberRole.OWNER.getValue());
             owner.setSignupDate(LocalDateTime.now());
+            owner.setCode(getRandomCode());
             ownerRepository.save(owner);
         } else {
             owner = _owner.get();
