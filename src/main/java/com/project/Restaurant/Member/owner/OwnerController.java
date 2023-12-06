@@ -1,5 +1,6 @@
 package com.project.Restaurant.Member.owner;
 
+import com.project.Restaurant.Member.EmailService;
 import com.project.Restaurant.Member.MemberCreateForm;
 import com.project.Restaurant.Member.PasswordResetForm;
 import com.project.Restaurant.Member.consumer.Customer;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -24,6 +26,7 @@ import java.security.Principal;
 public class OwnerController {
 
     private final OwnerService ownerService;
+    private final EmailService emailService;
 
     @GetMapping("/login")
     public String login() {
@@ -52,6 +55,7 @@ public class OwnerController {
             bindingResult.reject("signupFailed", e.getMessage());
             return "/member/signup_form";
         }
+        emailService.sendEmailOwner(memberCreateForm.getUsername());
         return "redirect:/member/login";
     }
 
@@ -69,7 +73,7 @@ public class OwnerController {
     public String findusername(String email, Model model) {
         Owner targetOwner = ownerService.findByEmail(email);
         if (targetOwner == null) {
-            String message = "이메일을 학인해주세요";
+            String message = "이메일을 확인해주세요";
             model.addAttribute("message", message);
             return "member/find_username_form";
         } else {
@@ -79,7 +83,7 @@ public class OwnerController {
     }
 
     @PostMapping("/userNameEmail")
-    public String usernameEmail(String username, String email, Model model, PasswordResetForm passwordResetForm) {
+    public String usernameEmail(String username, String email, Model model) {
         Owner targetOwner = ownerService.findByusername(username);
         String message = "아이디 또는 이메일을 확인해주세요";
         if (targetOwner == null) {
@@ -90,9 +94,27 @@ public class OwnerController {
                 model.addAttribute("message", message);
                 return "member/username_email_form";
             } else {
-                model.addAttribute("targetMember", targetOwner);
-                return "member/reset_password_form";
+                String msg = "이메일이 전송되었습니다";
+                model.addAttribute("msg", msg);
+                emailService.sendResetCodeOwner(targetOwner);
+                return "member/message";
             }
+        }
+    }
+
+    @GetMapping("/resetPassword/{username}/{code}")
+    public String resetPasswordForm(@PathVariable("code") String code,
+                                    @PathVariable("username") String username,
+                                    PasswordResetForm passwordResetForm,
+                                    Model model) {
+        Owner targetOwner = ownerService.findByusername(username);
+        if (targetOwner.getCode().equals(code)) {
+            model.addAttribute("targetMember", targetOwner);
+            return "member/reset_password_form";
+        } else {
+            String msg = "인증에 실패했습니다";
+            model.addAttribute("msg", msg);
+            return "member/message";
         }
     }
 
@@ -118,6 +140,6 @@ public class OwnerController {
             model.addAttribute("targetMember", targetOwner);
             return "member/reset_password_form";
         }
-        return "member/login_form";
+        return "member/loginForm/login_form";
     }
 }
