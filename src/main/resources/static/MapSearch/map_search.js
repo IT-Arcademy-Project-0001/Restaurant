@@ -107,6 +107,21 @@ function toggleMenuWrap() {
     }
 }
 
+// 식당 리스트 스타일 토글 함수
+function resListToggle(resOrderNumber, resCurrCategory) {
+
+    var resList = document.getElementById("resList");
+    var resList2 = document.getElementById("resList2");
+
+    if (resOrderNumber == 1 && resCurrCategory == "MT1") {
+        resList.style.display = "block";
+        resList2.style.display = "none";
+    } else if (resOrderNumber == 1 && resCurrCategory == "") {
+        resList.style.display = "none";
+        resList2.style.display = "block";
+    }
+}
+
 // 키워드 검색을 요청하는 함수입니다
 function searchPlaces() {
 
@@ -129,7 +144,7 @@ function initPressSearchButton() {
 }
 
 // HTML을 삽입할 위치를 선택 (예: 특정 테이블의 tbody)
-var tableBody = $('#resList tbody');
+var infoBody = $('#resList');
 
 // idle 이벤트 (ajax 실시간 갱신으로 자체 DB 업데이트)
 function mySearchPlaces() {
@@ -141,7 +156,8 @@ function mySearchPlaces() {
   initializeMarkerCategory(categoryOrderNumber);
 
   // 테이블의 기존 내용을 비움
-  tableBody.empty();
+
+    infoBody.empty();
 
     $.ajax({
         url: '/place/search',
@@ -157,16 +173,25 @@ function mySearchPlaces() {
                 // 서버에서 받아온 데이터를 이용하여 마커 생성
                 data.forEach(searchResult2 => {
 
-                    var row = '<tr>' +
-                                  '<td>' + searchResult2.id + '</td>' +
-                                  '<td>' + searchResult2.store + '</td>' +
-                              '</tr>';
+                    var listContent = '<div class="container">' +
+                                          '<div class="row mb-3 pb-3 border-bottom">' +
+                                              '<div class="col-sm-8">' +
+                                                  '<div class="fw-bold">' + searchResult2.store + '</div>' +
+                                                  '<div>' + searchResult2.address + '</div>' +
+                                                  '<div>' + searchResult2.category + '</div>' +
+                                              '</div>' +
+                                              '<div class="col-sm-4">' +
+                                                  '<img src="/MapSearch/samplethumbnail.png" class="img-fluid rounded float-start">' +
+                                              '</div>' +
+                                          '</div>' +
+                                      '</div>';
 
                     // HTML을 삽입할 위치를 선택 (예: 특정 테이블의 tbody)
-                    tableBody = $('#resList tbody');
+                    infoBody = $('#resList');
 
                     // 동적으로 생성된 HTML을 삽입
-                    tableBody.append(row);
+                    infoBody.append(listContent);
+
 
                     // 마커를 생성하고 지도에 표시합니다
                     var marker = addMarkerCategory(new kakao.maps.LatLng(searchResult2.locationLat, searchResult2.locationLng), searchResult2.categoryOrder);
@@ -271,7 +296,6 @@ function displayPlaces(places) {
 
             // 맵을 클릭하면 발생하는 이벤트
             kakao.maps.event.addListener(map, 'click', function() {
-                infowindow.close();
                 simpleinfowindow.close();
             });
 
@@ -279,15 +303,9 @@ function displayPlaces(places) {
             kakao.maps.event.addListener(marker, 'click', function() {
 
                 // 0. 간단 정보창 닫기
-                simpleinfowindow.close();
-
                 // 1. 정보창 표시
-                displayInfowindow(marker, pname, praddress, paddress);
-
                 // 2. 주소 정보들을 text 영역으로 전송 (hidden 사용)
-
                 // 2. 길찾기 Get쿼리 추가 (탐험하기로 통합)
-
             })
 
             // 마우스를 마커 위에 두면 발생하는 이벤트
@@ -475,23 +493,6 @@ function displaysimpleInfowindow(marker, title) {
     simpleinfowindow.open(map, marker);
 }
 
-// 마커를 클릭했을 때 호출되는 함수입니다
-function displayInfowindow(marker, pname, praddress, paddress) {
-     var content = '<div class = "wrapSimpleInfo">' +
-                '		       <div class = "classimg"><img src = "/MapSearch/samplelogo.jpg" width="160" height="160"></div>' +
-                         '        <div class="classinfo">' +
-                            '            <div class="classtitle">' + pname + '</div>' +
-                            '            <div class="classfounder">' + paddress + '</div>' +
-                            '            <div class="classbutton">' +
-                            '            <button type = "button" id = "selectstarting"> 출발지 </button>' +
-                            '            <button type = "button" id = "selectdestination"> 도착지 </button>' +
-                            '           </div>' +
-                         '        </div>' +
-                '			   </div>';
-    infowindow.setContent(content);
-    infowindow.open(map, marker);
-}
-
 function displayCustomWindow(marker, placeOrder, placeAddress, placeCategory, placeId, placeStore) {
         var content = '<div class="wrapInfo">' +
                                 '    <div class="infoC">' +
@@ -563,7 +564,8 @@ function addCategoryClickEvent() {
 function onClickCategory() {
     var id = this.id,
     className = this.className;
-    orderNumber = parseInt(this.getAttribute('data-order'));
+
+    var orderNumber = parseInt(this.getAttribute('data-order'), 10);
 
     // 중복 체크 (배열 초기화 없이 중복된 값만 배제, 배열 순서 자체는 상관없기 때문에 가능, 배열초기화 만이 능사가 아니다.)
     var index = categoryOrderNumber.indexOf(orderNumber);
@@ -575,12 +577,14 @@ function onClickCategory() {
     if (className === 'on') {
         currCategory = '';
         removeMarkerCategory(orderNumber);
-        tableBody.empty();
+        resListToggle(orderNumber, currCategory);
+
     } else {
         currCategory = id;
         categoryOrderNumber.push(orderNumber);
         console.log("categoryOrderNumberOnClick", categoryOrderNumber);
         mySearchPlaces();
+        resListToggle(orderNumber, currCategory);
         showMarkers(0);
     }
      toggleCategoryClass(this);
