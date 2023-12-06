@@ -20,9 +20,11 @@ public class Reservation {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  private LocalDateTime ReservationTime;
+  private LocalDateTime reservationDate;
 
   private String status;
+
+
 
   @ManyToOne
   private Customer customer;
@@ -32,5 +34,6 @@ public class Reservation {
 
   @ManyToOne
   private Owner Owner;
-///////
+
+
 }
