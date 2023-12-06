@@ -34,7 +34,7 @@ public class CustomerController {
     }
 
     @PostMapping("/signup")
-    public String signup(@Valid MemberCreateForm memberCreateForm, BindingResult bindingResult) {
+    public String signup(@Valid MemberCreateForm memberCreateForm, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             return "member/signup_form";
         }
@@ -56,7 +56,9 @@ public class CustomerController {
             return "member/signup_form";
         }
         emailService.sendEmailCustomer(memberCreateForm.getUsername());
-        return "redirect:/member/login";
+        String msg = "인증메일이 발송되었습니다!";
+        model.addAttribute("msg", msg);
+        return "member/message";
     }
 
     @GetMapping("/profile")
@@ -110,6 +112,11 @@ public class CustomerController {
                                     PasswordResetForm passwordResetForm,
                                     Model model) {
         Customer targetCustomer = customerService.findByusername(username);
+        if (targetCustomer == null) {
+            String msg = "잘못된 접근입니다.";
+            model.addAttribute("msg", msg);
+            return "member/message";
+        }
         if (targetCustomer.getCode().equals(code)) {
             model.addAttribute("targetMember", targetCustomer);
             return "member/reset_password_form";
