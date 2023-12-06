@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.security.Principal;
+
 @RequiredArgsConstructor
 @RequestMapping("/place")
 @Controller
@@ -24,7 +26,7 @@ public class PlaceCustController {
 
     @PostMapping("/map/add")
     public String customeradd(Model model, @RequestParam String placename, @RequestParam String locationaddress, @RequestParam String locationdetailedaddress
-            , @RequestParam String category, @RequestParam Double locationlat, @RequestParam Double locationlng, @RequestParam String memo)  // 매장 이름, 매장 주소, 매장 상세주소, 매장 카테고리, 위도, 경도, 메모
+            , @RequestParam String category, @RequestParam Double locationlat, @RequestParam Double locationlng, @RequestParam String memo, Principal principal)  // 매장 이름, 매장 주소, 매장 상세주소, 매장 카테고리, 위도, 경도, 메모
     {
         boolean isPlaceExists = placeCustService.checkPlaceExists(locationaddress, locationdetailedaddress, locationlat, locationlng);
 
@@ -35,8 +37,6 @@ public class PlaceCustController {
             model.addAttribute("message", "이미 등록된 위치입니다.");
         }
 
-        return "redirect:/place/Map";
+        return "redirect:/place/search";
     }
-
-
 }

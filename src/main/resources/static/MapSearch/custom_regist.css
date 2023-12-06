@@ -1,0 +1,44 @@
+body{
+	font-family:"맑은 고딕", "고딕", "굴림";
+}
+
+html, body {
+margin: 0px;
+padding: 0px;
+}
+
+#my_modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    z-index: 1000;
+    boxShadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    height : 700px;
+    border-radius: 10px;
+}
+
+#my_modal.active {
+    display: block;
+}
+
+.locationList {
+    height : 659px;
+    width : 410px;
+    border-radius: 10px;
+}
+
+.registBtn{
+    background : #289AFF;
+    color : white;
+    border-radius: 10px;
+    width : 200px;
+    height : 30px;
+}
+
+.customInfo {
+   background: #ffffff;
+   border: 2px solid #336699;
+}
