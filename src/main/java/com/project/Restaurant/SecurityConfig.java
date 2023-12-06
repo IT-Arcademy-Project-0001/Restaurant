@@ -2,10 +2,12 @@ package com.project.Restaurant;
 
 
 import com.project.Restaurant.Member.consumer.CustomerDetailsService;
+import com.project.Restaurant.Member.consumer.CustomerFailureHandler;
 import com.project.Restaurant.Member.consumer.CustomerOauth2UserService;
 import com.project.Restaurant.Member.consumer.CustomerRepository;
 import com.project.Restaurant.Member.Oauth2UserService;
 import com.project.Restaurant.Member.owner.OwnerDetailsService;
+import com.project.Restaurant.Member.owner.OwnerFailureHandler;
 import com.project.Restaurant.Member.owner.OwnerOauth2UserService;
 import com.project.Restaurant.Member.owner.OwnerRepository;
 import lombok.RequiredArgsConstructor;
@@ -49,7 +51,8 @@ public class SecurityConfig {
                 .formLogin(formLogin -> formLogin
                         .loginPage("/owner/login")
                         .defaultSuccessUrl("/")
-                        .permitAll())
+                        .permitAll()
+                        .failureHandler(new OwnerFailureHandler()))
                 .logout((logout) -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/member/logout"))
                         .logoutSuccessUrl("/")
@@ -70,7 +73,8 @@ public class SecurityConfig {
                 .formLogin(formLogin -> formLogin
                         .loginPage("/customer/login")
                         .defaultSuccessUrl("/")
-                        .permitAll())
+                        .permitAll()
+                        .failureHandler(new CustomerFailureHandler()))
                 .oauth2Login(oauth2Login -> oauth2Login
                         .loginPage("/customer/login")
                         .defaultSuccessUrl("/")
