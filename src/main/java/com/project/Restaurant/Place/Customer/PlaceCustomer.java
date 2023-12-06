@@ -30,7 +30,4 @@ public class PlaceCustomer {
     private String storeCategory;  // 매장 카테고리 ( ex. 음식점, 카페, 술집, )
 
     private String storeMemo;      // 추가 안내사항 작성
-
-    @ManyToOne
-    private Customer customer;
 }
