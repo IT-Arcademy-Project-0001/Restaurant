@@ -43,7 +43,7 @@ padding: 0px;
 .map_wrap {
     position:relative;
     width:100%;
-    height:100%;
+    height:93vh;
 }
 
 #menu_wrap {
@@ -52,10 +52,10 @@ padding: 0px;
     right:0;
     bottom:0;
     width:100%;
-    height:620px;
     margin: 0;
     padding: 0;
     overflow-y: auto;
+    height:720px;
     background:rgba(255, 255, 255, 0.7);
     z-index: 1;
     font-size:10px;
@@ -173,12 +173,12 @@ a{
 .locationlist {
     background : white;
     width : 30%;
-    height : 750px;
+    height : 100%;
 }
 .mapside {
     background : bisque;
     width : 70%;
-    height : 750px;
+    height : 100%;
 }
 
 .wrapSimpleInfo {
@@ -224,7 +224,7 @@ a{
 }
 
 #resList {
-    height : 620px;
+    height : 720px;
 }
 
 

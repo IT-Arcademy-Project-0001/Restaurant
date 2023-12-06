@@ -55,14 +55,14 @@ public class PlaceOwner {
     @OneToMany(mappedBy = "placeOwner")
     private List<PlaceTag> tagList;
 
-//    @ManyToOne
-//    private Owner owner;
-//
-//    @OneToMany(mappedBy="placeOwner", cascade = CascadeType.REMOVE)
-//    private List<Reservation> reservationList;
-//
-//    @OneToMany(mappedBy="placeOwner", cascade = CascadeType.REMOVE)
-//    private List<PlaceOwnerComment> placeOwnerCommentList;
+    @ManyToOne
+    private Owner owner;
+
+    @OneToMany(mappedBy="placeOwner", cascade = CascadeType.REMOVE)
+    private List<Reservation> reservationList;
+
+    @OneToMany(mappedBy="placeOwner", cascade = CascadeType.REMOVE)
+    private List<PlaceOwnerComment> placeOwnerCommentList;
 
     public PlaceOwnerDto convertDto() {
 
