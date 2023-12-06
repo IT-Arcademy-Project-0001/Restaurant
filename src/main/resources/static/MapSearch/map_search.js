@@ -85,6 +85,15 @@ var infowindow = new kakao.maps.InfoWindow({zIndex:1});
 var simpleinfowindow = new kakao.maps.InfoWindow({zIndex:1});
 var customInfo = new kakao.maps.CustomOverlay({clickable: true, yAnchor:1.3, zIndex:1});
 
+ // Enter 키 이벤트 처리
+document.getElementById("keyword").addEventListener("keyup", function (event) {
+    // Enter 키의 keyCode는 13입니다.
+    if (event.keyCode === 13) {
+        // Enter 키가 눌렸을 때 버튼 실행
+        document.getElementById("searchkeyword").click();
+    }
+});
+
 document.getElementById("searchkeyword").addEventListener("click", function() {
     // 키워드로 장소를 검색합니다.
     searchPlaces();
