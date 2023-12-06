@@ -53,8 +53,8 @@ public class PlaceOwner {
     private List<PlaceMenu> placeMenuList;
 
     @OneToMany(mappedBy = "placeOwner")
-    private List<PlaceTag> tagList;
-  
+    private List<PlaceTag> tagList; 
+   
     @ManyToOne
     private Owner owner;
 
