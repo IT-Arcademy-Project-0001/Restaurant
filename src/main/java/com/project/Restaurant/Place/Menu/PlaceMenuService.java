@@ -10,7 +10,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PlaceMenuService {
     private final PlaceMenuRepository placeMenuRepository;
-
     public void savefile(String origFileName, String filePath, PlaceOwner placeOwner, String name, String price){
         PlaceMenu placeMenu = new PlaceMenu();
         placeMenu.setOrigFileName(origFileName);
@@ -27,8 +26,13 @@ public class PlaceMenuService {
         return placeMenuList;
     }
 
-    public void deletefile(Long id){
+    public void deleteFile(Long id){
         PlaceMenu placeMenu = this.placeMenuRepository.findById(Math.toIntExact(id)).get();
         this.placeMenuRepository.delete(placeMenu);
+    }
+
+    public String findFile(Long id){
+        PlaceMenu placeMenu = this.placeMenuRepository.findById(Math.toIntExact(id)).get();
+        return placeMenu.getOrigFileName();
     }
 }
