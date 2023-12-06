@@ -28,12 +28,6 @@ public class CustomerController {
     private final CustomerService customerService;
     private final EmailService emailService;
 
-    @GetMapping("/profile/test")
-    public String test() {
-
-        return "member/loginForm/member_profile_layout";
-    }
-
 
     @GetMapping("/login")
     public String login() {
