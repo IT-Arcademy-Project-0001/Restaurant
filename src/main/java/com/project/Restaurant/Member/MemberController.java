@@ -45,6 +45,11 @@ public class MemberController {
                           Model model) {
         if (authority.equals("소비자")) {
             Customer customer = customerService.findByusername(username);
+            if (customer == null) {
+                String msg = "잘못된 접근입니다.";
+                model.addAttribute("msg", msg);
+                return "member/message";
+            }
             if (customer.getCode().equals(code)) {
                 customerService.customerActivation(customer, true);
                 return "member/welcomeForm";
@@ -55,6 +60,11 @@ public class MemberController {
             }
         } else {
             Owner owner = ownerService.findByusername(username);
+            if (owner == null) {
+                String msg = "잘못된 접근입니다.";
+                model.addAttribute("msg", msg);
+                return "member/message";
+            }
             if (owner.getCode().equals(code)) {
                 ownerService.ownerActivation(owner, true);
                 return "member/welcomeForm";
