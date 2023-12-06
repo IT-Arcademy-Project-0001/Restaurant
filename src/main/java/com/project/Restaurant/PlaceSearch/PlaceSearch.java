@@ -14,4 +14,5 @@ public class PlaceSearch {
     private Integer categoryOrder;
     private String address;
     private String category;
+
 }
