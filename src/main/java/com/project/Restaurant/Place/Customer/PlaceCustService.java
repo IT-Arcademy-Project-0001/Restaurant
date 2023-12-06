@@ -11,7 +11,6 @@ import javax.swing.plaf.PanelUI;
 public class PlaceCustService {
 
     private final PlaceCustRepository placeCustRepository;
-
     public void addnewplace(String name,String locationAddress, String detailedaddress, String category,  Double locationLat, Double locationLng, String memo){
 
         PlaceCustomer placeCustomer = new PlaceCustomer();

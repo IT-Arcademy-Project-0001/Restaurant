@@ -25,6 +25,15 @@ public class PlaceService {
     return this.placeRepository.findById(id).get();
   }
 
+  public void saveSubInfo(String webSite, String storeMemo, Long id){
+    PlaceOwner placeOwner = this.placeRepository.findById(id).get();
+
+    placeOwner.setLink(webSite);
+    placeOwner.setStoreMemo(storeMemo);
+
+    this.placeRepository.save(placeOwner);
+  }
+
   public List<PlaceOwner> getPlaceOwnersByOwnerId(Long ownerId) {
     return placeRepository.findByOwnerId(ownerId);
   }

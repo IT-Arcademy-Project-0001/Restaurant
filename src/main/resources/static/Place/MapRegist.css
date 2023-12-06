@@ -13,6 +13,11 @@ a:hover {
     text-decoration: none;
 }
 
+Pseudo ::scrollbar-thumb element{
+    border-radius : 8px;
+    background : #FFBB00;
+}
+
 .map_wrap, .map_wrap * {margin:0;padding:0;font-family:'Malgun Gothic',dotum,'돋움',sans-serif;font-size:12px;}
 .map_wrap a, .map_wrap a:hover, .map_wrap a:active{color:#000;text-decoration: none;}
 .map_wrap {position:relative;width:100%;height:500px;}
@@ -50,7 +55,7 @@ a:hover {
 #pagination a {display:inline-block;margin-right:10px;}
 #pagination .on {font-weight: bold; cursor: default;color:#777;}
 
-.registBtn{
+.RegistBtn{
     background : #289AFF;
     color : white;
     border-radius: 10px;
@@ -58,34 +63,35 @@ a:hover {
     height : 30px;
 }
 
-.regist_array{
-    width : 80%;
-    display : block;
-    margin-left : 10%;
+.RegistArray{
+    display :flex;
+    justify-content: center;
+    width : 90%;
+    height : 80%;
+    margin-left : 5%;
+    margin-top : 1%;
 }
 
-.regist_form{
+.RegistArray{
     border-radius: 10px;
     border : 2px solid rgb(25, 206, 96);
     width : 100%;
 }
 
-.regist_text{
-    padding: 6px;
-    width : 98%;
-    margin : 5px;
+.RegistText{
+    padding: 3px;
+    width : 50%;
+    margin : 3px;
 }
 
-.regist_label{
+.RegistLabel{
     font-size : 15px;
     font-weight : bold;
-    margin-left : 15px;
-    width : 87px;
 }
 
 input::placeholder {color:#d2d2d2;}
 
-.regist_sub{
+.RegistSub{
     color : red;
     font-size : 13px;
     font-weight : bold;
@@ -93,13 +99,51 @@ input::placeholder {color:#d2d2d2;}
     width : 40px;
 }
 
-.regist_content{
-    width: 50%; /* 원하는 폭으로 조절하세요 */
-    height : 80%;
+.RegistBasicContent{
     margin: 0 auto; /* 가운데 정렬을 위해 사용합니다 */
     display: flex;
     flex-direction: column;
     overflow : auto;
+    margin-bottom : 5%;
+}
+
+.RegistAddContent{
+    margin: 0 auto; /* 가운데 정렬을 위해 사용합니다 */
+    display: flex;
+    flex-direction: column;
+    overflow : auto;
+    margin-bottom : 5%;
+}
+
+.RegistAddContent > form {
+    margin-bottom: 20px;
+}
+
+.menuText{
+    width : 121px;
+}
+
+.menuTextDetail{
+    width : 121px;
+    border : none;
+    font-size : 11px;
+    text-align : center;
+    margin-left : 5px;
+}
+
+.BasicInfoSave{
+    background : #289AFF;
+    color : white;
+    border-radius: 10px;
+    width : 110px;
+    height : 30px;
+}
+
+.MenuInfoSave{
+    border : 2px solid  #20c997;
+    color : black;
+    border-radius: 10px;
+    font-size : 14px;
 }
 
 
@@ -116,4 +160,37 @@ input::placeholder {color:#d2d2d2;}
     position: absolute;
     top: 10px;
     right: 10px;
+}
+
+#menu {
+    flex-direction : column;
+}
+
+
+.tags {
+     color: black;
+     background-color: rgb(25, 206, 96);
+     margin : 4px;
+     border-radius: 3px;
+     padding : 1px;
+     cursor : pointer;
+}
+
+.tagText{
+    padding: 3px;
+    margin : 3px;
+    width: 35%;
+    position : relative;
+    border : none;
+    margin-left : 5px;
+    height : 34px;
+}
+
+.tagLayout {
+     color: black;
+     background-color: #D3D3D3;
+     margin : 4px;
+     border-radius: 3px;
+     padding : 1px;
+     cursor : pointer;
 }

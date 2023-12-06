@@ -77,12 +77,20 @@ public class PlaceMenuController {
         List<OperateDto> operateDtoList = placeOperateService.getAllOperateDtoList(ownerId);
         model.addAttribute("placeOperateList", operateDtoList);
 
-        return "MapRegist";
+        return "redirect:/place/map/regist/info/" + id;
     }
 
     @RequestMapping("/regist/menu/delete")
     public String deleteMenu(Model model, @RequestParam Long fileId, @RequestParam Long ownerId) {
-        this.placeMenuService.deletefile(fileId);
+
+        String path = "C:\\"+"place\\"+"menu\\";
+        String originFileName = this.placeMenuService.findFile(fileId);
+
+        File file = new File(path+originFileName);
+        System.out.println(file);
+        file.delete();
+
+        this.placeMenuService.deleteFile(fileId);
 
         PlaceOwner placeOwner = this.placeService.findById(ownerId);
         PlaceOwnerDto placeOwnerDto = placeOwner.convertDto();
