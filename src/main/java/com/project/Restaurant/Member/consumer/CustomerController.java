@@ -24,6 +24,13 @@ public class CustomerController {
 
     private final CustomerService customerService;
 
+    @GetMapping("/profile/test")
+    public String test() {
+
+        return "member/loginForm/member_profile_layout";
+    }
+
+
     @GetMapping("/login")
     public String login() {
         return "member/loginForm/customerLoginForm";

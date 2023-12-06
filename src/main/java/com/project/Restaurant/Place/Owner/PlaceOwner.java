@@ -54,11 +54,7 @@ public class PlaceOwner {
 
     @OneToMany(mappedBy = "placeOwner")
     private List<PlaceTag> tagList;
-<<<<<<< HEAD
 
-=======
-  
->>>>>>> c5f2bf4219d1cc721eece808a35a6092ff6c7379
     @ManyToOne
     private Owner owner;
 
