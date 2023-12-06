@@ -28,7 +28,6 @@ public class CustomerController {
     private final CustomerService customerService;
     private final EmailService emailService;
 
-
     @GetMapping("/login")
     public String login() {
         return "member/loginForm/customerLoginForm";
