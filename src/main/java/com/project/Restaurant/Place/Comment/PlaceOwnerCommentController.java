@@ -47,7 +47,7 @@ public class PlaceOwnerCommentController {
         return "PlaceSearch/place_review";
       }
 
-      this.placeOwnerCommentService.create(reservation.getPlaceOwner(), customer, placeOwnerCommentForm.getReviewSubject(), placeOwnerCommentForm.getReviewContent());
+      this.placeOwnerCommentService.create(reservation.getPlaceOwner(), customer, placeOwnerCommentForm.getStarRate(), placeOwnerCommentForm.getReviewContent());
 
       return "redirect:/reservation/customerList";
     }

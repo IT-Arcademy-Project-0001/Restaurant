@@ -42,7 +42,7 @@
                                 <div id="resList2" style="display: block;">
                                     <img src="/MapSearch/search_main.jpg" class="img-fluid" alt="...">
                                     <h2 class="text-center my-3">원하는 장소를 검색하세요</h2>
-                                    <div class = "text-end">
+                                    <div sec:authorize="hasAuthority('소비자')" class = "text-end">
                                     <button class="popup_open_btn btn btn-primary" type ="button" id="popup_open_btn">누락된 장소 추가</button>
                                     </div>
                                 </div>
@@ -129,6 +129,7 @@
 
                     <!-- 카카오지도 키워드 검색  -->
                     <script src="/MapSearch/map_search.js"></script>
+                    <!-- 소비자 신규장소등록 요청 (모달) -->
                     <script src="/MapSearch/custom_regist.js"></script>
 
                 </div>
