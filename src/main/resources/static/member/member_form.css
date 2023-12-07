@@ -9,6 +9,16 @@
     margin-top: 9px;
 }
 
-.profileInfo {
-    margin-left:28%;
+.image {
+    height:250px;
+    margin:5%;
+}
+
+.profile {
+    border-radius: 10px;
+    border : 2px solid rgb(25, 206, 96);
+    width:75%;
+    height:15%;
+    display:flex;
+    justify-content:center;
 }

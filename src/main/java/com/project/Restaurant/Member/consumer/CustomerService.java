@@ -1,6 +1,7 @@
 package com.project.Restaurant.Member.consumer;
 
 import com.project.Restaurant.Member.MemberRole;
+import com.project.Restaurant.Member.owner.Owner;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -69,5 +70,9 @@ public class CustomerService {
         String newCode = getRandomCode();
         customer.setCode(newCode);
         customerRepository.save(customer);
+    }
+
+    public void deleteCustomer(Customer customer) {
+        customerRepository.delete(customer);
     }
 }

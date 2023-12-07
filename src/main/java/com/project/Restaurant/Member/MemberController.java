@@ -4,15 +4,18 @@ import com.project.Restaurant.Member.consumer.Customer;
 import com.project.Restaurant.Member.consumer.CustomerService;
 import com.project.Restaurant.Member.owner.Owner;
 import com.project.Restaurant.Member.owner.OwnerService;
+import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
@@ -22,6 +25,7 @@ import java.security.Principal;
 public class MemberController {
     private final CustomerService customerService;
     private final OwnerService ownerService;
+    private final PasswordEncoder passwordEncoder;
 
     @GetMapping("/login")
     public String login() {
@@ -81,24 +85,71 @@ public class MemberController {
         }
     }
 
-    @GetMapping("/profileInfo")
-    public String memberProfileInfo(Model model, Principal principal) {
+    @GetMapping("/deleteForm")
+    public String deleteForm(PasswordResetForm passwordResetForm) {
+        return "member/deleteForm";
+    }
+
+    @PostMapping("/delete")
+    public String delete(Model model, Principal principal, @Valid PasswordResetForm passwordResetForm,
+                         BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            return "member/deleteForm";
+        }
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         GrantedAuthority authority = authentication.getAuthorities().iterator().next();
+        String msg = "탈퇴실패";
 
-        System.out.println("권한============================" + authority);
+        if (passwordResetForm.getPassword().equals(passwordResetForm.getPasswordConfirm())) {
+            if (authority.getAuthority().equals("사장님")) {
+                Owner owner = ownerService.findByusername(principal.getName());
+                if (passwordEncoder.matches(passwordResetForm.getPassword(), owner.getPassword())) {
+                    ownerService.deleteOwner(owner);
+                    return "redirect:/member/logout";
+                } else {
+                    model.addAttribute("msg", msg);
+                    return "member/deleteForm";
+                }
+            } else {
+                Customer customer = customerService.findByusername(principal.getName());
+                if (passwordEncoder.matches(passwordResetForm.getPassword(), customer.getPassword())) {
+                    customerService.deleteCustomer(customer);
+                    return "redirect:/member/logout";
+                } else {
+                    model.addAttribute("msg", msg);
+                    return "member/deleteForm";
+                }
+            }
+        } else {
+            model.addAttribute("msg", msg);
+            return "member/deleteForm";
+        }
+    }
+
+    @GetMapping("/profileInfo")
+    public String memberProfileInfo(Model model, Principal principal) {
+        populateMemberInfo(model, principal);
+        return "member/member_profileInfo";
+    }
+
+    @GetMapping("/security")
+    public String memberSecurity(Model model, Principal principal) {
+        populateMemberInfo(model, principal);
+        return "member/security";
+    }
+
+    private void populateMemberInfo(Model model, Principal principal) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        GrantedAuthority authority = authentication.getAuthorities().iterator().next();
 
         if (authority.getAuthority().equals("사장님")) {
             Owner owner = ownerService.findByusername(principal.getName());
-            String photo = owner.getPhoto();
-            model.addAttribute("photo", photo);
+            model.addAttribute("member", owner);
         } else {
             Customer customer = customerService.findByusername(principal.getName());
-            String photo = customer.getPhoto();
-            model.addAttribute("photo", photo);
+            model.addAttribute("member", customer);
         }
-
-        return "member/member_profileInfo";
     }
 }
