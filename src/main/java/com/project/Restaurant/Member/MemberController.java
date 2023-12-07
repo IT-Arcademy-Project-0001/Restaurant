@@ -5,6 +5,9 @@ import com.project.Restaurant.Member.consumer.CustomerService;
 import com.project.Restaurant.Member.owner.Owner;
 import com.project.Restaurant.Member.owner.OwnerService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -80,9 +83,22 @@ public class MemberController {
 
     @GetMapping("/profileInfo")
     public String memberProfileInfo(Model model, Principal principal) {
-        Customer customer = customerService.findByusername(principal.getName());
-        String photo = customer.getPhoto();
-        model.addAttribute("photo", photo);
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        GrantedAuthority authority = authentication.getAuthorities().iterator().next();
+
+        System.out.println("권한============================" + authority);
+
+        if (authority.getAuthority().equals("사장님")) {
+            Owner owner = ownerService.findByusername(principal.getName());
+            String photo = owner.getPhoto();
+            model.addAttribute("photo", photo);
+        } else {
+            Customer customer = customerService.findByusername(principal.getName());
+            String photo = customer.getPhoto();
+            model.addAttribute("photo", photo);
+        }
+
         return "member/member_profileInfo";
     }
 }

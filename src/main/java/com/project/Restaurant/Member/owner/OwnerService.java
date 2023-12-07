@@ -38,6 +38,7 @@ public class OwnerService {
         owner.setMemberActivation(false);
         owner.setAuthority(MemberRole.OWNER.getValue());
         owner.setCode(getRandomCode());
+        owner.setPhoto("/member/profilePhoto/human.png");
         ownerRepository.save(owner);
     }
 
