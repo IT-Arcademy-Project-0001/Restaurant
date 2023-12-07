@@ -13,10 +13,10 @@ public class PlaceOwnerCommentService {
 
   private final PlaceOwnerCommentRepository placeOwnerCommentRepository;
 
-  public void create(PlaceOwner placeOwner, Customer customer, String subject, String content) {
+  public void create(PlaceOwner placeOwner, Customer customer, String starRate, String content) {
     PlaceOwnerComment poc = new PlaceOwnerComment();
     poc.setPlaceOwner(placeOwner);
-    poc.setSubject(subject);
+    poc.setStarRate(starRate);
     poc.setContent(content);
     poc.setLocalDateTime(LocalDateTime.now());
     poc.setCustomer(customer);
