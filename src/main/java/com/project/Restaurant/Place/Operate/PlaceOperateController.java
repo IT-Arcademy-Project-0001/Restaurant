@@ -27,7 +27,7 @@ public class PlaceOperateController {
 
     @GetMapping("/regist/owner")
     public String regist2() {
-        return "Place/MapRegistOpentime";
+        return "Place/PlaceRegistOpentime";
     }
 
     @PostMapping("/regist/owner/time")
@@ -63,7 +63,7 @@ public class PlaceOperateController {
 //        List<PlaceOperate> placeOperateList = this.placeOperateService.getAllOperateList(Math.toIntExact(placeOwner.getId()));
 //        model.addAttribute("placeOperateList", placeOperateList);
 
-        return "Place/MapRegist";
+        return "Place/PlaceRegist";
     }
 
 }

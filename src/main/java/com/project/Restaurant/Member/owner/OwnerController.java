@@ -28,6 +28,13 @@ public class OwnerController {
     private final OwnerService ownerService;
     private final EmailService emailService;
 
+
+    @GetMapping("/profile/test")
+    public String test() {
+
+        return "member/member_profile_layout";
+    }
+
     @GetMapping("/login")
     public String login() {
         return "member/loginForm/ownerLoginForm";
