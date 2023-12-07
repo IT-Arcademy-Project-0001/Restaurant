@@ -38,6 +38,18 @@ public class PlaceSearchController {
     return searchResult;
   }
 
+  @GetMapping(value = "/searchModal", produces = "application/json")
+  @ResponseBody
+  public List<PlaceSearch> targetSearchModalJson(Model model, @RequestParam("latitude2") Double latitude, @RequestParam("longitude2") Double longitude,
+                                            @RequestParam(value = "order2[]", required = false) List<Integer> order) {
+
+    List<PlaceSearch> searchResult2 = this.placeSearchService.searchPlace(latitude, longitude, order);
+
+    model.addAttribute("placeModalList", searchResult2);
+
+    return searchResult2;
+  }
+
 //  @PostMapping("/search")
 //  public String targetSearch(Model model, @RequestParam Map<String, String> requestParams,
 //                             @Valid PlaceSearchForm placeSearchForm, BindingResult bindingResult) {
