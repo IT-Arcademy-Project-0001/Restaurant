@@ -2,7 +2,7 @@
 <html lang="ko" layout:decorate="~{/member/member_profile_layout}">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="/Place/MapRegist.css">
+    <link rel="stylesheet" href="/Place/PlaceRegist.css">
     <style>
         button {
             border: none;
@@ -70,7 +70,7 @@
             </div>
             <div class="RegistAddContent">
                 <label class="RegistLabel"> 영업시간 </label>
-                <nav th:replace="~{Place/MapRegistOpentime :: navbarFragment}"></nav>
+                <nav th:replace="~{Place/PlaceRegistOpentime :: navbarFragment}"></nav>
                 <form id="siteArray" style="display : contents;">
                     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                     <input type="hidden" id="placeId" name="placeId" th:value="${placeOwner?.Id == null ? '' : placeOwner.Id}">
