@@ -1,5 +1,7 @@
 package com.project.Restaurant.Place.Owner;
 
+import com.project.Restaurant.Member.owner.Owner;
+import com.project.Restaurant.Member.owner.OwnerService;
 import com.project.Restaurant.Place.Operate.OperateDto;
 import com.project.Restaurant.Place.Operate.PlaceOperate;
 import com.project.Restaurant.Place.Operate.PlaceOperateService;
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,17 +25,20 @@ public class PlaceController {
   private final PlaceOperateService placeOperateService;
   private final PlaceService placeService;
   private final PlaceTagService placeTagService;
-
+  private final OwnerService ownerService;
   @GetMapping("/regist")
   public String regist(Model model) {
     List<PlaceOperate> placeOperateList = this.placeOperateService.getAllOperateList(null);
     model.addAttribute("placeOperateList", placeOperateList);
     model.addAttribute("placeOwner", null);
-    return "Place/MapRegist";
+    return "Place/PlaceRegist";
   }
   @PostMapping("/regist/info/save")
-  public String infoSave(Model model, @RequestParam String storeName, @RequestParam String address, @RequestParam String detailAddress, @RequestParam String phoneNum, @RequestParam String category,@RequestParam Double latitude, @RequestParam Double longitude ){
-    PlaceOwner placeOwner = this.placeService.savePlace(storeName,address,detailAddress,phoneNum,category,latitude,longitude);
+  public String infoSave(Model model, Principal principal, @RequestParam String storeName, @RequestParam String address, @RequestParam String detailAddress, @RequestParam String phoneNum, @RequestParam String category,@RequestParam Double latitude, @RequestParam Double longitude ){
+
+    Owner owner = this.ownerService.findByusername(principal.getName());
+
+    PlaceOwner placeOwner = this.placeService.savePlace(storeName,address,detailAddress,phoneNum,category,latitude,longitude,owner);
     model.addAttribute("placeOwner", placeOwner);
 
     List<PlaceOperate> placeOperateList = this.placeOperateService.getAllOperateList(placeOwner.getId());
@@ -63,5 +69,13 @@ public class PlaceController {
     Map<String, String> response = new HashMap<>();
     response.put("redirectUrl", "/place/map/regist/info/" + Long.valueOf(placeOwnerId));
     return response;
+  }
+
+  @GetMapping("regist/list")
+  public String getList(Principal principal,Model model){
+    Owner owner = this.ownerService.findByusername(principal.getName());
+    List<PlaceOwner> placeList = this.placeService.getPlaceOwnersByOwnerId(owner.getId());
+    model.addAttribute("placeList",placeList);
+    return "Place/PlaceRegistList";
   }
 }

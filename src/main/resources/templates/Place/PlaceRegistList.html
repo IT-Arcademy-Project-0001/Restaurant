@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ko" layout:decorate="~{/member/member_profile_layout}">
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="/Place/PlaceRegistList.css">
+    </head>
+    <body>
+        <div layout:fragment="profileContent">
+            <table>
+                <thead>
+                    <tr>
+                        <th>순번</th>
+                        <th>가게명</th>
+                        <th>오픈일자</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="placelist,loop : ${placeList}">
+                        <td th:text="${loop.count}"></td>
+                        <td th:text="${placelist.store}"></td>
+                        <td th:text="${#temporals.format(placelist.openingDate, 'yyyy-MM-dd')}"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </body>
+</html>

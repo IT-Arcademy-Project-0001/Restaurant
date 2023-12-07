@@ -10,6 +10,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -45,6 +46,8 @@ public class PlaceOwner {
     private String storeCategory;        // 매장 카테고리 ( ex. 음식점, 카페, 술집, )
 
     private String storeMemo;            // 추가 안내사항 작성
+
+    private LocalDateTime openingDate;   // 개업일자
 
     @OneToMany(mappedBy = "placeOwner")
     private List<PlaceOperate> placeOperateList;
