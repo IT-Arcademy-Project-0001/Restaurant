@@ -232,7 +232,6 @@ function map_modal_create(){
 
                  var content = '<div class ="labelCustom"><span class="left"></span><span class="center">' + searchResult3.store + '</span><span class="right"></span></div>';
 
-
                  var customOverlay = new kakao.maps.CustomOverlay({
                      position: position,
                      content: content,
