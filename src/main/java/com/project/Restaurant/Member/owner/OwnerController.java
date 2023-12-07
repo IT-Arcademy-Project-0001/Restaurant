@@ -77,6 +77,7 @@ public class OwnerController {
         model.addAttribute("authority", authority);
         return "member/member_profile";
     }
+
     @PostMapping("/findusername")
     public String findusername(String email, Model model) {
         Owner targetOwner = ownerService.findByEmail(email);

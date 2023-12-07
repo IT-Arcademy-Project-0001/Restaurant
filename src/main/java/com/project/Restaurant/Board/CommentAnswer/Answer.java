@@ -1,26 +1,25 @@
-package com.project.Restaurant.CommentAnswer;
+package com.project.Restaurant.Board.CommentAnswer;
 
 
+import com.project.Restaurant.Board.Post.Post;
+import com.project.Restaurant.Board.PostComment.Comment;
 import com.project.Restaurant.Member.consumer.Customer;
-import com.project.Restaurant.Post.Post;
-import com.project.Restaurant.PostComment.PostComment;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.Set;
 
-@Entity
 @Getter
 @Setter
+@Entity
 public class Answer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 200)
+    @Column(length = 200, nullable = false)
     private String content;
 
     private LocalDateTime localDateTime;
@@ -28,11 +27,13 @@ public class Answer {
     @ManyToOne
     private Customer customer;
 
+    private LocalDateTime modifyDate;
+
     @ManyToOne
     private Post post;
 
     @ManyToOne
-    private PostComment postComment;
+    private Comment comment;
 
-    private LocalDateTime modifyDate;
+
 }

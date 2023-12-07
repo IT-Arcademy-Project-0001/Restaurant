@@ -1,9 +1,9 @@
-package com.project.Restaurant.Post;
+package com.project.Restaurant.Board.Post;
 
 
 import com.project.Restaurant.DataNotFoundException;
 import com.project.Restaurant.Member.consumer.Customer;
-import com.project.Restaurant.PostComment.PostComment;
+import com.project.Restaurant.Board.PostComment.Comment;
 import jakarta.persistence.criteria.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -11,15 +11,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
-import java.io.Serial;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @RequiredArgsConstructor
 @Service
@@ -28,34 +25,35 @@ public class PostService {
     private final PostRepository postRepository;
 
 
-    private Specification<Post> search(String kw) {
-        return new Specification<>() {
-            private static final long serialVersionUID = 1L;
+//    private Specification<Post> search(String kw) {
+//        return new Specification<>() {
+//            private static final long serialVersionUID = 1L;
+//
+//            @Override
+//            public Predicate toPredicate(Root<Post> p, CriteriaQuery<?> query, CriteriaBuilder cb) {
+//                query.distinct(true);  // 중복을 제거
+//                Join<Post, Customer> u1 = p.join("customer", JoinType.LEFT);
+//                Join<Post, Comment> a = p.join("commentList", JoinType.LEFT);
+//                Join<Comment, Customer> u2 = a.join("customer", JoinType.LEFT);
+//                return cb.or(cb.like(p.get("title"), "%" + kw + "%"), // 제목
+//                        cb.like(p.get("content"), "%" + kw + "%"),      // 내용
+//                        cb.like(u1.get("username"), "%" + kw + "%"),    // 질문 작성자
+//                        cb.like(a.get("content"), "%" + kw + "%"),      // 답변 내용
+//                        cb.like(u2.get("username"), "%" + kw + "%"));   // 답변 작성자
+//            }
+//        };
+//    }
 
-            @Override
-            public Predicate toPredicate(Root<Post> p, CriteriaQuery<?> query, CriteriaBuilder cb) {
-                query.distinct(true);  // 중복을 제거
-                Join<Post, Customer> u1 = p.join("customer", JoinType.LEFT);
-                Join<Post, PostComment> a = p.join("postCommentList", JoinType.LEFT);
-                Join<PostComment, Customer> u2 = a.join("customer", JoinType.LEFT);
-                return cb.or(cb.like(p.get("title"), "%" + kw + "%"), // 제목
-                        cb.like(p.get("content"), "%" + kw + "%"),      // 내용
-                        cb.like(u1.get("username"), "%" + kw + "%"),    // 질문 작성자
-                        cb.like(a.get("content"), "%" + kw + "%"),      // 답변 내용
-                        cb.like(u2.get("username"), "%" + kw + "%"));   // 답변 작성자
-            }
-        };
-    }
 
-
-    public Page<Post> getList(int page, String kw) {
+    public Page<Post> getList(int category, int page, String kw) {
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.desc("localDateTime"));
         Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
 
-        Specification<Post> spec = search(kw);
-        return this.postRepository.findAll(spec, pageable);
+//        Specification<Post> spec = search(kw);
+        return postRepository.findAllByKeywordAndType(kw, category, pageable);
     }
+
 
 
     public Post getPost(Long id) {
@@ -71,17 +69,18 @@ public class PostService {
             post1.setView(post1.getView() + 1);
             return this.postRepository.save(post1);
         } else {
-            throw new DataNotFoundException("Question not found");
+            throw new DataNotFoundException("post not found");
         }
     }
 
 
-    public void create(String title, String content, Customer customer) {
+    public void create(String title, String content, Customer customer, int category) {
         Post p = new Post();
         p.setTitle(title);
         p.setContent(content);
         p.setLocalDateTime(LocalDateTime.now());
         p.setCustomer(customer);
+        p.setCategory(category);
         this.postRepository.save(p);
     }
 
