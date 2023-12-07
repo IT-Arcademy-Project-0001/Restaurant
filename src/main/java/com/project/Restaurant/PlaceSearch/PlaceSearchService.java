@@ -1,6 +1,8 @@
 package com.project.Restaurant.PlaceSearch;
 
 import com.project.Restaurant.DataNotFoundException;
+import com.project.Restaurant.Place.Comment.PlaceOwnerComment;
+import com.project.Restaurant.Place.Comment.PlaceOwnerCommentRepository;
 import com.project.Restaurant.Place.Customer.PlaceCustRepository;
 import com.project.Restaurant.Place.Customer.PlaceCustomer;
 import com.project.Restaurant.Place.Owner.PlaceOwner;
@@ -19,6 +21,7 @@ public class PlaceSearchService {
 
   private final PlaceCustRepository placeCustRepository;
   private final PlaceRepository placeOwnerRepository;
+  private final PlaceOwnerCommentRepository placeOwnerCommentRepository;
 
   public PlaceOwner getPlace(Long id) {
     // JpaRepository의 기능을 이용하여 기사번호 id에 맞는 가게를 찾아 가져오는 것임
@@ -34,6 +37,7 @@ public class PlaceSearchService {
 
     List<PlaceOwner> placeResults1 = placeOwnerRepository.findAll();
     List<PlaceCustomer> placeResults2 = placeCustRepository.findAll();
+
 
     // 하버사인 공식에 의해 현재 보고 있는 맵중심을 기준으로 반경 2km 이내의 장소만 출력
     // 카카오 기준으로는 30km 이내만 도보 길안내를 알려줌. (5km 성인기준 1시간 15분 정도 소요)
@@ -51,10 +55,19 @@ public class PlaceSearchService {
         ps.setCategoryOrder(1); // order 값 설정
         ps.setCategory(place.getStoreCategory());
         ps.setAddress(place.getStoreAddress());
+
+//        // 해당 장소의 후기 가져오기
+//        List<PlaceOwnerComment> comments = placeOwnerCommentRepository.findByPlaceOwner(place);
+//
+//        // 평균 별점 계산 및 설정 (소수점 첫째자리)
+//        double averageStarRating = calculateAverageStarRating(comments);
+//        ps.setStarRate(String.format("%.1f", averageStarRating));
+
         // ... 나머지 필드 설정
         searchResults.add(ps);
       }
     }
+
 
     for (PlaceCustomer place2 : placeResults2) {
       if (order != null && order.contains(2) && calculateDistance(currentLat, currentLng, place2.getLatitude(), place2.getLongitude()) < radius) {
@@ -88,4 +101,19 @@ public class PlaceSearchService {
     return earthRadius * c;
 
   }
+
+
+  private double calculateAverageStarRating(List<PlaceOwnerComment> comments) {
+    if (comments.isEmpty()) {
+      return 0.0; // or any default value
+    }
+
+    double sum = 0;
+    for (PlaceOwnerComment comment : comments) {
+      sum += Double.parseDouble(comment.getStarRate());
+    }
+
+    return sum / comments.size();
+  }
+
 }
