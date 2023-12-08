@@ -20,8 +20,6 @@
                 </div>
             </div>
             <div class="my-3">
-
-
                 <a href="javascript:void(0);" class="recommend btn btn-sm btn-outline-secondary"
                    th:data-uri="@{|/post/likes/${post.id}|}">
                     좋아요
@@ -104,16 +102,17 @@
 
 
             <!--            댓글에 답변 작성-->
-            <form th:action="@{|/answer/create/${comment.id}|}" method="post" class="my-3" th:object="${answerForm}"
+            <form  th:action="@{|/answer/create/${comment.id}|}" method="post" class="my-3" th:object="${answerForm}"
                   onsubmit="return submitAnswer()">
                 <input type="hidden" th:value="${post.id}" name="postId">
                 <input type="hidden" th:value="${comment.id}" name="commentId">
                 <div class="alert alert-danger" role="alert" th:if="${#fields.hasAnyErrors()}">
                     <div th:each="err : ${#fields.allErrors()}" th:text="${err}"/>
                 </div>
-                <div id="Textarea">
-                    <div th:if="${#authorization.expression('isAuthenticated()')}">
-                            <textarea th:field="*{content}" class="form-control" rows="2" placeholder="답글을 남겨보세요."></textarea>
+                <div id="Textarea" >
+                    <div th:if="${#authorization.expression('isAuthenticated()') and not #authorization.expression('hasAuthority(''사장님'')')}"
+                    >
+                            <textarea  th:field="*{content}" class="form-control" rows="2" placeholder="답글을 남겨보세요."></textarea>
                         <input type="submit" value="등록" class="btn btn-primary my-2">
                     </div>
                 </div>
@@ -127,26 +126,25 @@
 
 
     <!-- 답변 작성 -->
-    <form th:action="@{|/comment/create/${post.id}|}" method="post" class="my-3" th:object="${commentForm}"
-          onsubmit="return submitComment()">
+    <form th:action="@{|/comment/create/${post.id}|}" method="post" class="my-3" th:object="${commentForm}" onsubmit="return submitComment()">
         <div class="alert alert-danger" role="alert" th:if="${#fields.hasAnyErrors()}">
             <div th:each="err : ${#fields.allErrors()}" th:text="${err}"/>
         </div>
         <div id="floatingTextarea">
             <!-- 익명 사용자인 경우 "로그인" 버튼을 표시 -->
             <div th:if="${#authorization.expression('isAnonymous()')}">
-                <textarea disabled th:field="*{content}" class="form-control" rows="2" placeholder="로그인을 해주세요."
-                          id="anonymousContent"></textarea>
+                <textarea disabled th:field="*{content}" class="form-control" rows="2" placeholder="로그인을 해주세요." id="anonymousContent"></textarea>
                 <input type="submit" value="로그인" class="btn btn-primary my-2">
             </div>
-            <!--   인증된 사용자인 경우 "답변등록" 버튼을 표시 -->
-            <div th:if="${#authorization.expression('isAuthenticated()')}">
-                <textarea th:field="*{content}" class="form-control" rows="2" placeholder="댓글을 남겨보세요."
-                          id="authenticatedComment"></textarea>
+            <!-- 인증된 사용자이면서 사장님 권한이 아닌 경우 "등록" 버튼을 표시 -->
+            <div th:if="${#authorization.expression('isAuthenticated()') and not #authorization.expression('hasAuthority(''사장님'')')}"
+            >
+                <textarea th:field="*{content}" class="form-control" rows="2" placeholder="댓글을 남겨보세요." id="authenticatedComment"></textarea>
                 <input type="submit" value="등록" class="btn btn-primary my-2">
             </div>
         </div>
     </form>
+
 
     <script>
         // function submitAnswer() {

@@ -52,19 +52,20 @@
                     <div>
                         <table class="board-table">
                             <thead>
-                                <tr class="text-center">
-                                    <th style="width:15%">번호</th>
-                                    <th style="width:25%">제목</th>
-                                    <th style="width:30%">작성자</th>
-                                    <th style="width:20%">작성일시</th>
-                                    <th style="width:20%">조회수</th>
-                                </tr>
+                            <tr class="text-center">
+                                <th style="width:15%">번호</th>
+                                <th style="width:25%">제목</th>
+                                <th style="width:30%">작성자</th>
+                                <th style="width:20%">작성일시</th>
+                                <th style="width:20%">조회수</th>
+                            </tr>
                             </thead>
                             <tbody>
                             <tr class="text-center" th:each="post, loop : ${paging.content}">
                                 <td th:text="${paging.getTotalElements - (paging.number * paging.size) - loop.index}"></td>
                                 <td class="text-start">
-                                    <a class="Post-List" style="text-decoration: none;" th:href="@{|/post/detail/${post.id}|}"
+                                    <a class="Post-List" style="text-decoration: none;"
+                                       th:href="@{|/post/detail/${post.id}|}"
                                        th:text="${post.title}"></a>
                                     <span class="text-danger small ms-2" th:if="${#lists.size(post.commentList) > 0}">
                                     <span class="comment-text" th:text="${#lists.size(post.commentList)}"></span>
@@ -79,65 +80,60 @@
                         </table>
                     </div>
                 </div>
+                <!-- 오른쪽 열 아래에 질문 등록하기 버튼을 배치 -->
+                <div class="update-button">
+                    <div>
+                        <a th:if="${#authorization.expression('hasAuthority(''관리자'')') and boardName == 0}" th:href="@{/post/create/notice}" class="btn btn-primary">공지사항 등록</a>
+                        <a  th:if="${not #authorization.expression('hasAuthority(''사장님'')') and boardName == 1}" th:href="@{/post/create/free}" class="btn btn-dark" style="padding: 5px;">자유게시판 등록</a>
+                        <a th:if="${not #authorization.expression('hasAuthority(''사장님'')') and boardName == 2}" th:href="@{/post/create/request}" class="btn btn-dark" style="padding: 5px;">고객요청사항 등록</a>
+                    </div>
+
+
+                </div>
 
                 <!-- 페이징처리 시작 -->
-                <div>
-                    <div th:if="${!paging.isEmpty()}">
-                        <ul class="pagination justify-content-center">
+                <div th:if="${!paging.isEmpty()}" class="paging">
+                    <ul class="pagination justify-content-center">
 
-                            <!-- 추가: 맨 처음으로 가는 버튼 -->
-                            <li class="page-item" th:classappend="${paging.number > 0} ? '' : 'disabled'">
-                                <a class="page-link" th:href="@{|?page=0|}">
-                                    <span>처음</span>
-                                </a>
-                            </li>
+                        <!-- 추가: 맨 처음으로 가는 버튼 -->
+                        <li class="page-item" th:classappend="${paging.number > 0} ? '' : 'disabled'">
+                            <a class="page-link" th:href="@{|?page=0|}">
+                                <span>처음</span>
+                            </a>
+                        </li>
 
-                            <li class="page-item" th:classappend="${!paging?.hasPrevious} ? 'disabled' : ''">
-                                <a class="page-link" th:href="@{|?page=${(paging?.number ?: 0) - 1}|}">
-                                    <span>이전</span>
-                                </a>
-                            </li>
-
-
-                            <!-- 페이지 번호 링크 -->
-                            <li th:each="i : ${#numbers.sequence(paging.number - (paging.number % 10), (paging.number + (9 - (paging.number % 10))) < paging.totalPages ? (paging.number + (9 - (paging.number % 10))) : paging.totalPages - 1)}"
-                                class="page-item">
-                                <a th:text="${i+1}" class="page-link" th:href="@{|?page=${i}|}"
-                                   th:classappend="${i == paging.number} ? 'active'"></a>
-                            </li>
+                        <li class="page-item" th:classappend="${!paging?.hasPrevious} ? 'disabled' : ''">
+                            <a class="page-link" th:href="@{|?page=${(paging?.number ?: 0) - 1}|}">
+                                <span>이전</span>
+                            </a>
+                        </li>
 
 
-                            <li class="page-item" th:classappend="${!paging.hasNext} ? 'disabled'">
-                                <a class="page-link" th:href="@{|?page=${paging.number+1}|}">
-                                    <span>다음</span>
-                                </a>
-                            </li>
+                        <!-- 페이지 번호 링크 -->
+                        <li th:each="i : ${#numbers.sequence(paging.number - (paging.number % 10), (paging.number + (9 - (paging.number % 10))) < paging.totalPages ? (paging.number + (9 - (paging.number % 10))) : paging.totalPages - 1)}"
+                            class="page-item">
+                            <a th:text="${i+1}" class="page-link" th:href="@{|?page=${i}|}"
+                               th:classappend="${i == paging.number} ? 'active'"></a>
+                        </li>
 
 
-                            <!-- 추가: 맨 끝으로 가는 버튼 -->
-                            <li class="page-item"
-                                th:classappend="${paging.number < paging.totalPages - 1} ? '' : 'disabled'">
-                                <a class="page-link" th:href="@{|?page=${paging.totalPages - 1}|}">
-                                    <span>마지막</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                    <!-- 페이징처리 끝 -->
+                        <li class="page-item" th:classappend="${!paging.hasNext} ? 'disabled'">
+                            <a class="page-link" th:href="@{|?page=${paging.number+1}|}">
+                                <span>다음</span>
+                            </a>
+                        </li>
 
 
-                    <!-- 오른쪽 열 아래에 질문 등록하기 버튼을 배치 -->
-                    <div class="update-button">
-                        <div style="margin-top: -49px;">
-                            <!--                    <a th:href="@{/post/create/notice}" class="btn btn-primary"-->
-                            <!--                       th:if="${boardName == 0}">공지사항 등록</a>-->
-                            <a th:href="@{/post/create/free}" class="btn btn-dark" style="padding: 5px;"
-                               th:if="${boardName == 1}">자유게시판 등록</a>
-                            <a th:href="@{/post/create/request}" class="btn btn-dark" style="padding: 5px;"
-                               th:if="${boardName == 2}">고객요청사항 등록</a>
-                        </div>
-                    </div>
+                        <!-- 추가: 맨 끝으로 가는 버튼 -->
+                        <li class="page-item"
+                            th:classappend="${paging.number < paging.totalPages - 1} ? '' : 'disabled'">
+                            <a class="page-link" th:href="@{|?page=${paging.totalPages - 1}|}">
+                                <span>마지막</span>
+                            </a>
+                        </li>
+                    </ul>
                 </div>
+                <!-- 페이징처리 끝 -->
 
 
                 <!--            <script layout:fragment="script" type='text/javascript'>-->
