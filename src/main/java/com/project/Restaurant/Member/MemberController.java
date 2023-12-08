@@ -108,8 +108,7 @@ public class MemberController {
                     ownerService.deleteOwner(owner);
                     return "redirect:/member/logout";
                 } else {
-                    bindingResult.rejectValue("passwordConfirm", "passwordInCorrect",
-                            "패스워드가 일치하지 않습니다.");
+                    bindingResultReject(bindingResult);
                     return "member/deleteForm";
                 }
             } else {
@@ -118,14 +117,12 @@ public class MemberController {
                     customerService.deleteCustomer(customer);
                     return "redirect:/member/logout";
                 } else {
-                    bindingResult.rejectValue("passwordConfirm", "passwordInCorrect",
-                            "패스워드가 일치하지 않습니다.");
+                    bindingResultReject(bindingResult);
                     return "member/deleteForm";
                 }
             }
         } else {
-            bindingResult.rejectValue("passwordConfirm", "passwordInCorrect",
-                    "패스워드가 일치하지 않습니다.");
+            bindingResultReject(bindingResult);
             return "member/deleteForm";
         }
     }
@@ -142,6 +139,52 @@ public class MemberController {
         return "member/security";
     }
 
+    @GetMapping("/changePw")
+    public String changePw(PasswordChangeForm passwordChangeForm) {
+        return "member/changePwForm";
+    }
+
+    @PostMapping("/changePw")
+    public String passwordChange(@Valid PasswordChangeForm passwordChangeForm, BindingResult bindingResult,
+                                 Principal principal) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        GrantedAuthority authority = authentication.getAuthorities().iterator().next();
+
+        if (bindingResult.hasErrors()) {
+            return "member/changePwForm";
+        }
+
+        if (passwordChangeForm.getPassword().equals(passwordChangeForm.getPasswordConfirm())) {
+            if (authority.getAuthority().equals("사장님")) {
+                Owner owner = ownerService.findByusername(principal.getName());
+                if (passwordEncoder.matches(passwordChangeForm.getOldPassword(), owner.getPassword())) {
+                    ownerService.changePassword(owner, passwordChangeForm.getPassword());
+                } else {
+                    bindingResultReject(bindingResult);
+                    return "member/changePwForm";
+                }
+            } else {
+                Customer customer = customerService.findByusername(principal.getName());
+                if (passwordEncoder.matches(passwordChangeForm.getOldPassword(), customer.getPassword())) {
+                    customerService.changePassword(customer, passwordChangeForm.getOldPassword());
+                } else {
+                    bindingResultReject(bindingResult);
+                    return "member/changePwForm";
+                }
+            }
+        } else {
+            bindingResultReject(bindingResult);
+            return "member/changePwForm";
+        }
+        return "redirect:/member/logout";
+    }
+
+
+    private void bindingResultReject(BindingResult bindingResult) {
+        bindingResult.rejectValue("passwordConfirm", "passwordInCorrect",
+                "패스워드가 일치하지 않습니다.");
+    }
     private void populateMemberInfo(Model model, Principal principal) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         GrantedAuthority authority = authentication.getAuthorities().iterator().next();

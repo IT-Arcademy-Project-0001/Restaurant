@@ -51,6 +51,11 @@ public class OwnerService {
         ownerRepository.save(owner);
     }
 
+    public void changePassword(Owner owner, String password) {
+        owner.setPassword(passwordEncoder.encode(password));
+        ownerRepository.save(owner);
+    }
+
     public Owner findByusername(String username) {
         if (ownerRepository.findByusername(username).isPresent()) {
             return ownerRepository.findByusername(username).get();
