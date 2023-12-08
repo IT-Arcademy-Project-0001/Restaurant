@@ -37,7 +37,7 @@
                 <td th:text="${reservation.customer.username}"></td>
                 <td>
                     <span th:text="${#temporals.format(reservation.reservationDate, 'yyyy-MM-dd HH:mm')}"></span>
-                    <form th:if="${reservation.status != '2'}" th:id="${'changeForm-' + reservation.id}"
+                    <form th:if="${reservation.status != '2' and reservation.status != '4'}" th:id="${'changeForm-' + reservation.id}"
                           th:action="@{/reservation/change}" method="post">
                         <input th:id="${'datetimepicker-' + reservation.id}" name="newReservationDate" type="text"/>
                         <input type="hidden" name="id" th:value="${reservation.id}"/>
