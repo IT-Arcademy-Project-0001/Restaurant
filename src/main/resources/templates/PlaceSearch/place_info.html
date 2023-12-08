@@ -11,18 +11,41 @@
         <div class="container py-4">
             <div class="card shadow-sm mb-3">
                 <div class="card-header bg-transparent text-center">
-                    <img class="profile_img" height="300" width="350" th:src="'/menu/' + ${placeMenuThumbnail.origFileName}"  alt="student dp">
+                    <img class="profile_img rounded" height="300" width="350" th:src="'/menu/' + ${placeMenuThumbnail.origFileName}"  alt="student dp">
                     <div>
                         <span th:text = "${placeOwner.store}"></span>
                     </div>
                 </div>
-                <div class="card-body">
-                    <p class="mb-0"><strong class="pr-1">업종 :</strong> <span th:text = "${placeOwner.storeCategory}"></span></p>
-                    <p class="mb-0"><strong class="pr-1">주소 :</strong> <span th:text = "${placeOwner.storeAddress}"></span></p>
-                    <p class="mb-0"><strong class="pr-1">전화번호 :</strong> <span th:text = "${placeOwner.callNum}"></span> </p>
-                    <p class="mb-0"><strong class="pr-1">홈페이지 :</strong> <span th:text = "${placeOwner.link}"></span> </p>
-                    <p class="mb-0"><strong class="pr-1">영업시간 :</strong> 팝업 보여주기 (유사모달), 달력 이미지 및 아이콘 고려 </p>
-                    <p class="mb-0"><strong class="pr-1">태그 </strong>  <span th:each="placeTag : ${placeTags}" th:text="${placeTag.tag}"></span>
+                <div class="card-body align-middle">
+                    <p class="mb-2"><strong class="pr-1">업종 :</strong> <span th:text = "${placeOwner.storeCategory}"></span></p>
+                    <p class="mb-2"><strong class="pr-1">주소 :</strong> <span th:text = "${placeOwner.storeAddress}"></span></p>
+                    <p class="mb-2"><strong class="pr-1">전화번호 :</strong> <span th:text = "${placeOwner.callNum}"></span> </p>
+                    <p class="mb-2"><strong class="pr-1">홈페이지 :</strong> <span th:text = "${placeOwner.link}"></span> </p>
+                    <div class="btn-group">
+                        <div class="mb-2"><strong class="pr-1">영업시간 : </strong> </div>
+                        <button class="btn btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            상세보기
+                        </button>
+                        <ul class="dropdown-menu">
+                            <table class="table">
+                                <thead>
+                                <tr class = "text-center">
+                                    <th scope="col">요일</th>
+                                    <th scope="col">오픈</th>
+                                    <th scope="col">폐점</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="placeOL : ${placeOperate}">
+                                    <td th:text="${placeOL.day}"></td>
+                                    <td th:text="${placeOL.openTime}"></td>
+                                    <td th:text="${placeOL.closeTime}"></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </ul>
+                    </div>
+                    <p class="mb-0"><span th:each="placeTag : ${placeTags}" th:text="${placeTag.tag}"></span>
                 </div>
             </div>
 

@@ -3,6 +3,7 @@ package com.project.Restaurant.PlaceSearch;
 import com.project.Restaurant.Place.Comment.PlaceOwnerComment;
 import com.project.Restaurant.Place.Menu.PlaceMenu;
 import com.project.Restaurant.Place.Menu.PlaceMenuService;
+import com.project.Restaurant.Place.Operate.OperateDto;
 import com.project.Restaurant.Place.Operate.PlaceOperate;
 import com.project.Restaurant.Place.Operate.PlaceOperateService;
 import com.project.Restaurant.Place.Owner.PlaceOwner;
@@ -87,7 +88,7 @@ public class PlaceSearchController {
     PlaceMenu placeMenuThumbnail = this.placeMenuService.findByPlaceOwnerId(id).get(0);
     model.addAttribute("placeMenuThumbnail", placeMenuThumbnail);
 
-    List<PlaceOperate> placeOperateList = this.placeOperateService.getAllOperateList(id);
+    List<OperateDto> placeOperateList = this.placeOperateService.getAllOperateDtoList(id);
     model.addAttribute("placeOperate", placeOperateList);
 
     return "PlaceSearch/place_info";
