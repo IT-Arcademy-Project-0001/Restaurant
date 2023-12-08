@@ -4,6 +4,7 @@ import com.project.Restaurant.Member.EmailService;
 import com.project.Restaurant.Member.MemberCreateForm;
 import com.project.Restaurant.Member.PasswordResetForm;
 import com.project.Restaurant.Member.owner.Owner;
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -32,7 +33,7 @@ public class CustomerController {
     }
 
     @PostMapping("/signup")
-    public String signup(@Valid MemberCreateForm memberCreateForm, BindingResult bindingResult, Model model) {
+    public String signup(@Valid MemberCreateForm memberCreateForm, BindingResult bindingResult, Model model) throws MessagingException {
         if (bindingResult.hasErrors()) {
             return "member/signup_form";
         }
