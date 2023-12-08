@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko" layout:decorate="~{layout}" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" layout:decorate="~{layout}">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,6 +7,7 @@
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <title>예약 목록</title>
+    <link rel="stylesheet" href="/reservation/customer.css">
     <link rel="stylesheet" type="text/css" href="/reservation/jquery.datetimepicker.min.css"/>
     <script src="/reservation/jquery.js"></script>
     <script src="/reservation/jquery.datetimepicker.full.min.js"></script>
@@ -14,7 +15,7 @@
 <body>
 <div layout:fragment="content">
     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-    <div>
+    <div id="kkk">
         <h2>예약 목록</h2>
         <table class="table">
             <thead class="table-dark">
@@ -36,9 +37,10 @@
                 <td th:text="${reservation.customer.username}"></td>
                 <td>
                     <span th:text="${#temporals.format(reservation.reservationDate, 'yyyy-MM-dd HH:mm')}"></span>
-                    <form th:if="${reservation.status != '2'}" th:id="${'changeForm-' + reservation.id}" th:action="@{/reservation/change}" method="post">
+                    <form th:if="${reservation.status != '2' and reservation.status != '4'}" th:id="${'changeForm-' + reservation.id}"
+                          th:action="@{/reservation/change}" method="post">
                         <input th:id="${'datetimepicker-' + reservation.id}" name="newReservationDate" type="text"/>
-                        <input type="hidden" name="id" th:value="${reservation.id}" />
+                        <input type="hidden" name="id" th:value="${reservation.id}"/>
                         <button type="button" th:onclick="changeReservationTime([[${reservation.id}]])">예약 변경</button>
                     </form>
                     <script th:inline="javascript">
@@ -56,6 +58,7 @@
                     <span th:if="${reservation.status == '1'}">승인됨</span>
                     <span th:if="${reservation.status == '2'}">완료됨</span>
                     <span th:if="${reservation.status == '3'}">취소됨</span>
+                    <span th:if="${reservation.status == '4'}">예약완료</span>
                 </td>
                 <td>
                     <!-- 예약이 완료되었을 때 결제 버튼 표시 -->
@@ -73,6 +76,9 @@
                         <a th:href="@{|/place/comment/${reservation.id}|}">
                             <button type="button">후기작성</button>
                         </a>
+                    </span>
+                    <span th:if="${reservation.status == '4'}">
+                        후기등록됨
                     </span>
                 </td>
             </tr>
