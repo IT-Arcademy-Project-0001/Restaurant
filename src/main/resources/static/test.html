@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="reservation/jquery.datetimepicker.min.css"/>
+    <script src="reservation/jquery.js"></script>
+    <script src="reservation/jquery.datetimepicker.full.min.js"></script>
+</head>
+<body>
+<input id="datetimepicker1" type="text" />
+<input id="datetimepicker2" type="text" />
+<script>
+    $("#datetimepicker1").datetimepicker({
+      format: "d/m/Y H:m:",
+    });
+</script>
+<script>
+    $("#datetimepicker2").datetimepicker({
+      format: "d/m/Y H:00",
+    });
+</script>
+</body>
+</html>

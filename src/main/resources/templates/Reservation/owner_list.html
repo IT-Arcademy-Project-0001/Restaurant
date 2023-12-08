@@ -19,6 +19,7 @@
             <th>가게 이름</th>
             <th>손님 이름</th>
             <th>사장 이름</th>
+            <th>예약날짜</th>
             <th>예약 상태</th>
             <th>예약 입력</th>
             <th>작업</th>
@@ -31,6 +32,9 @@
             <td th:text="${reservation.placeOwner.store}"></td>
             <td th:text="${reservation.customer.username}"></td>
             <td th:text="${reservation.placeOwner.owner.username}"></td>
+            <td>
+            <span th:text="${#temporals.format(reservation.reservationDate, 'yyyy-MM-dd HH:mm')}"></span>
+            </td>
             <td>
                 <span th:if="${reservation.status == '0'}">요청중</span>
                 <span th:if="${reservation.status == '1'}">승인됨</span>
