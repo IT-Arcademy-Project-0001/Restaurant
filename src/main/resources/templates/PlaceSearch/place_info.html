@@ -11,7 +11,7 @@
         <div class="container py-4">
             <div class="card shadow-sm mb-3">
                 <div class="card-header bg-transparent text-center">
-                    <img class="profile_img" height="300" width="350" src="/MapSearch/target_mark.png" alt="student dp">
+                    <img class="profile_img" height="300" width="350" th:src="'/menu/' + ${placeMenuThumbnail.origFileName}"  alt="student dp">
                     <div>
                         <span th:text = "${placeOwner.store}"></span>
                     </div>
@@ -21,43 +21,12 @@
                     <p class="mb-0"><strong class="pr-1">주소 :</strong> <span th:text = "${placeOwner.storeAddress}"></span></p>
                     <p class="mb-0"><strong class="pr-1">전화번호 :</strong> <span th:text = "${placeOwner.callNum}"></span> </p>
                     <p class="mb-0"><strong class="pr-1">홈페이지 :</strong> <span th:text = "${placeOwner.link}"></span> </p>
-                    <p class="mb-0"><strong class="pr-1">태그(폰트변경 #태그 공백 #태그)</strong> <span th:text = "${placeOwner.store}"></span></p>
+                    <p class="mb-0"><strong class="pr-1">영업시간 :</strong> 팝업 보여주기 (유사모달), 달력 이미지 및 아이콘 고려 </p>
+                    <p class="mb-0"><strong class="pr-1">태그 </strong>  <span th:each="placeTag : ${placeTags}" th:text="${placeTag.tag}"></span>
                 </div>
             </div>
 
-
-            <div class="card shadow-sm">
-                <div class="card-header bg-transparent border-0">
-                    <h3 class="mb-0"><i class="far fa-clone pr-1"></i>메뉴판</h3>
-                </div>
-                <div class="card-body pt-0">
-                    <table class="table table-bordered">
-                        <tr>
-                            <th>물냉면</th>
-                            <td>12,000원</td>
-                        </tr>
-                        <tr>
-                            <th>비빔냉면</th>
-                            <td>15,000원</td>
-                        </tr>
-                        <tr>
-                            <th>막국수</th>
-                            <td>13,000원</td>
-                        </tr>
-                        <tr>
-                            <th>고기만두</th>
-                            <td>8,000원</td>
-                        </tr>
-                        <tr>
-                            <th>잡채만두</th>
-                            <td>9,000원</td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-
-
-            <div class="card shadow-sm mt-3">
+            <div class="card shadow-sm mb-3">
                 <div class="card-header bg-transparent border-0">
                     <h3 class="mb-0"><i class="far fa-clone pr-1"></i> 진행중인 이벤트 </h3>
                 </div>
@@ -65,10 +34,35 @@
                     <span th:text = "${placeOwner.storeMemo}"></span>
                 </div>
             </div>
+
+            <div class="card shadow-sm">
+                <div class="card-header bg-transparent border-0">
+                    <h3 class="mb-0"><i class="far fa-clone pr-1"></i>메뉴판</h3>
+                </div>
+                <div class="card-body">
+                    <div class="container">
+                        <div class="row">
+                            <div th:each="placeMenuList : ${placeMenu}"  class="col-sm-3">
+                                <div class="card mb-3" style="width: 18rem;">
+                                    <img th:src="'/menu/' + ${placeMenuList.origFileName}" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                        <p class="card-text"> <span th:text = "${placeMenuList.menuName}"></span> </p>
+                                        <p class="card-text"> <span th:text = "${placeMenuList.menuPrice} + ' 원'"></span> </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div>
-                <h5 class="border-bottom my-3 py-2"></h5>
+            <div class="card shadow-sm mt-3 p-3">
+                <div class="card-header bg-transparent border-0">
+                    <h3 class="mb-0"><i class="far fa-clone pr-1"></i> 후기 </h3>
+                </div>
                 <!-- 답변 반복 시작 -->
-                <div class="card my-3" th:each="comment : ${placeOwner.placeOwnerCommentList}">
+                <div class="card mb-2" th:each="comment : ${placeOwner.placeOwnerCommentList}">
                     <div class="card-body">
                         <div class="mb-3"><i th:attr="data-star=${comment.starRate}"></i></div>
                         <div class="card-text" style="white-space: pre-line;" th:text="${comment.content}"></div>
@@ -83,7 +77,8 @@
                      </div>
                 </div>
             </div>
-            <div class = "text-center">
+            </div>
+            <div class = "border-top text-center">
                 <form id="reservationForm" method="post">
                     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                     <input type="hidden" name = "placeOwnerId" th:value = "${placeOwner.id}"/>
