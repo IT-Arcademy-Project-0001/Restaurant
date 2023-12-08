@@ -2,9 +2,12 @@ package com.project.Restaurant.Place.Owner;
 
 import com.project.Restaurant.Member.owner.Owner;
 import com.project.Restaurant.Member.owner.OwnerService;
+import com.project.Restaurant.Place.Menu.PlaceMenu;
+import com.project.Restaurant.Place.Menu.PlaceMenuService;
 import com.project.Restaurant.Place.Operate.OperateDto;
 import com.project.Restaurant.Place.Operate.PlaceOperate;
 import com.project.Restaurant.Place.Operate.PlaceOperateService;
+import com.project.Restaurant.Place.Owner.Tag.PlaceTag;
 import com.project.Restaurant.Place.Owner.Tag.PlaceTagService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -26,6 +29,8 @@ public class PlaceController {
   private final PlaceService placeService;
   private final PlaceTagService placeTagService;
   private final OwnerService ownerService;
+  private final PlaceMenuService placeMenuService;
+  private final OperateDto operateDto;
   @GetMapping("/regist")
   public String regist(Model model) {
     List<PlaceOperate> placeOperateList = this.placeOperateService.getAllOperateList(null);
@@ -77,5 +82,23 @@ public class PlaceController {
     List<PlaceOwner> placeList = this.placeService.getPlaceOwnersByOwnerId(owner.getId());
     model.addAttribute("placeList",placeList);
     return "Place/PlaceRegistList";
+  }
+  @GetMapping("regist/list/detail/{id}")
+  public String getListDetail(Model model,@PathVariable("id") Long id){
+    PlaceOwner placeOwner = this.placeService.findById(id);
+    model.addAttribute("placeOwner", placeOwner);
+
+    Long ownerId = placeOwner.getId();
+    List<OperateDto> operateDtoList = placeOperateService.getAllOperateDtoList(ownerId);
+    model.addAttribute("placeOperateList", operateDtoList);
+
+
+    List<PlaceMenu> placeMenuList  =  this.placeMenuService.findByPlaceOwnerId(id);
+    model.addAttribute("menus", placeMenuList);
+
+    List<PlaceTag> tagList = this.placeTagService.findTags(id);
+    model.addAttribute("TagList",tagList);
+
+    return "Place/PlaceRegistDetailList";
   }
 }

@@ -56,7 +56,6 @@ public class PlaceOperateController {
         List<PlaceMenu> placeMenuList  =  this.placeMenuService.findByPlaceOwnerId(id);
         model.addAttribute("menus", placeMenuList);
 
-
         List<PlaceTag> tagList = this.placeTagService.findTags(id);
         model.addAttribute("TagList",tagList);
 
