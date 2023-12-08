@@ -241,7 +241,7 @@ function getListItem2(searchResult2) {
     var listContent = '<div class="row p-3 border-bottom">' +
                           '<div class="col-sm-8">' +
                               '<div class="fw-bold"><a href="/place/' + searchResult2.categoryOrder + '/' + searchResult2.id + '" target="_blank" class="link">' + searchResult2.store + '</a></div>' +
-                              '<div>' + searchResult2.starRate + '</div>' +
+                              '<div>' + searchResult2.starRate + '<i data-star="' + searchResult2.starRate + '"></i> | 후기 ' + searchResult2.reviewCount + '</div>' +
                               '<div>' + searchResult2.address + '</div>' +
                               '<div>' + searchResult2.category + '</div>' +
                           '</div>' +

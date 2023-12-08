@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="/MapSearch/map_search.css">
     <link rel="stylesheet" href="/MapSearch/custominfo.css">
     <link rel="stylesheet" href="/MapSearch/custom_regist.css">
+    <link rel="stylesheet" type="text/css" href="/MapSearch/star_rate.css">
 </head>
 <body>
 <div layout:fragment="content">
@@ -31,20 +32,20 @@
                                     <ul id="placesList"></ul>
                                     <div id="pagination"></div>
                                 </div>
-                                <div id="menu_wrap2" style="display: block;">
+                                <div class ="text-center " id="menu_wrap2" style="display: block;">
                                     <img src="/MapSearch/search_main.jpg" class="img-fluid" alt="...">
-                                    <h2 class="text-center my-3">원하는 장소를 검색하세요</h2>
+                                    <h4 class="my-3">원하는 장소를 검색하세요</h4>
+                                    <div sec:authorize="hasAuthority('소비자')">
+                                        <button class="popup_open_btn btn btn-primary" type ="button" id="popup_open_btn">신규 장소 요청</button>
+                                    </div>
                                 </div>
                             </div>
                             <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">
                                 <div id="resList" class="overflow-auto" style="display: none;">
                                 </div>
-                                <div id="resList2" style="display: block;">
+                                <div class ="text-center" id="resList2" style="display: block;">
                                     <img src="/MapSearch/search_main.jpg" class="img-fluid" alt="...">
-                                    <h2 class="text-center my-3">원하는 장소를 검색하세요</h2>
-                                    <div sec:authorize="hasAuthority('소비자')" class = "text-end">
-                                    <button class="popup_open_btn btn btn-primary" type ="button" id="popup_open_btn">누락된 장소 추가</button>
-                                    </div>
+                                    <h4 class="text-center my-3">원하는 장소를 검색하세요</h4>
                                 </div>
 
                                 <div id="my_modal">
