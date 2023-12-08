@@ -91,7 +91,7 @@ public class MemberController {
     }
 
     @PostMapping("/delete")
-    public String delete(Model model, Principal principal, @Valid PasswordResetForm passwordResetForm,
+    public String delete(Principal principal, @Valid PasswordResetForm passwordResetForm,
                          BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
@@ -100,7 +100,6 @@ public class MemberController {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         GrantedAuthority authority = authentication.getAuthorities().iterator().next();
-        String msg = "탈퇴실패";
 
         if (passwordResetForm.getPassword().equals(passwordResetForm.getPasswordConfirm())) {
             if (authority.getAuthority().equals("사장님")) {
@@ -109,7 +108,8 @@ public class MemberController {
                     ownerService.deleteOwner(owner);
                     return "redirect:/member/logout";
                 } else {
-                    model.addAttribute("msg", msg);
+                    bindingResult.rejectValue("passwordConfirm", "passwordInCorrect",
+                            "패스워드가 일치하지 않습니다.");
                     return "member/deleteForm";
                 }
             } else {
@@ -118,12 +118,14 @@ public class MemberController {
                     customerService.deleteCustomer(customer);
                     return "redirect:/member/logout";
                 } else {
-                    model.addAttribute("msg", msg);
+                    bindingResult.rejectValue("passwordConfirm", "passwordInCorrect",
+                            "패스워드가 일치하지 않습니다.");
                     return "member/deleteForm";
                 }
             }
         } else {
-            model.addAttribute("msg", msg);
+            bindingResult.rejectValue("passwordConfirm", "passwordInCorrect",
+                    "패스워드가 일치하지 않습니다.");
             return "member/deleteForm";
         }
     }

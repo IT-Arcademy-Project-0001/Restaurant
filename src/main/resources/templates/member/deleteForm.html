@@ -12,6 +12,9 @@
             <div role="alert" th:if="${#fields.hasAnyErrors()}">
                 <div th:replace="~{form_errors :: formErrorsFragment}"></div>
             </div>
+            <div th:if="${message}" class="alert alert-danger">
+                <span th:text="${message}"></span>
+            </div>
             <div class="mb-3">
                 <label for="password" class="form-label">비밀번호</label>
                 <input type="text" id="password" th:field="*{password}"
@@ -22,7 +25,7 @@
                 <input type="text" id="passwordConfirm" th:field="*{passwordConfirm}"
                        name="passwordConfirm" class="form-control">
             </div>
-            <input type="submit" th:value="회원탈퇴">
+            <input type="button" class="btn btn-secondary" th:value="회원탈퇴" onclick="">
         </form>
     </div>
 </div>
