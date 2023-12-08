@@ -1,7 +1,10 @@
 package com.project.Restaurant.PlaceSearch;
 
+import com.project.Restaurant.Place.Comment.PlaceOwnerComment;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -14,5 +17,7 @@ public class PlaceSearch {
     private Integer categoryOrder;
     private String address;
     private String category;
+    private Long reviewCount;
+    private String starRate;
 
 }

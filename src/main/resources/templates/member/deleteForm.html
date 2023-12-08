@@ -6,7 +6,7 @@
 </head>
 <body>
 <div layout:fragment="profileContent">
-    <div class="all">
+    <div class="wrap">
         <form th:action="@{/member/delete}" method="post" th:object="${passwordResetForm}">
             <h1>회원탈퇴</h1>
             <div role="alert" th:if="${#fields.hasAnyErrors()}">

@@ -18,13 +18,12 @@ public class PlaceOwnerComment {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(nullable = false, length = 20)
-  private String subject;
-
   @Column(nullable = false, length = 200)
   private String content;
 
   private LocalDateTime localDateTime;
+
+  private String starRate;
 
   @ManyToOne
   private Customer customer;

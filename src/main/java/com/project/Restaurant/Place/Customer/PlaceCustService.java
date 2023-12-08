@@ -1,5 +1,6 @@
 package com.project.Restaurant.Place.Customer;
 
+import com.project.Restaurant.Member.consumer.Customer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -11,9 +12,11 @@ import javax.swing.plaf.PanelUI;
 public class PlaceCustService {
 
     private final PlaceCustRepository placeCustRepository;
-    public void addnewplace(String name,String locationAddress, String detailedaddress, String category,  Double locationLat, Double locationLng, String memo){
+    public void addnewplace(String name, String locationAddress, String detailedaddress, String category, Double locationLat, Double locationLng,
+                            String memo, Customer customer){
 
         PlaceCustomer placeCustomer = new PlaceCustomer();
+
         placeCustomer.setStore(name);
         placeCustomer.setStoreAddress(locationAddress);
         placeCustomer.setStoreDetailedAddress(detailedaddress);
@@ -21,6 +24,7 @@ public class PlaceCustService {
         placeCustomer.setLatitude(locationLat);
         placeCustomer.setLongitude(locationLng);
         placeCustomer.setStoreMemo(memo);
+        placeCustomer.setCustomer(customer);
 
         this.placeCustRepository.save(placeCustomer);
     }

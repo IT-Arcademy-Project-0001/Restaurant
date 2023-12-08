@@ -16,6 +16,7 @@
     }
 
     if (form) {
+       alert('신규장소 추가 요청이 완료되었습니다');
        form.action = "/place/map/add";
        form.submit();
     } else {
@@ -229,13 +230,12 @@ function map_modal_create(){
 
                  var position = new kakao.maps.LatLng(searchResult3.locationLat, searchResult3.locationLng);
 
-                 var content = '<div class = "customInfo">' + searchResult3.store + '</div>';
-                 // 커스텀 오버레이를 생성합니다
+                 var content = '<div class ="labelCustom"><span class="left"></span><span class="center">' + searchResult3.store + '</span><span class="right"></span></div>';
 
                  var customOverlay = new kakao.maps.CustomOverlay({
                      position: position,
                      content: content,
-                     xAnchor: 0.3,
+                     xAnchor: 0.43,
                      yAnchor: 0.91,
                      zIndex:1,
                      clickable: true
@@ -253,8 +253,8 @@ function map_modal_create(){
 
  function addMarkerCategory2(position, order, map_modal) {
 
-     var imageSrc = '/MapSearch/marker_food.png', // 마커 이미지 url, 스프라이트 이미지를 씁니다
-         imageSize = new kakao.maps.Size(36, 53),  // 마커 이미지의 크기
+     var imageSrc = '/MapSearch/regist_waiting.png', // 마커 이미지 url, 스프라이트 이미지를 씁니다
+         imageSize = new kakao.maps.Size(30, 30),  // 마커 이미지의 크기
          imgOptions =  {
              offset: new kakao.maps.Point(11, 28) // 마커 좌표에 일치시킬 이미지 내에서의 좌표
          },

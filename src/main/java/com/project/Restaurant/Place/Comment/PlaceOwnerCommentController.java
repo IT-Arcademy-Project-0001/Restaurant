@@ -4,6 +4,7 @@ package com.project.Restaurant.Place.Comment;
 import com.project.Restaurant.Member.consumer.Customer;
 import com.project.Restaurant.Member.consumer.CustomerService;
 import com.project.Restaurant.Reservation.Reservation;
+import com.project.Restaurant.Reservation.ReservationRepository;
 import com.project.Restaurant.Reservation.ReservationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,7 @@ public class PlaceOwnerCommentController {
   private final CustomerService customerService;
   private final ReservationService reservationService;
   private final PlaceOwnerCommentService placeOwnerCommentService;
+  private final ReservationRepository reservationRepository;
 
   @GetMapping("/comment/{reservationId}")
   public String placecomment(Model model, @PathVariable("reservationId") Long reservationId,
@@ -47,7 +49,10 @@ public class PlaceOwnerCommentController {
         return "PlaceSearch/place_review";
       }
 
-      this.placeOwnerCommentService.create(reservation.getPlaceOwner(), customer, placeOwnerCommentForm.getReviewSubject(), placeOwnerCommentForm.getReviewContent());
+      reservation.setStatus("4");
+      this.reservationRepository.save(reservation);
+
+      this.placeOwnerCommentService.create(reservation.getPlaceOwner(), customer, placeOwnerCommentForm.getStarRate(), placeOwnerCommentForm.getReviewContent());
 
       return "redirect:/reservation/customerList";
     }

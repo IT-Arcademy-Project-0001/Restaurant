@@ -6,14 +6,27 @@
 </head>
 <body>
 <div layout:fragment="profileContent">
-    <div class="all">
+    <div class="wrap">
         <div class="profile">
             <img th:src="${member.getPhoto()}" class="image">
         </div>
         <div class="info">
-            <h4 th:text="${member.getNickname()}"></h4>
-            <h4 th:text="${member.getEmail()}"></h4>
-            <h4 th:text="${#temporals.format(member.getSignupDate(), 'yyyy-MM-dd')}"></h4>
+            <div>
+                <label for="nickName" class="form-label">닉네임 : </label>
+                <h4 th:text="${member.getNickname()}" id="nickName"></h4>
+            </div>
+            <div>
+                <label for="email" class="form-label">이메일 : </label>
+                <h4 th:text="${member.getEmail()}" id="email"></h4>
+            </div>
+            <div>
+                <label for="signupDate" class="form-label">가입일자 : </label>
+                <h4 th:text="${#temporals.format(member.getSignupDate(), 'yyyy-MM-dd')}" id="signupDate"></h4>
+            </div>
+        </div>
+        <div class="set">
+            <a th:href="@{/member/deleteForm}" class="btn btn-secondary">회원탈퇴</a>
+            <a th:href="@{/member/changePw}" class="btn btn-secondary">비밀번호변경</a>
         </div>
     </div>
 </div>

@@ -7,4 +7,5 @@ import java.util.List;
 public interface PlaceOperateRepository extends JpaRepository<PlaceOperate, Integer> {
   List<PlaceOperate> findByPlaceOwner_Id(Long PlaceOwnerId);
   List<PlaceOperate>  findByPlaceOwner(PlaceOwner placeOwner);
+
 }

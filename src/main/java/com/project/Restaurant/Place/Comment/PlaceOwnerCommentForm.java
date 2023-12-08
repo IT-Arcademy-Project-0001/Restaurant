@@ -11,8 +11,8 @@ public class PlaceOwnerCommentForm {
 
   private String reservationId;
 
-  @NotBlank(message = "후기 제목은 필수입니다.")
-  private String reviewSubject;
+  @NotBlank(message = "별점을 선택해주세요.")
+  private String starRate;
 
   @NotBlank(message = "후기 내용은 필수입니다.")
   private String reviewContent;

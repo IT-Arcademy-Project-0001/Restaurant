@@ -6,7 +6,7 @@
 </head>
 <body>
 <div layout:fragment="profileContent">
-    <div class="all">
+    <div class="wrap">
         <form th:action="@{/member/changePw}" method="post" th:object="${passwordChangeForm}">
             <h1>비밀번호 변경</h1>
             <div role="alert" th:if="${#fields.hasAnyErrors()}">

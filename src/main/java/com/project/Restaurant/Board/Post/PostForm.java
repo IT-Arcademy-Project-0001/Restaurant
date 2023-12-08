@@ -1,4 +1,4 @@
-package com.project.Restaurant.Post;
+package com.project.Restaurant.Board.Post;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;

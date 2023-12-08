@@ -41,8 +41,6 @@ public class PlaceService {
   }
 
   public List<PlaceOwner> getPlaceOwnersByOwnerId(Long ownerId) {
-    return placeRepository.findByOwnerId(ownerId);
-  }
-
-
+    return this.placeRepository.findByOwnerId(ownerId);
+  } 
 }
