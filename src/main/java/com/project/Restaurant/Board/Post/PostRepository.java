@@ -1,4 +1,4 @@
-package com.project.Restaurant.Post;
+package com.project.Restaurant.Board.Post;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,13 +22,17 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             + "distinct p "
             + "from Post p "
             + "left outer join Customer u1 on p.customer=u1 "
-            + "left outer join PostComment a on a.post=p "
+            + "left outer join Comment a on a.post=p "
             + "left outer join Customer u2 on a.customer=u2 "
             + "where "
+            + "   (p.category = :category) "
+            + "   and ( "
             + "   p.title like %:kw% "
             + "   or p.content like %:kw% "
             + "   or u1.username like %:kw% "
             + "   or a.content like %:kw% "
-            + "   or u2.username like %:kw% ")
-    Page<Post> findAllByKeyword(@Param("kw") String kw, Pageable pageable);
+            + "   or u2.username like %:kw% "
+            + "   )")
+    Page<Post> findAllByKeywordAndType(@Param("kw") String kw, @Param("category") Integer category, Pageable pageable);
+
 }

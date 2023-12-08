@@ -1,9 +1,9 @@
 package com.project.Restaurant.Place.Owner;
 
 import com.project.Restaurant.Member.owner.Owner;
-import com.project.Restaurant.Member.owner.OwnerService;
+import com.project.Restaurant.Member.owner.OwnerService; 
 import com.project.Restaurant.Place.Menu.PlaceMenu;
-import com.project.Restaurant.Place.Menu.PlaceMenuService;
+import com.project.Restaurant.Place.Menu.PlaceMenuService; 
 import com.project.Restaurant.Place.Operate.OperateDto;
 import com.project.Restaurant.Place.Operate.PlaceOperate;
 import com.project.Restaurant.Place.Operate.PlaceOperateService;
@@ -28,9 +28,10 @@ public class PlaceController {
   private final PlaceOperateService placeOperateService;
   private final PlaceService placeService;
   private final PlaceTagService placeTagService;
-  private final OwnerService ownerService;
+  private final OwnerService ownerService; 
   private final PlaceMenuService placeMenuService;
-  private final OperateDto operateDto;
+  private final OperateDto operateDto; 
+  
   @GetMapping("/regist")
   public String regist(Model model) {
     List<PlaceOperate> placeOperateList = this.placeOperateService.getAllOperateList(null);
@@ -82,7 +83,7 @@ public class PlaceController {
     List<PlaceOwner> placeList = this.placeService.getPlaceOwnersByOwnerId(owner.getId());
     model.addAttribute("placeList",placeList);
     return "Place/PlaceRegistList";
-  }
+  } 
   @GetMapping("regist/list/detail/{id}")
   public String getListDetail(Model model,@PathVariable("id") Long id){
     PlaceOwner placeOwner = this.placeService.findById(id);
@@ -100,5 +101,5 @@ public class PlaceController {
     model.addAttribute("TagList",tagList);
 
     return "Place/PlaceRegistDetailList";
-  }
+  } 
 }

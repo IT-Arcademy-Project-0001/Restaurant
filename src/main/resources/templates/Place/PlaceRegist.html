@@ -32,10 +32,10 @@
                                style="width : 23%; padding : 3px; margin:5px;" placeholder="상세주소" th:value="${placeOwner?.storeAddress == null ? '' : placeOwner.storeAddress.split('/').length > 1 ? placeOwner.storeAddress.split('/')[1] : ''}">
                         <input type="button" style="width : 17%; padding : 3px; font-size : 13px;" onclick="address_execDaumPostcode()"
                                value="주소 검색"><br>
-                        <div id="map" style="width:90%;height:300px;margin-top:10px; margin-bottom:10px;"></div>
-
+                        <div id="map" style="width:90%;height:300px;margin-top:10px; margin-bottom:10px;"></div> 
                         <input type="hidden" id="latitude" name="latitude" th:value="${placeOwner?.latitude == null ? '' : placeOwner.latitude}">
                         <input type="hidden" id="longitude" name="longitude" th:value="${placeOwner?.longitude == null ? '' : placeOwner.longitude}">
+ 
                     </div>
                     <label class="RegistLabel"> 전화번호 </label>
                     <input type="text" class="RegistText" id="phoneNum" name="phoneNum" maxlength="13"
@@ -60,8 +60,8 @@
                     </button>
                 </div>
             </form>
-        </div>
-        <div class="addRegist" style="overflow : auto; width : 42%;">
+        </div> 
+        <div class="addRegist" style="overflow : auto; width : 42%;"> 
             <div class="RegistTitle" style="margin-top : 20px; margin-bottom : 20px;">
                 <a style="font-size : 18px; font-weight : bold; margin-bottom : 10px;">추가 정보</a>
                 <button class="BasicInfoSave" id="AddInfoSave" type="submit" style="margin-left : 80%;"
@@ -137,10 +137,10 @@
             <div style="display : grid; margin-top : 3px;">
                 <div style="display : inline-flex; width : 100%;">
                     <label class="RegistLabel" style="margin-top : 9px;"> 매장 태그 </label>
-                    <p style="margin-top : 8px; margin-left : 10px; font-weight : bold;">(</p>
+                    <p style="margin-top : 8px; margin-left : 10px; font-weight : bold;">(</p> 
                     <input type="text" class="tagText" id="storeTag" placeholder="ex. #떡볶이맛집" onkeydown="if (event.key === 'Enter') { addFunc(); }" >
                     <p style="margin-top : 8px; font-weight : bold;">)</p>
-                    <Button type="submit" class="MenuInfoSave" style="height : 26px; margin-top : 1.4%; margin-left : 10%;"  onclick="saveTags()">태그 저장</Button>
+                    <Button type="submit" class="MenuInfoSave" style="height : 26px; margin-top : 1.4%; margin-left : 10%;"  onclick="saveTags()">태그 저장</Button> 
                 </div>
                 <p style="color : red ; margin-left : 10px; border : none; font-size : 11px; margin-top : -10px;">작성 후 Enter키 누르면 태그 생성 및 태그 클릭하여 삭제</p>
                 <div style="display: flex;">
@@ -344,26 +344,22 @@
               mapOption = {
                   center: new daum.maps.LatLng(37.537187, 127.005476), // 지도의 중심좌표
                   level: 5 // 지도의 확대 레벨
-              };
-
-
+              }; 
               var map = new daum.maps.Map(mapContainer, mapOption);
 
               var geocoder = new daum.maps.services.Geocoder();
-
+ 
               var marker = new daum.maps.Marker({
                   position: new daum.maps.LatLng(37.537187, 127.005476),
                   map: map
-              });
-
+              }); 
               function address_execDaumPostcode() {
                   new daum.Postcode({
                       oncomplete: function(data) {
                           var addr = data.address; // 최종 주소 변수
 
                           // 주소 정보를 해당 필드에 넣는다.
-                          document.getElementById("address").value = addr;
-
+                          document.getElementById("address").value = addr; 
                               geocoder.addressSearch(data.address, function(results, status) {
 1
                                   if (status === daum.maps.services.Status.OK) {
@@ -384,7 +380,7 @@
 
                                   }
                               });
-                          }
+                          } 
                   }).open();
               }
              ////////////////////////////////////////////////  주소 지도 구현 끝  ////////////////////////////////////////////////

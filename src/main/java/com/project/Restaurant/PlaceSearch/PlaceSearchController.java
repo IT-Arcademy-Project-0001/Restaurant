@@ -1,5 +1,6 @@
 package com.project.Restaurant.PlaceSearch;
 
+import com.project.Restaurant.Place.Comment.PlaceOwnerComment;
 import com.project.Restaurant.Place.Owner.PlaceOwner;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;

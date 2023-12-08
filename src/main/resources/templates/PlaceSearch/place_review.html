@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title> 후기 작성 페이지 </title>
+    <link rel="stylesheet" type="text/css" href="/MapSearch/star_rate.css">
 </head>
     <body>
     <div layout:fragment="content">
@@ -36,12 +37,40 @@
                 <div role="alert" th:if="${#fields.hasAnyErrors()}">
                     <div th:replace="~{form_errors :: formErrorsFragment}"></div>
                 </div>
-                <div class="mb-3">
-                    <label for="exampleFormControlInput1" class="form-label"> 후기제목 </label>
-                    <input type="text" th:field="*{reviewSubject}" class="form-control" id="exampleFormControlInput1">
+                <div class="rating mb-3">
+                    <label>
+                        <input type="radio" th:field="*{starRate}" value="1" />
+                        <span class="icon">★</span>
+                    </label>
+                    <label>
+                        <input type="radio" th:field="*{starRate}" value="2" />
+                        <span class="icon">★</span>
+                        <span class="icon">★</span>
+                    </label>
+                    <label>
+                        <input type="radio" th:field="*{starRate}" value="3" />
+                        <span class="icon">★</span>
+                        <span class="icon">★</span>
+                        <span class="icon">★</span>
+                    </label>
+                    <label>
+                        <input type="radio" th:field="*{starRate}" value="4" />
+                        <span class="icon">★</span>
+                        <span class="icon">★</span>
+                        <span class="icon">★</span>
+                        <span class="icon">★</span>
+                    </label>
+                    <label>
+                        <input type="radio" th:field="*{starRate}" value="5" />
+                        <span class="icon">★</span>
+                        <span class="icon">★</span>
+                        <span class="icon">★</span>
+                        <span class="icon">★</span>
+                        <span class="icon">★</span>
+                    </label>
                 </div>
                 <div class="mb-3">
-                    <label for="exampleFormControlTextarea1" class="form-label"> 후기내용</label>
+                    <label for="exampleFormControlTextarea1" class="form-label"></label>
                     <textarea th:field="*{reviewContent}" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
                 </div>
                 <div class="text-center mb-3">
