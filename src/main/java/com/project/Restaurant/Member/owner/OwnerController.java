@@ -150,7 +150,7 @@ public class OwnerController {
             ownerService.resetPassword(targetOwner, passwordResetForm.getPassword());
         } catch (Exception e) {
             e.printStackTrace();
-            bindingResult.reject("PasswordRestFailed", e.getMessage());
+            bindingResult.reject("PasswordResetFailed", e.getMessage());
             model.addAttribute("targetMember", targetOwner);
             return "member/reset_password_form";
         }

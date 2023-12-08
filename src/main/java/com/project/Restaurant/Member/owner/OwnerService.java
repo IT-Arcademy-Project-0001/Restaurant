@@ -3,8 +3,10 @@ package com.project.Restaurant.Member.owner;
 import com.project.Restaurant.Member.MemberRole;
 import com.project.Restaurant.Member.consumer.Customer;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
@@ -38,6 +40,7 @@ public class OwnerService {
         owner.setMemberActivation(false);
         owner.setAuthority(MemberRole.OWNER.getValue());
         owner.setCode(getRandomCode());
+        owner.setPhoto("/member/profilePhoto/human.png");
         ownerRepository.save(owner);
     }
 
@@ -45,6 +48,11 @@ public class OwnerService {
         owner.setPassword(passwordEncoder.encode(password));
         String newCode = getRandomCode();
         owner.setCode(newCode);
+        ownerRepository.save(owner);
+    }
+
+    public void changePassword(Owner owner, String password) {
+        owner.setPassword(passwordEncoder.encode(password));
         ownerRepository.save(owner);
     }
 
@@ -69,5 +77,9 @@ public class OwnerService {
         String newCode = getRandomCode();
         owner.setCode(newCode);
         ownerRepository.save(owner);
+    }
+
+    public void deleteOwner(Owner owner) {
+        ownerRepository.delete(owner);
     }
 }

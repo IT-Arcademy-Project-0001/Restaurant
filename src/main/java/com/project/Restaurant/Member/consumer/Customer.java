@@ -9,6 +9,7 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -51,4 +52,9 @@ public class Customer {
     private String providerId;
 
     private String code;    //  회원가입시 유저마다 부여되는 고유코드(랜덤코드)
+
+    private String photo;   //  프로필사진
+
+    @ManyToMany(mappedBy = "likes")
+    private Set<Post> likeList;
 }
