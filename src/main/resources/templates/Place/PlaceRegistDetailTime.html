@@ -5,8 +5,8 @@
     <title> 카카오지도 장소등록 </title>
     <link rel="stylesheet" href="/Place/PlaceRegistOpentime.css">
 </head>
-<body> 
-<nav th:fragment="navbarFragment"> 
+<body>
+<nav th:fragment="navbarFragment">
     <div>
         <div class="time_modal">
             <!--        <div th:each="OperateList, iterStat : ${placeOperateList}">-->
@@ -17,7 +17,23 @@
             <!--&lt;!&ndash;            <input type="button" th:data-iter-index="${iterStat.index}" onclick="articleMessage(this)" style="background : yellow;">&ndash;&gt;-->
             <!--        </div>-->
 
-            <input type="text" class="RegistText" id="popup_open_btn" placeholder="여기를 클릭해주세요."/>
+            <div th:if="${placeOperateList != null}">
+                <div class="RegistText" style="display:contents;" th:each="operateList, iterStat : ${placeOperateList}">
+                    <div th:if="${operateList.openTime == ''}">
+                        <p th:text="${operateList.day + '( 휴무 )'}"></p>
+                        <input type="hidden" id="operateList.day" th:text="${operateList.day}">
+                    </div>
+                    <div style="display:contents;" th:if="${operateList.openTime != ''}">
+                        <p th:text="${operateList.day + ' / OpenTime: ' + operateList.openTime + ' / CloseTime: ' + operateList.closeTime}"></p>
+                    </div>
+                </div>
+                <input type="button" class="Modify" id="popup_open_btn2"
+                       style="height : 26px; margin-top : 1.4%; margin-left : 10%;  border : 2px solid rgb(25, 206, 96); color : black; border-radius: 10px; font-size : 13px; margin-left : 70%"
+                       value="영업시간 수정" th:if="${!#lists.isEmpty(placeOperateList)}"/>
+                <div th:if="${#lists.isEmpty(placeOperateList)}">
+                    <input type="text" class="RegistText" id="popup_open_btn" placeholder="여기를 클릭해주세요."/>
+                </div>
+            </div>
             <div id="time_modal" style="overflow : auto; max-height : 61%;">
                 <div class="time_array" style="margin : 15px;">
                     <form id="targetCreateForm" name="targetCreateForm" method="post">
@@ -31,7 +47,7 @@
 
                         <div th:if="${message != null}" th:text="${message}" class="message"
                              style="color : red; font-weight : bold; margin-top : 2px;"></div>
-                        <div class="time_table" style="text-align : center;"> 
+                        <div class="time_table" style="text-align : center;">
                             <div style="margin-top: 17px;">
                                 <script>
                                     var daysOfWeek = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
@@ -67,10 +83,10 @@
                                 </script>
                             </div>
                         </div>
-                        <div style="margin-top : 5%;"> 
+                        <div style="margin-top : 5%;">
                             <button type="button" style="margin-left : 15%;" class="RegistBtn" id="RegistBtn"
                                     onclick="registPlace()">등록
-                            </button> 
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -94,7 +110,7 @@
         };
 
         function toggleDayContainer(num,num2) {
-            var timeClickContainer = document.getElementById("timeClickContainer_" + num); 
+            var timeClickContainer = document.getElementById("timeClickContainer_" + num);
             var str_time = document.getElementById(daysOfWeek[num - 1] + "_str_time").value;
             var end_time = document.getElementById(daysOfWeek[num - 1] + "_end_time").value;
 
@@ -109,7 +125,7 @@
             } else if (str_time == '' && end_time == '') {
                 timeClickContainer.style.display = "none";
                 str_time.value = "";
-                end_time.value = ""; 
+                end_time.value = "";
             }
         }
 
@@ -164,7 +180,7 @@
             for (var k in styles) this.style[k] = styles[k];
             return this;
         };
- 
+
         var popup = document.getElementById('popup_open_btn');
 
         if(popup != null){
@@ -184,6 +200,23 @@
                      } else if( startTimeInput.value == null && startTimeInput.value == '' ){
                         document.getElementById("RegistBtn").innerText = "등록";
                      }
+                });
+            });
+        }
+        var popup2 = document.getElementById('popup_open_btn2');
+        if(popup2 != null){
+            popup2.addEventListener('click', function() {
+                // 모달창 띄우기
+                modal('time_modal');
+                let timeClickList = document.querySelectorAll('.time_click');
+
+                timeClickList.forEach(function(element) {
+                    let words = element.id.split('_');
+                    console.log(words);
+                    let result = words[1];
+
+                    toggleDayContainer(result);
+                    document.getElementById("RegistBtn").innerText = "수정";
                 });
             });
         }

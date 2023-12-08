@@ -101,5 +101,14 @@ public class PlaceController {
     model.addAttribute("TagList",tagList);
 
     return "Place/PlaceRegistDetailList";
-  } 
+  }
+
+  @PostMapping("regist/list/delete/tag")
+  public String deleteTags(Model model,@RequestParam Long tagId, @RequestParam Long POwnerId){
+    System.out.println("---tagId---"+ tagId);
+    System.out.println("---POwnerId---"+POwnerId);
+    this.placeTagService.deleteTag(tagId);
+//
+    return "redirect:/place/map/regist/list/detail/" + POwnerId;
+  }
 }
