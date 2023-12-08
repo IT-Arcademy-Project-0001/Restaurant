@@ -18,8 +18,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.security.Principal;
-
 @RequiredArgsConstructor
 @Controller
 @RequestMapping("/customer")
@@ -59,18 +57,6 @@ public class CustomerController {
         String msg = "인증메일이 발송되었습니다!";
         model.addAttribute("msg", msg);
         return "member/message";
-    }
-
-    @GetMapping("/profile")
-    public String customerProfile(Model model, Principal principal) {
-
-        Customer customer = customerService.findByusername(principal.getName());
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        GrantedAuthority authority = authentication.getAuthorities().iterator().next();
-
-        model.addAttribute("member", customer);
-        model.addAttribute("authority", authority);
-        return "member/member_profile";
     }
 
     @PostMapping("/findusername")

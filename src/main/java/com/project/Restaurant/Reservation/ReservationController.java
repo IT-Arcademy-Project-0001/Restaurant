@@ -117,7 +117,6 @@ public class ReservationController {
         return "redirect:/reservation/customerList";
     }
 
-
     private boolean isCustomerLoggedIn(Principal principal) {
         if (principal != null && principal instanceof Authentication) {
             Authentication authentication = (Authentication) principal;

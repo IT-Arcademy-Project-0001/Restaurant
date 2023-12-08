@@ -6,7 +6,7 @@
 <body>
 <nav th:fragment="navbarFragment" class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
     <div class="container-fluid">
-        <a class="navbar-brand" href="/"> [Favicon] </a>
+        <a class="navbar-brand" href="/place/search"> 파인다이닝 </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -24,14 +24,10 @@
                     <a sec:authorize="isAnonymous()" th:href="@{/member/signup}" class="nav-link">회원가입</a>
                 </li>
                 <li sec:authorize="isAuthenticated()">
-                    <a class="nav-link" sec:authorize="hasAuthority('사장님')" th:href="@{/owner/profile}">마이페이지</a>
-                    <a class="nav-link" sec:authorize="hasAuthority('소비자')" th:href="@{/customer/profile}">마이페이지</a>
+                    <a class="nav-link" th:href="@{/member/profileInfo}">마이페이지</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/place/map">맛집등록</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/place/search">맛집찾기</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" sec:authorize="hasAuthority('사장님')" th:href="@{/reservation/ownerList}">맛집예약</a>
