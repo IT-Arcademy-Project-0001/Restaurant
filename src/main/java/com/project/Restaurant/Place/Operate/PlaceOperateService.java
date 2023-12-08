@@ -1,6 +1,7 @@
 package com.project.Restaurant.Place.Operate;
 
 import com.project.Restaurant.Place.Owner.PlaceOwner;
+import com.project.Restaurant.Place.Owner.PlaceOwnerDto;
 import com.project.Restaurant.Place.Owner.PlaceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -69,5 +70,6 @@ public class PlaceOperateService {
 
     return operateDtoList;
   }
+
 
 }

@@ -1,0 +1,208 @@
+
+.listTable{
+   font-size : 13px;
+}
+
+td, th {
+    padding : 14px 0;
+}
+
+.listCo{
+   border-top : 1px solid #ccc;
+   border-bottom : 1px solid #ccc;
+   width : 60%;
+   margin-left : 15%;
+   margin-top : 1%;
+}
+
+.searchBtn{
+    border-radius: 0 5px 5px 0;
+    background : rgb(25, 206, 96);
+    border : 2px solid rgb(25, 206, 96);
+    color : white;
+    width : 10%;
+    margin-left : -5px;
+    border-top:1px solid black;
+    border-right:1px solid black;
+    border-bottom:1px solid black;
+    height : 30px;
+}
+
+
+.map_wrap, .map_wrap * {margin:0;padding:0;font-family:'Malgun Gothic',dotum,'돋움',sans-serif;font-size:12px;}
+.map_wrap a, .map_wrap a:hover, .map_wrap a:active{color:#000;text-decoration: none;}
+.map_wrap {position:relative;width:100%;height:500px;}
+#menu_wrap {position:absolute;top:0;left:0;bottom:0;width:250px;margin:10px 0 30px 10px;padding:5px;overflow-y:auto;background:rgba(255, 255, 255, 0.7);z-index: 1;font-size:12px;border-radius: 10px;}
+.bg_white {background:#fff;}
+#menu_wrap hr {display: block; height: 1px;border: 0; border-top: 2px solid #5F5F5F;margin:3px 0;}
+#menu_wrap .option{text-align: center;}
+#menu_wrap .option p {margin:10px 0;}
+#menu_wrap .option button {margin-left:5px;}
+#placesList li {list-style: none;}
+#placesList .item {position:relative;border-bottom:1px solid #888;overflow: hidden;cursor: pointer;min-height: 65px;}
+#placesList .item span {display: block;margin-top:4px;}
+#placesList .item h5, #placesList .item .info {text-overflow: ellipsis;overflow: hidden;white-space: nowrap;}
+#placesList .item .info{padding:10px 0 10px 55px;}
+#placesList .info .gray {color:#8a8a8a;}
+#placesList .info .jibun {padding-left:26px;background:url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_jibun.png) no-repeat;}
+#placesList .info .tel {color:#009900;}
+#placesList .item .markerbg {float:left;position:absolute;width:36px; height:37px;margin:10px 0 0 10px;background:url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png) no-repeat;}
+#placesList .item .marker_1 {background-position: 0 -10px;}
+#placesList .item .marker_2 {background-position: 0 -56px;}
+#placesList .item .marker_3 {background-position: 0 -102px}
+#placesList .item .marker_4 {background-position: 0 -148px;}
+#placesList .item .marker_5 {background-position: 0 -194px;}
+#placesList .item .marker_6 {background-position: 0 -240px;}
+#placesList .item .marker_7 {background-position: 0 -286px;}
+#placesList .item .marker_8 {background-position: 0 -332px;}
+#placesList .item .marker_9 {background-position: 0 -378px;}
+#placesList .item .marker_10 {background-position: 0 -423px;}
+#placesList .item .marker_11 {background-position: 0 -470px;}
+#placesList .item .marker_12 {background-position: 0 -516px;}
+#placesList .item .marker_13 {background-position: 0 -562px;}
+#placesList .item .marker_14 {background-position: 0 -608px;}
+#placesList .item .marker_15 {background-position: 0 -654px;}
+#pagination {margin:10px auto;text-align: center;}
+#pagination a {display:inline-block;margin-right:10px;}
+#pagination .on {font-weight: bold; cursor: default;color:#777;}
+
+.RegistBtn{
+    background : #289AFF;
+    color : white;
+    border-radius: 10px;
+    width : 200px;
+    height : 30px;
+}
+
+.RegistArray{
+    display :flex;
+    justify-content: center;
+    width : 90%;
+    height : 80%;
+    margin-left : 5%;
+    margin-top : 1%;
+}
+
+.RegistArray{
+    border-radius: 10px;
+    border : 2px solid rgb(25, 206, 96);
+    width : 100%;
+}
+
+.RegistText{
+    padding: 3px;
+    width : 50%;
+    margin : 3px;
+}
+
+.RegistLabel{
+    font-size : 13px;
+    font-weight : bold;
+}
+
+input::placeholder {color:#d2d2d2;}
+
+.RegistSub{
+    color : red;
+    font-size : 13px;
+    font-weight : bold;
+    position : relative;
+    width : 40px;
+}
+
+.RegistBasicContent{
+    margin: 0 auto; /* 가운데 정렬을 위해 사용합니다 */
+    display: flex;
+    flex-direction: column;
+    overflow : auto;
+    margin-bottom : 5%;
+}
+
+.RegistAddContent{
+    margin: 0 auto; /* 가운데 정렬을 위해 사용합니다 */
+    display: flex;
+    flex-direction: column;
+    overflow : auto;
+    margin-bottom : 5%;
+}
+
+.RegistAddContent > form {
+    margin-bottom: 20px;
+}
+
+.menuText{
+    width : 121px;
+}
+
+.menuTextDetail{
+    width : 121px;
+    border : none;
+    font-size : 11px;
+    text-align : center;
+    margin-left : 5px;
+}
+
+.BasicInfoSave{
+    background : #289AFF;
+    color : white;
+    border-radius: 10px;
+    width : 90px;
+    height : 28px;
+    font-size : 13px;
+}
+
+.MenuInfoSave{
+    border : 2px solid  #20c997;
+    color : black;
+    border-radius: 10px;
+    font-size : 13px;
+}
+
+
+#time_modal {
+    display: none;
+    width: 450px;
+    padding: 20px 60px;
+    background-color: #fefefe;
+    border: 1px solid #888;
+    border-radius: 3px;
+}
+
+#time_modal .modal_close_btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+#menu {
+    flex-direction : column;
+}
+
+
+.tags {
+     color: black;
+     background-color: rgb(25, 206, 96);
+     margin : 4px;
+     border-radius: 3px;
+     padding : 1px;
+     cursor : pointer;
+}
+
+.tagText{
+    padding: 3px;
+    margin : 3px;
+    width: 35%;
+    position : relative;
+    border : none;
+    margin-left : 5px;
+    height : 34px;
+}
+
+.tagLayout {
+     color: black;
+     background-color: #D3D3D3;
+     margin : 4px;
+     border-radius: 3px;
+     padding : 1px;
+     cursor : pointer;
+}
