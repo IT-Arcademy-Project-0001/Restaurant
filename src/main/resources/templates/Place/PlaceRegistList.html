@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ko" layout:decorate="~{/member/member_profile_layout}">
+   <head> 
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="/Place/PlaceRegistList.css">
+    </head>
+    <body>
+        <div layout:fragment="profileContent"> 
+            <div class="listLayout" style="display : grid; margin-top : 3%;">
+                <div class="co" style="margin-left : 40%;">
+                    <h3>가게목록</h3>
+                </div>
+                <div id="board-search">
+                    <div class="search-window" style="margin-left : 28%;">
+                        <form action="">
+                            <div class="search-wrap">
+                                <label for="search" class="blind">가게 검색</label>
+                                <input id="search" type="search" name="" placeholder="검색어를 입력해주세요." value="" style="width : 30%; border-radius: 5px 0 0 5px; margin-left : 8px;">
+                                <button type="submit" class="searchBtn">검색</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="listCo">
+                    <div class="listTable" >
+                        <table>
+                            <thead style="font-size : 15px;">
+                                <tr>
+                                    <th style="width : 10%; text-align : center;">순번</th>
+                                    <th style="text-align : center;">가게명</th>
+                                    <th style="text-align : center;">오픈일자</th>
+                                    <th style="width : 10%; text-align : center;"></th>
+                                </tr>
+                            </thead>
+                            <tbody th:if="${placeList != null}" style="font-size : 14px;">
+                                <tr th:each="place,loop : ${placeList}">
+                                    <td style="text-align : center;" th:text="${loop.count}"></td>
+                                    <td style="width : 30%; text-align : center;" th:text="${place.store}"></td>
+                                    <td style="width : 10%; text-align : center;" th:text="${#temporals.format(place.openingDate, 'yyyy-MM-dd')}"></td>
+                                    <td>
+                                        <a style="text-decoration: none; color: inherit; font-weight : bold;" th:href="@{|/place/map/regist/list/detail/${place.id}|}"> 상세보기 및 수정</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div> 
+        </div>
+    </body>
+</html>

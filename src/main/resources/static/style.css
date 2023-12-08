@@ -1,4 +1,18 @@
+@font-face {
+    font-family: 'JeonjuCraftGoR';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2310@1.0/JeonjuCraftGoR.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+div{
+    font-family : 'JeonjuCraftGoR';
+}
+
+
 .input-group select,
 .input-group input {
-    margin-right: 10px; /* 원하는 만큼의 마진을 추가하세요 */
+    margin-right: 0; /* 원하는 만큼의 마진을 추가하세요 */
 }
+
+

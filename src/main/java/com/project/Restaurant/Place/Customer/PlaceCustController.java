@@ -1,5 +1,7 @@
 package com.project.Restaurant.Place.Customer;
 
+import com.project.Restaurant.Member.consumer.Customer;
+import com.project.Restaurant.Member.consumer.CustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -8,6 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.security.Principal;
+
 @RequiredArgsConstructor
 @RequestMapping("/place")
 @Controller
@@ -15,7 +19,7 @@ public class PlaceCustController {
 
     private final PlaceCustService placeCustService;
 
-    private final PlaceCustRepository placeCustRepository;
+    private final CustomerService customerService;
 
     @GetMapping("/map")
     public String map() {
@@ -24,19 +28,20 @@ public class PlaceCustController {
 
     @PostMapping("/map/add")
     public String customeradd(Model model, @RequestParam String placename, @RequestParam String locationaddress, @RequestParam String locationdetailedaddress
-            , @RequestParam String category, @RequestParam Double locationlat, @RequestParam Double locationlng, @RequestParam String memo)  // 매장 이름, 매장 주소, 매장 상세주소, 매장 카테고리, 위도, 경도, 메모
+            , @RequestParam String category, @RequestParam Double locationlat, @RequestParam Double locationlng, @RequestParam String memo, Principal principal)  // 매장 이름, 매장 주소, 매장 상세주소, 매장 카테고리, 위도, 경도, 메모
     {
-        boolean isPlaceExists = placeCustService.checkPlaceExists(locationaddress, locationdetailedaddress, locationlat, locationlng);
+
+        Customer customer = this.customerService.findByusername(principal.getName());
+
+        boolean isPlaceExists = this.placeCustService.checkPlaceExists(locationaddress, locationdetailedaddress, locationlat, locationlng);
 
         if(!isPlaceExists){
-            this.placeCustService.addnewplace(placename,locationaddress,locationdetailedaddress,category,locationlat,locationlng,memo);
+            this.placeCustService.addnewplace(placename,locationaddress,locationdetailedaddress,category,locationlat,locationlng,memo,customer);
             model.addAttribute("message", "등록되었습니다.");
         } else {
             model.addAttribute("message", "이미 등록된 위치입니다.");
         }
 
-        return "redirect:/place/Map";
+        return "redirect:/place/search";
     }
-
-
 }

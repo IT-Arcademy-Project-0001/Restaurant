@@ -1,9 +1,12 @@
 package com.project.Restaurant.Place.Operate;
 
+import com.project.Restaurant.Place.Menu.PlaceMenu;
 import com.project.Restaurant.Place.Menu.PlaceMenuService;
 import com.project.Restaurant.Place.Owner.PlaceOwner;
 import com.project.Restaurant.Place.Owner.PlaceOwnerDto;
 import com.project.Restaurant.Place.Owner.PlaceService;
+import com.project.Restaurant.Place.Owner.Tag.PlaceTag;
+import com.project.Restaurant.Place.Owner.Tag.PlaceTagService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,13 +21,13 @@ import java.util.List;
 public class PlaceOperateController {
 
     private final PlaceOperateService placeOperateService;
-    private final OperateDto operateDto2;
     private final PlaceMenuService placeMenuService;
     private final PlaceService placeService;
+    private final PlaceTagService placeTagService;
 
     @GetMapping("/regist/owner")
     public String regist2() {
-        return "MapRegistOpentime";
+        return "Place/PlaceRegistOpentime";
     }
 
     @PostMapping("/regist/owner/time")
@@ -46,16 +49,20 @@ public class PlaceOperateController {
         PlaceOwnerDto placeOwnerDto = placeOwner.convertDto();
         model.addAttribute("placeOwner", placeOwnerDto);
 
-
         Long ownerId = placeOwner.getId();
         List<OperateDto> operateDtoList = placeOperateService.getAllOperateDtoList(ownerId);
         model.addAttribute("placeOperateList", operateDtoList);
 
+        List<PlaceMenu> placeMenuList  =  this.placeMenuService.findByPlaceOwnerId(id);
+        model.addAttribute("menus", placeMenuList);
+
+        List<PlaceTag> tagList = this.placeTagService.findTags(id);
+        model.addAttribute("TagList",tagList);
 
 //        List<PlaceOperate> placeOperateList = this.placeOperateService.getAllOperateList(Math.toIntExact(placeOwner.getId()));
 //        model.addAttribute("placeOperateList", placeOperateList);
 
-        return "MapRegist";
+        return "Place/PlaceRegist";
     }
 
 }

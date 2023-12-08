@@ -1,10 +1,12 @@
 package com.project.Restaurant.Member.owner;
 
+import com.project.Restaurant.Member.MemberRole;
 import com.project.Restaurant.Member.consumer.Customer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
 
 @RequiredArgsConstructor
@@ -13,6 +15,18 @@ public class OwnerService {
 
     private final OwnerRepository ownerRepository;
     private final PasswordEncoder passwordEncoder;
+    private final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"; // 사용할 문자셋
+
+    public String getRandomCode() {
+        SecureRandom random = new SecureRandom();
+        StringBuilder sb = new StringBuilder(6); // 6자리의 코드 생성
+        for (int i = 0; i < 6; i++) {
+            int randomIndex = random.nextInt(CHARACTERS.length());
+            char randomChar = CHARACTERS.charAt(randomIndex);
+            sb.append(randomChar);
+        }
+        return sb.toString();
+    }
 
     public void create(String username, String password, String nickname, String email) {
         Owner owner = new Owner();
@@ -21,13 +35,16 @@ public class OwnerService {
         owner.setNickname(nickname);
         owner.setEmail(email);
         owner.setSignupDate(LocalDateTime.now());
-        owner.setMemberActivation(true);
-        owner.setAuthority("OWNER");
+        owner.setMemberActivation(false);
+        owner.setAuthority(MemberRole.OWNER.getValue());
+        owner.setCode(getRandomCode());
         ownerRepository.save(owner);
     }
 
     public void resetPassword(Owner owner, String password) {
         owner.setPassword(passwordEncoder.encode(password));
+        String newCode = getRandomCode();
+        owner.setCode(newCode);
         ownerRepository.save(owner);
     }
 
@@ -45,5 +62,12 @@ public class OwnerService {
         } else {
             return null;
         }
+    }
+
+    public void ownerActivation(Owner owner, boolean activation) {
+        owner.setMemberActivation(activation);
+        String newCode = getRandomCode();
+        owner.setCode(newCode);
+        ownerRepository.save(owner);
     }
 }

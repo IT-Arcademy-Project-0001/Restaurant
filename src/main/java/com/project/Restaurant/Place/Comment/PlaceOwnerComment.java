@@ -20,11 +20,15 @@ public class PlaceOwnerComment {
 
   @Column(nullable = false, length = 200)
   private String content;
+
   private LocalDateTime localDateTime;
+
+  private String starRate;
 
   @ManyToOne
   private Customer customer;
 
   @ManyToOne
   private PlaceOwner placeOwner;
+
 }

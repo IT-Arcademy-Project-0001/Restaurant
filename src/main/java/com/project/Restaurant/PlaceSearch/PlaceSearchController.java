@@ -1,5 +1,6 @@
 package com.project.Restaurant.PlaceSearch;
 
+import com.project.Restaurant.Place.Comment.PlaceOwnerComment;
 import com.project.Restaurant.Place.Owner.PlaceOwner;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -28,12 +29,26 @@ public class PlaceSearchController {
 
   @GetMapping(value = "/search", produces = "application/json")
   @ResponseBody
-  public List<PlaceSearch> targetSearchJson(@RequestParam("latitude") Double latitude, @RequestParam("longitude") Double longitude,
+  public List<PlaceSearch> targetSearchJson(Model model, @RequestParam("latitude") Double latitude, @RequestParam("longitude") Double longitude,
                                             @RequestParam(value = "order[]", required = false) List<Integer> order) {
 
     List<PlaceSearch> searchResult = this.placeSearchService.searchPlace(latitude, longitude, order);
 
+    model.addAttribute("placeList", searchResult);
+
     return searchResult;
+  }
+
+  @GetMapping(value = "/searchModal", produces = "application/json")
+  @ResponseBody
+  public List<PlaceSearch> targetSearchModalJson(Model model, @RequestParam("latitude2") Double latitude, @RequestParam("longitude2") Double longitude,
+                                            @RequestParam(value = "order2[]", required = false) List<Integer> order) {
+
+    List<PlaceSearch> searchResult2 = this.placeSearchService.searchPlace(latitude, longitude, order);
+
+    model.addAttribute("placeModalList", searchResult2);
+
+    return searchResult2;
   }
 
 //  @PostMapping("/search")

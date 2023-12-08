@@ -1,0 +1,215 @@
+<html layout:decorate="~{layout}">
+<div layout:fragment="content" class="container my-3">
+    <link rel="stylesheet" href="/style.css">
+    <!-- 질문 -->
+
+    <h2 class="border-bottom py-2" th:text="${post.title}"></h2>
+    <div class="card my-3">
+        <div class="card-body">
+            <div class="card-text" style="white-space: pre-line;" th:text="${post.content}"></div>
+            <div class="d-flex justify-content-end">
+                <div th:if="${post.modifyDate != null}" class="badge bg-light text-dark p-2 text-start mx-3">
+                    <div class="mb-2">수정한 날짜</div>
+                    <div th:text="${#temporals.format(post.modifyDate, 'yyyy-MM-dd HH:mm')}"></div>
+                </div>
+                <div class="badge bg-light text-dark p-2 text-start">
+                    <div class="mb-2">
+                        <span th:if="${post.customer != null}" th:text="${post.customer.nickname}"></span>
+                    </div>
+                    <div th:text="${#temporals.format(post.localDateTime, 'yyyy-MM-dd HH:mm')}"></div>
+                </div>
+            </div>
+            <div class="my-3">
+
+
+                <a href="javascript:void(0);" class="recommend btn btn-sm btn-outline-secondary"
+                   th:data-uri="@{|/post/likes/${post.id}|}">
+                    좋아요
+                    <span class="badge rounded-pill bg-success" th:text="${#lists.size(post.likes)}"></span>
+                </a>
+
+                <a th:href="@{|/post/modify/${post.id}|}" class="btn btn-sm btn-outline-secondary"
+                   sec:authorize="isAuthenticated()"
+                   th:if="${post.customer != null and #authentication.getPrincipal().getUsername() == post.customer.username}"
+                   th:text="수정"></a>
+                <a href="javascript:void(0);" th:data-uri="@{|/post/delete/${post.id}|}"
+                   class="delete btn btn-sm btn-outline-secondary" sec:authorize="isAuthenticated()"
+                   th:if="${post.customer != null and #authentication.getPrincipal().getUsername() == post.customer.username}"
+                   th:text="삭제"></a>
+            </div>
+
+        </div>
+    </div>
+    <!-- 답변의 갯수 표시 -->
+    <h5 class="border-bottom my-3 py-2"
+        th:text="|댓글${#lists.size(post.getCommentList)}개|"></h5>
+
+
+    <!-- 답변 반복 시작 -->
+
+    <div class="card my-3" th:each="comment : ${post.getCommentList}" th:if="${comment.id}">
+        <a th:id="|comment${comment.id}|"></a>
+        <div class="card-body">
+            <div class="card-text" style="white-space: pre-line;" th:text="${comment.content}"></div>
+            <div class="d-flex justify-content-end">
+                <div th:if="${comment.modifyDate != null}" class="badge bg-light text-dark p-2 text-start mx-3">
+                    <div class="mb-2">수정한 날짜</div>
+                    <div th:text="${#temporals.format(comment.modifyDate, 'yyyy-MM-dd HH:mm')}"></div>
+                </div>
+                <div class="badge bg-light text-dark p-2 text-start">
+                    <div class="mb-2">
+                        <span th:if="${comment.customer != null}" th:text="${comment.customer.nickname}"></span>
+                    </div>
+                    <div th:text="${#temporals.format(comment.localDateTime, 'yyyy-MM-dd HH:mm')}"></div>
+                </div>
+            </div>
+            <div class="my-3">
+                <a href="javascript:void(0);" class="recommend btn btn-sm btn-outline-secondary"
+                   th:data-uri="@{|/comment/likes/${comment.id}|}">
+                    추천
+                    <span class="badge rounded-pill bg-success" th:text="${#lists.size(comment.likes)}"></span>
+                </a>
+
+                <a th:href="@{|/comment/modify/${comment.id}|}" class="btn btn-sm btn-outline-secondary"
+                   sec:authorize="isAuthenticated()"
+                   th:if="${comment.customer != null and #authentication.getPrincipal().getUsername() == comment.customer.username}"
+                   th:text="수정"></a>
+                <a href="javascript:void(0);" th:data-uri="@{|/comment/delete/${comment.id}|}"
+                   class="delete btn btn-sm btn-outline-secondary" sec:authorize="isAuthenticated()"
+                   th:if="${comment.customer != null and #authentication.getPrincipal().getUsername() == comment.customer.username}"
+                   th:text="삭제"></a>
+            </div>
+
+            <div class="border-bottom my-3 py-2"
+                 th:text="|${#lists.size(comment.getAnswerList())}개의 답글이 있습니다.|"></div>
+
+            <div class="card my-3" th:each="answer : ${comment.getAnswerList()}" th:if="${comment.id}">
+                <a th:id="|answer${answer.id}|"></a>
+                <div class="card-body">
+                    <div class="card-text" style="white-space: pre-line;" th:text="${answer.content}"></div>
+                    <div class="d-flex justify-content-end">
+                        <div th:if="${answer.modifyDate != null}" class="badge bg-light text-dark p-2 text-start mx-3">
+                            <div class="mb-2">수정한 날짜</div>
+                            <div th:text="${#temporals.format(answer.modifyDate, 'yyyy-MM-dd HH:mm')}"></div>
+                        </div>
+                        <div class="badge bg-light text-dark p-2 text-start">
+                            <div class="mb-2">
+                                <span th:if="${answer.customer != null}" th:text="${answer.customer.nickname}"></span>
+                            </div>
+                            <div th:text="${#temporals.format(answer.localDateTime, 'yyyy-MM-dd HH:mm')}"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!--            댓글에 답변 작성-->
+            <form th:action="@{|/answer/create/${comment.id}|}" method="post" class="my-3" th:object="${answerForm}"
+                  onsubmit="return submitAnswer()">
+                <input type="hidden" th:value="${post.id}" name="postId">
+                <input type="hidden" th:value="${comment.id}" name="commentId">
+                <div class="alert alert-danger" role="alert" th:if="${#fields.hasAnyErrors()}">
+                    <div th:each="err : ${#fields.allErrors()}" th:text="${err}"/>
+                </div>
+                <div id="Textarea">
+                    <div th:if="${#authorization.expression('isAuthenticated()')}">
+                            <textarea th:field="*{content}" class="form-control" rows="2" placeholder="답글을 남겨보세요."></textarea>
+                        <input type="submit" value="등록" class="btn btn-primary my-2">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!--        답변작성 끝-->
+
+
+    <!-- 답변 반복 끝  -->
+
+
+    <!-- 답변 작성 -->
+    <form th:action="@{|/comment/create/${post.id}|}" method="post" class="my-3" th:object="${commentForm}"
+          onsubmit="return submitComment()">
+        <div class="alert alert-danger" role="alert" th:if="${#fields.hasAnyErrors()}">
+            <div th:each="err : ${#fields.allErrors()}" th:text="${err}"/>
+        </div>
+        <div id="floatingTextarea">
+            <!-- 익명 사용자인 경우 "로그인" 버튼을 표시 -->
+            <div th:if="${#authorization.expression('isAnonymous()')}">
+                <textarea disabled th:field="*{content}" class="form-control" rows="2" placeholder="로그인을 해주세요."
+                          id="anonymousContent"></textarea>
+                <input type="submit" value="로그인" class="btn btn-primary my-2">
+            </div>
+            <!--   인증된 사용자인 경우 "답변등록" 버튼을 표시 -->
+            <div th:if="${#authorization.expression('isAuthenticated()')}">
+                <textarea th:field="*{content}" class="form-control" rows="2" placeholder="댓글을 남겨보세요."
+                          id="authenticatedComment"></textarea>
+                <input type="submit" value="등록" class="btn btn-primary my-2">
+            </div>
+        </div>
+    </form>
+
+    <script>
+        // function submitAnswer() {
+        //     // 답변 내용 가져오기
+        //     var content = document.getElementById("authenticatedAnswer").value;
+        //
+        //     // 답변 내용이 공백인 경우
+        //     if (!content.trim()) {
+        //         // 경고창 표시
+        //         alert("답변을 입력해주세요.");
+        //         return false; // 폼 제출 막기
+        //     } else {
+        //         // 여기에 실제 답변 등록 코드 추가 (예: 서버로 데이터 전송 등)
+        //         // 실제 답변 등록 코드를 여기에 추가하세요.
+        //         return true; // 폼 제출 허용
+        //     }
+        // }
+    </script>
+
+    <script>
+        function submitComment() {
+            // 답변 내용을 가져오기
+            var content = document.getElementById("authenticatedComment").value;
+
+            // 답변 내용이 비어있는 경우
+            if (!content.trim()) {
+                // 경고창 띄우기
+                alert("댓글을 입력해주세요.");
+                return false; // 폼 제출을 막음
+            } else {
+                // 여기에 실제 답변 등록 코드를 추가 (예: 서버로 데이터 전송 등)
+                // 여기에 실제 글 등록 코드를 추가하세요.
+                return true; // 폼 제출 허용
+            }
+        }
+
+    </script>
+
+
+    <script layout:fragment="script" type='text/javascript'>
+        const delete_elements = document.getElementsByClassName("delete");
+        Array.from(delete_elements).forEach(function (element) {
+            element.addEventListener('click', function () {
+                if (confirm("정말로 삭제하시겠습니까?")) {
+                    location.href = this.dataset.uri;
+                }
+                ;
+            });
+        });
+
+
+        const recommend_elements = document.getElementsByClassName("recommend");
+        Array.from(recommend_elements).forEach(function (element) {
+            element.addEventListener('click', function () {
+                if (confirm("정말로 추천하시겠습니까?")) {
+                    location.href = this.dataset.uri;
+                }
+                ;
+            });
+        });
+
+
+    </script>
+
+</div>
+</html>

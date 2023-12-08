@@ -1,11 +1,9 @@
 package com.project.Restaurant.Member.consumer;
 
 import com.project.Restaurant.Place.Customer.PlaceCustomer;
-import com.project.Restaurant.Post.Post;
-import com.project.Restaurant.PostComment.PostComment;
+import com.project.Restaurant.Board.Post.Post;
 import com.project.Restaurant.Reservation.Reservation;
 import jakarta.persistence.*;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -51,4 +49,6 @@ public class Customer {
     private String provider;
 
     private String providerId;
+
+    private String code;    //  회원가입시 유저마다 부여되는 고유코드(랜덤코드)
 }
