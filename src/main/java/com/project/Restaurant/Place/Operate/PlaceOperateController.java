@@ -64,5 +64,26 @@ public class PlaceOperateController {
 
         return "Place/PlaceRegist";
     }
+    @GetMapping("/regist/info/detail/{id}")
+    public String infosave3(Model model, @PathVariable Long id ){
+        PlaceOwner placeOwner = this.placeService.findById(id);
+        PlaceOwnerDto placeOwnerDto = placeOwner.convertDto();
+        model.addAttribute("placeOwner", placeOwnerDto);
+
+        Long ownerId = placeOwner.getId();
+        List<OperateDto> operateDtoList = placeOperateService.getAllOperateDtoList(ownerId);
+        model.addAttribute("placeOperateList", operateDtoList);
+
+        List<PlaceMenu> placeMenuList  =  this.placeMenuService.findByPlaceOwnerId(id);
+        model.addAttribute("menus", placeMenuList);
+
+        List<PlaceTag> tagList = this.placeTagService.findTags(id);
+        model.addAttribute("TagList",tagList);
+
+//        List<PlaceOperate> placeOperateList = this.placeOperateService.getAllOperateList(Math.toIntExact(placeOwner.getId()));
+//        model.addAttribute("placeOperateList", placeOperateList);
+
+        return "Place/PlaceRegistDetailList";
+    }
 
 }
