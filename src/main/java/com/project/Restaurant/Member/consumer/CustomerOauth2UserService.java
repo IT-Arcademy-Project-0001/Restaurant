@@ -54,6 +54,7 @@ public class CustomerOauth2UserService extends DefaultOAuth2UserService {
             customer.setAuthority(MemberRole.CUSTOMER.getValue());
             customer.setSignupDate(LocalDateTime.now());
             customer.setCode(getRandomCode());
+            customer.setPhoto(oAuth2User.getAttribute("picture"));
             customerRepository.save(customer);
         } else {
             customer = _customer.get();

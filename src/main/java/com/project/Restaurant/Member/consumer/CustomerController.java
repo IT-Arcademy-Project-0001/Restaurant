@@ -74,7 +74,7 @@ public class CustomerController {
     }
 
     @PostMapping("/userNameEmail")
-    public String usernameEmail(String username, String email, Model model) {
+    public String usernameEmail(String username, String email, Model model) throws MessagingException {
         Customer targetCustomer = customerService.findByusername(username);
         String message = "아이디 또는 이메일을 확인해주세요";
         if (targetCustomer == null) {
