@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko" layout:decorate="~{/member/member_profile_layout}">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/member/member_form.css">
+</head>
+<body>
+<div layout:fragment="profileContent">
+    <div class="wrap">
+        <form th:action="@{/member/changePw}" method="post" th:object="${passwordChangeForm}">
+            <h1>비밀번호 변경</h1>
+            <div role="alert" th:if="${#fields.hasAnyErrors()}">
+                <div th:replace="~{form_errors :: formErrorsFragment}"></div>
+            </div>
+            <div class="mb-3">
+                <label for="oldPassword" class="form-label">현재 비밀번호</label>
+                <input type="text" id="oldPassword" th:field="*{oldPassword}"
+                       name="oldPassword" class="form-control">
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">새 비밀번호</label>
+                <input type="text" id="password" th:field="*{password}"
+                       name="password" class="form-control">
+            </div>
+            <div class="mb-3">
+                <label for="passwordConfirm" class="form-label">비밀번호 확인</label>
+                <input type="text" id="passwordConfirm" th:field="*{passwordConfirm}"
+                       name="passwordConfirm" class="form-control">
+            </div>
+            <input type="button" class="btn btn-secondary" th:value="비밀번호변경" onclick="changePw(this)">
+        </form>
+    </div>
+    <script>
+        function changePw(input) {
+            if(confirm("비밀번호를 변경하시겠습니까?")) {
+                input.form.submit();
+            }
+        }
+    </script>
+</div>
+</body>
+</html>

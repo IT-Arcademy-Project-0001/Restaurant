@@ -46,7 +46,7 @@ public class PostController {
         model.addAttribute("boardName", category);
         Page<Post> paging = postService.getList(category, page, kw);
         model.addAttribute("paging", paging);
-        model.addAttribute("kw", kw);
+        model.addAttribute("spec", kw);
 
         return "Board/post_list";
     }

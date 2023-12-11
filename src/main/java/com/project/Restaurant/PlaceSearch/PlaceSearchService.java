@@ -5,6 +5,7 @@ import com.project.Restaurant.Place.Comment.PlaceOwnerComment;
 import com.project.Restaurant.Place.Comment.PlaceOwnerCommentRepository;
 import com.project.Restaurant.Place.Customer.PlaceCustRepository;
 import com.project.Restaurant.Place.Customer.PlaceCustomer;
+import com.project.Restaurant.Place.Menu.PlaceMenu;
 import com.project.Restaurant.Place.Owner.PlaceOwner;
 import com.project.Restaurant.Place.Owner.PlaceRepository;
 import lombok.RequiredArgsConstructor;
@@ -55,13 +56,19 @@ public class PlaceSearchService {
         ps.setCategoryOrder(1); // order 값 설정
         ps.setCategory(place.getStoreCategory());
         ps.setAddress(place.getStoreAddress());
+        ps.setCallNum(place.getCallNum());
 
-//        // 해당 장소의 후기 가져오기
-//        List<PlaceOwnerComment> comments = placeOwnerCommentRepository.findByPlaceOwner(place);
-//
-//        // 평균 별점 계산 및 설정 (소수점 첫째자리)
-//        double averageStarRating = calculateAverageStarRating(comments);
-//        ps.setStarRate(String.format("%.1f", averageStarRating));
+        // 해당 장소의 후기 가져오기
+        List<PlaceOwnerComment> comments = place.getPlaceOwnerCommentList();
+        ps.setReviewCount((long) comments.size());
+
+        // 평균 별점 계산 및 설정 (소수점 첫째자리)
+        double averageStarRating = calculateAverageStarRating(comments);
+        ps.setStarRate(String.format("%.1f", averageStarRating));
+
+        // 해당 장소의 첫번째 이미지 가져오기 (섬네일로 사용)
+        PlaceMenu placeMenuList = place.getPlaceMenuList().get(0);
+        ps.setThumbNailImg(placeMenuList.getOrigFileName());
 
         // ... 나머지 필드 설정
         searchResults.add(ps);

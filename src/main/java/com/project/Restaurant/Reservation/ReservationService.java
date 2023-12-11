@@ -6,9 +6,13 @@ import com.project.Restaurant.Place.Owner.PlaceService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -22,6 +26,7 @@ public class ReservationService {
     private final PlaceService placeService;
     private final OwnerService ownerService;
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+
 
 
 
@@ -74,11 +79,20 @@ public class ReservationService {
                 scheduler.schedule(() -> deleteCancelledReservation(reservationId), 30, TimeUnit.SECONDS);
             }
         }
-
     }
     private void deleteCancelledReservation(Long reservationId) {
         // 실제로 리스트에서 예약 삭제하는 코드 추가
         reservationRepository.deleteById(reservationId);
     }
+
+    @Transactional
+    public void changeReservationTime(Long reservationId, LocalDateTime newReservationDate) {
+        Reservation reservation = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 예약이 존재하지 않습니다."));
+        reservation.setReservationDate(newReservationDate);
+        reservationRepository.save(reservation);
+    }
+
+
 }
 

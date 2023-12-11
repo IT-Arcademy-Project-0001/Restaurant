@@ -7,6 +7,7 @@ import com.project.Restaurant.Member.owner.OwnerService;
 import com.project.Restaurant.Place.Owner.PlaceOwner;
 import com.project.Restaurant.Place.Owner.PlaceService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Controller;
@@ -14,7 +15,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +43,7 @@ public class ReservationController {
 
         Reservation reservation = new Reservation();
 
-        reservation.setReservationTime(LocalDateTime.now());
+        reservation.setReservationDate(LocalDateTime.now());
         reservation.setStatus("0");
         reservation.setCustomer(customer);
         reservation.setPlaceOwner(placeOwner);
@@ -105,6 +109,13 @@ public class ReservationController {
         return "redirect:/reservation/customerList";
     }
 
+    @PostMapping("/reservation/change")
+    public String changeReservationTime(@RequestParam("id") Long reservationId,
+                                        @RequestParam("newReservationDate") @DateTimeFormat(pattern = "dd/MM/yyyy HH:mm") LocalDateTime newReservationDate) {
+
+        reservationService.changeReservationTime(reservationId, newReservationDate);
+        return "redirect:/reservation/customerList";
+    }
 
     private boolean isCustomerLoggedIn(Principal principal) {
         if (principal != null && principal instanceof Authentication) {

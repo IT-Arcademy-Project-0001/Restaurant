@@ -8,3 +8,27 @@
 .find {
     margin-top: 9px;
 }
+
+.image {
+    height:250px;
+    margin:5%;
+}
+
+.set {
+    position: absolute;
+    right: 0;
+    bottom: -58px;
+}
+
+.wrap {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top:5%;
+    border-radius: 10px;
+    border : 2px solid rgb(25, 206, 96);
+    margin-left: 27%;
+    width: 30%;
+    padding:15px;
+}

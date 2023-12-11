@@ -17,5 +17,9 @@ public class PlaceSearch {
     private Integer categoryOrder;
     private String address;
     private String category;
+    private Long reviewCount;
+    private String callNum;
     private String starRate;
+    private String thumbNailImg;
+
 }

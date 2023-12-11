@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="/MapSearch/map_search.css">
     <link rel="stylesheet" href="/MapSearch/custominfo.css">
     <link rel="stylesheet" href="/MapSearch/custom_regist.css">
+    <link rel="stylesheet" href="/MapSearch/star_rate.css">
 </head>
 <body>
 <div layout:fragment="content">
@@ -32,35 +33,29 @@
                                     <div id="pagination"></div>
                                 </div>
                                 <div id="menu_wrap2" style="display: block;">
-                                    <img src="/MapSearch/search_main.jpg" class="img-fluid" alt="...">
-                                    <h2 class="text-center my-3">원하는 장소를 검색하세요</h2>
-                                </div>
-                            </div>
-                            <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">
-                                <div id="resList" class="overflow-auto" style="display: none;">
-                                </div>
-                                <div id="resList2" style="display: block;">
-                                    <img src="/MapSearch/search_main.jpg" class="img-fluid" alt="...">
-                                    <h2 class="text-center my-3">원하는 장소를 검색하세요</h2>
-                                    <div sec:authorize="hasAuthority('소비자')" class = "text-end">
-                                    <button class="popup_open_btn btn btn-primary" type ="button" id="popup_open_btn">누락된 장소 추가</button>
+                                    <div class = "text-center">
+                                        <img src="/MapSearch/search_main.jpg" class="img-fluid" alt="...">
+                                        <h4 class="my-3">원하는 장소를 검색하세요</h4>
+                                        <div sec:authorize="hasAuthority('소비자')">
+                                            새롭게 추가된 장소를 알고 계세요? <br>
+                                            장소 제안은 지도 품질 향상에 큰 도움이 됩니다. <br>
+                                            <button class="btn btn-primary mt-3" type ="button" id="popup_open_btn">신규장소 등록요청</button>
+                                        </div>
                                     </div>
-                                </div>
-
-                                <div id="my_modal">
-                                    <div class="locationList" style="margin : 15px;">
-                                        <form id="targetCreateForm" name="targetCreateForm" method="post">
-                                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                                            <div class = "text-end">
-                                                <button type="button" class="modal_close_btn btn-close" aria-label="Close"></button>
-                                            </div>
+                                    <div id="my_modal">
+                                        <div class="locationList" style="margin : 15px;">
+                                            <form id="targetCreateForm" name="targetCreateForm" method="post">
+                                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                                                <div class = "text-end">
+                                                    <button type="button" class="modal_close_btn btn-close" aria-label="Close"></button>
+                                                </div>
                                                 <span style="font-size : 18px; font-weight : bold; justify-content: center;  align-items: center; display: flex;"> 장소 추가 </span>
                                                 <span style="font-size : 15px;"> 장소 세부정보 </span>
-                                            <div class="mb-3">
-                                                <span style="font-size : 14px; color : #aaaaaa;"> 이 장소에 대한 정보를 제공해 주세요. 이 장소가 지도에 추가되면 공개적으로 표시됩니다 </span>
-                                            </div>
-                                            <div th:if="${message != null}" th:text="${message}" class="message" style="color : red; font-weight : bold; margin-top : 2px;"></div>
-                                            <div class="input-group mb-1">
+                                                <div class="mb-3">
+                                                    <span style="font-size : 14px; color : #aaaaaa;"> 이 장소에 대한 정보를 제공해 주세요. 이 장소가 지도에 추가되면 공개적으로 표시됩니다 </span>
+                                                </div>
+                                                <div th:if="${message != null}" th:text="${message}" class="message" style="color : red; font-weight : bold; margin-top : 2px;"></div>
+                                                <div class="input-group mb-1">
                                                     <div class="col-sm-8">
                                                         <input type="text" class="form-control" id="locationName" name="placename" placeholder="장소 이름(필수항목)">
                                                     </div>
@@ -71,37 +66,46 @@
                                                             <option value="술집"> 술집 </option>
                                                         </select>
                                                     </div>
-                                            </div>
+                                                </div>
 
-                                            <div class="mb-1">
-                                                <input type="text" class="form-control" id="locationAddress" name="locationaddress"
-                                                       placeholder="위치(필수항목)" onkeydown="findLocation()" readonly>
-                                            </div>
-                                            <div class="mb-1">
-                                                <input type="text" class="form-control" id="locationDetailedAddress" name="locationdetailedaddress"
-                                                       placeholder="상세주소" >
-                                            </div>
-                                            <div id="map_click" style="display : block; margin-bottom : 2px;">
-                                                <div id="map_modal" style="width:100%; height:248px;"></div>
-                                            </div>
-                                            <div class="form-floating mb-3" hidden="hidden">
-                                                <input type="text" class="form-control custom-input" id="locationLat" name="locationlat"
-                                                       value=" " readonly>
-                                                <label class="custom-label" for="locationLat"> 위도 </label>
-                                            </div>
-                                            <div class="form-floating mb-3" hidden="hidden">
-                                                <input type="text" class="form-control custom-input" id="locationLng" name="locationlng"
-                                                       value=" " readonly>
-                                                <label class="custom-label" for="locationLng"> 경도 </label>
-                                            </div>
-                                            <div class="mb-3">
-                                                <textarea class="form-control" id="memo" name="memo" rows="3"placeholder="설명" style="resize: none;"></textarea>
-                                            </div>
-                                            <div>
-                                                <button type="button" style="margin-left : 25%;" class="registBtn" id = "registBtn" onclick="registPlace(this)">등록</button>
-                                            </div>
-                                        </form>
+                                                <div class="mb-1">
+                                                    <input type="text" class="form-control" id="locationAddress" name="locationaddress"
+                                                           placeholder="위치(필수항목)" onkeydown="findLocation()" readonly>
+                                                </div>
+                                                <div class="mb-1">
+                                                    <input type="text" class="form-control" id="locationDetailedAddress" name="locationdetailedaddress"
+                                                           placeholder="상세주소" >
+                                                </div>
+                                                <div id="map_click" style="display : block; margin-bottom : 2px;">
+                                                    <div id="map_modal" style="width:100%; height:248px;"></div>
+                                                </div>
+                                                <div class="form-floating mb-3" hidden="hidden">
+                                                    <input type="text" class="form-control custom-input" id="locationLat" name="locationlat"
+                                                           value=" " readonly>
+                                                    <label class="custom-label" for="locationLat"> 위도 </label>
+                                                </div>
+                                                <div class="form-floating mb-3" hidden="hidden">
+                                                    <input type="text" class="form-control custom-input" id="locationLng" name="locationlng"
+                                                           value=" " readonly>
+                                                    <label class="custom-label" for="locationLng"> 경도 </label>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <textarea class="form-control" id="memo" name="memo" rows="3"placeholder="설명" style="resize: none;"></textarea>
+                                                </div>
+                                                <div>
+                                                    <button type="button" style="margin-left : 25%;" class="registBtn" id = "registBtn" onclick="registPlace(this)">등록</button>
+                                                </div>
+                                            </form>
+                                        </div>
                                     </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">
+                                <div id="resList" class="overflow-auto" style="display: none;">
+                                </div>
+                                <div class ="text-center" id="resList2" style="display: block;">
+                                    <img src="/MapSearch/search_main.jpg" class="img-fluid" alt="...">
+                                    <h4 class="text-center my-3">지도의 카테고리를 눌러보세요</h4>
                                 </div>
                             </div>
                         </div>

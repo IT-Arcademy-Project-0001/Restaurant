@@ -18,7 +18,10 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
@@ -60,6 +63,7 @@ public class SecurityConfig {
         return http.build();
     }
 
+
     @Bean
     @Order(2)
     public SecurityFilterChain customerFilterChain(HttpSecurity http) throws Exception {
@@ -81,8 +85,8 @@ public class SecurityConfig {
                         .userInfoEndpoint(userInfo -> userInfo.userService(oauth2UserService)))
                 .logout((logout) -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/member/logout"))
-        .logoutSuccessUrl("/")
-        .invalidateHttpSession(true));
+                        .logoutSuccessUrl("/")
+                        .invalidateHttpSession(true));
         return http.build();
     }
 
@@ -108,4 +112,8 @@ public class SecurityConfig {
 
         return daoAuthenticationProvider;
     }
+
+
 }
+
+

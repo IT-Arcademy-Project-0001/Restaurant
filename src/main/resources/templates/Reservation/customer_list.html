@@ -1,18 +1,22 @@
 <!DOCTYPE html>
-<html lang="ko" layout:decorate="~{layout}" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" layout:decorate="~{layout}">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <title>예약 목록</title>
+    <link rel="stylesheet" href="/reservation/customer.css">
+    <link rel="stylesheet" type="text/css" href="/reservation/jquery.datetimepicker.min.css"/>
+    <script src="/reservation/jquery.js"></script>
+    <script src="/reservation/jquery.datetimepicker.full.min.js"></script>
 </head>
 <body>
 <div layout:fragment="content">
     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-    <div>
-        <h2>예약 목록</h2>
-
-        <!-- 예약 목록을 표시하는 테이블 -->
+    <div id="kkk">
+    <h2 style="color : black; margin-top : 3%; margin-bottom : 3%;">예약 목록</h2>
         <table class="table">
             <thead class="table-dark">
             <tr>
@@ -20,23 +24,41 @@
                 <th>가게이름</th>
                 <th>사장이름</th>
                 <th>손님이름</th>
+                <th>예약날짜</th>
                 <th>예약상태</th>
                 <th>작업</th>
             </tr>
             </thead>
-            <tbody>
+            <body>
             <tr th:each="reservation : ${reservationList}">
-                <!-- 각 열에 예약 정보 표시 -->
                 <td th:text="${reservation.id}"></td>
                 <td th:text="${reservation.placeOwner.store}"></td>
                 <td th:text="${reservation.placeOwner.owner.username}"></td>
                 <td th:text="${reservation.customer.username}"></td>
                 <td>
-                    <!-- 예약 상태에 따라 다른 내용을 표시하는 if문 -->
+                    <span th:text="${#temporals.format(reservation.reservationDate, 'yyyy-MM-dd HH:mm')}"></span>
+                    <form th:if="${reservation.status != '2' and reservation.status != '4'}" th:id="${'changeForm-' + reservation.id}"
+                          th:action="@{/reservation/change}" method="post">
+                        <input th:id="${'datetimepicker-' + reservation.id}" name="newReservationDate" type="text"/>
+                        <input type="hidden" name="id" th:value="${reservation.id}"/>
+                        <button type="button" th:onclick="changeReservationTime([[${reservation.id}]])">예약 변경</button>
+                    </form>
+                    <script th:inline="javascript">
+                        $("#datetimepicker-[[${reservation.id}]]").datetimepicker({
+                            format: "d/m/Y H:00",
+                        });
+                        function changeReservationTime(id) {
+                           form = document.getElementById('changeForm-' + id);
+                           form.submit();
+                        }
+                    </script>
+                </td>
+                <td>
                     <span th:if="${reservation.status == '0'}">요청중</span>
                     <span th:if="${reservation.status == '1'}">승인됨</span>
                     <span th:if="${reservation.status == '2'}">완료됨</span>
                     <span th:if="${reservation.status == '3'}">취소됨</span>
+                    <span th:if="${reservation.status == '4'}">예약완료</span>
                 </td>
                 <td>
                     <!-- 예약이 완료되었을 때 결제 버튼 표시 -->
@@ -55,11 +77,13 @@
                             <button type="button">후기작성</button>
                         </a>
                     </span>
+                    <span th:if="${reservation.status == '4'}">
+                        후기등록됨
+                    </span>
                 </td>
             </tr>
-            </tbody>
+            </body>
         </table>
-
         <!-- 결제 성공 메시지 표시 -->
         <div th:if="${paymentStatus == 'SUCCESS'}" class="alert alert-success" role="alert">
             결제가 성공적으로 완료되었습니다.
