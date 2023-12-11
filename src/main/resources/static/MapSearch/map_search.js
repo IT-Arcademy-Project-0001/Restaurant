@@ -248,7 +248,7 @@ function getListItem2(searchResult2) {
                               '<div>' + searchResult2.callNum + '</div>' +
                           '</div>' +
                           '<div class="col-sm-4">' +
-                              '<img src="/menu/'+ searchResult2.thumbNailImg + '" class="img-fluid rounded float-start">' +
+                              '<img src="/menu/'+ searchResult2.thumbNailImg + '" class="img-fluid rounded float-start" style="height: 9rem;">' +
                           '</div>' +
                       '</div>';
 
