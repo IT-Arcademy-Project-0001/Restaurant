@@ -167,6 +167,13 @@
         }, true);
 
         function doSave(form){
+<!--            var name = document.getElementById('storeName');-->
+<!--            console.log("dkssud" + name);-->
+
+<!--             if(document.getElementById('storeName') == ""){-->
+<!--                alert("매장명을 작성해주세요.");-->
+<!--             }-->
+
              form.action = "/place/map/regist/info/save";
              form.method = "post";
              form.submit();
