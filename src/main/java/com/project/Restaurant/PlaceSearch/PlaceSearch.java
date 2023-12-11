@@ -18,6 +18,8 @@ public class PlaceSearch {
     private String address;
     private String category;
     private Long reviewCount;
+    private String callNum;
     private String starRate;
+    private String thumbNailImg;
 
 }

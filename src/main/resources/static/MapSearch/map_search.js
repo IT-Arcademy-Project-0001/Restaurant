@@ -194,11 +194,11 @@ function mySearchPlaces() {
 
                     var itemEl2 = getListItem2(searchResult2); // 검색 결과 항목 Element를 생성합니다
 
-                    (function(map, markerCustomInfo, placeOrder, placeAddress, placeCategory, placeId, placeStore) {
+                    (function(map, markerCustomInfo, placeOrder, placeAddress, placeCategory, placeId, placeStore, thumbNailImg) {
 
                      // 마커를 클릭했을 때 커스텀 오버레이를 표시합니다
                        kakao.maps.event.addListener(marker, 'click', function() {
-                           displayCustomWindow(markerCustomInfo, placeOrder, placeAddress, placeCategory, placeId, placeStore);
+                           displayCustomWindow(markerCustomInfo, placeOrder, placeAddress, placeCategory, placeId, placeStore, thumbNailImg);
                        });
 
                        // 맵을 클릭했을 때의 이벤트를 등록합니다.
@@ -218,7 +218,8 @@ function mySearchPlaces() {
 
                        // 커스텀 오버레이를 닫기 위해 호출되는 함수입니다
 
-                    })(map, markerCustomInfo, searchResult2.categoryOrder, searchResult2.address, searchResult2.category, searchResult2.id, searchResult2.store);
+                    })(map, markerCustomInfo, searchResult2.categoryOrder, searchResult2.address, searchResult2.category, searchResult2.id,
+                    searchResult2.store, searchResult2.thumbNailImg);
 
                     // 동적으로 생성된 HTML을 삽입
                     fragment2.appendChild(itemEl2);
@@ -240,13 +241,14 @@ function getListItem2(searchResult2) {
     var el2 = document.createElement('div')
     var listContent = '<div class="row p-3 border-bottom">' +
                           '<div class="col-sm-8">' +
-                              '<div class="fw-bold"><a href="/place/' + searchResult2.categoryOrder + '/' + searchResult2.id + '" target="_blank" class="link">' + searchResult2.store + '</a></div>' +
+                              '<div class="fw-bold mb-3"><a href="/place/' + searchResult2.categoryOrder + '/' + searchResult2.id + '" target="_blank" class="link">' + searchResult2.store + '</a></div>' +
                               '<div>' + searchResult2.starRate + '<i data-star="' + searchResult2.starRate + '"></i> | 후기 ' + searchResult2.reviewCount + '</div>' +
                               '<div>' + searchResult2.address + '</div>' +
                               '<div>' + searchResult2.category + '</div>' +
+                              '<div>' + searchResult2.callNum + '</div>' +
                           '</div>' +
                           '<div class="col-sm-4">' +
-                              '<img src="/MapSearch/samplethumbnail.png" class="img-fluid rounded float-start">' +
+                              '<img src="/menu/'+ searchResult2.thumbNailImg + '" class="img-fluid rounded float-start">' +
                           '</div>' +
                       '</div>';
 
@@ -561,7 +563,7 @@ function displayCustomWindowSimple(marker, placeOrder, placeAddress, placeCatego
 
 }
 
-function displayCustomWindow(marker, placeOrder, placeAddress, placeCategory, placeId, placeStore) {
+function displayCustomWindow(marker, placeOrder, placeAddress, placeCategory, placeId, placeStore, thumbNailImg) {
         var content = '<div class="wrapInfo">' +
                                 '    <div class="infoC">' +
                                 '        <div class="title">' + placeStore +
@@ -569,7 +571,7 @@ function displayCustomWindow(marker, placeOrder, placeAddress, placeCategory, pl
                                 '        </div>' +
                                 '        <div class="body">' +
                                 '            <div class="img">' +
-                                '                <img src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/thumnail.png" width="73" height="70">' +
+                                '                <img src="/menu/'+ thumbNailImg +'" width="73" height="70">' +
                                 '           </div>' +
                                 '            <div class="desc">' +
                                 '                <div class="ellipsis">' + placeAddress + '</div>' +
