@@ -11,9 +11,9 @@
     </style>
 </head>
 <body>
-<div layout:fragment="profileContent">
+<div layout:fragment="profileContent" >
 <!--    <a style="font-size : 20px; font-weight : bold; margin-left : 50px;">가게 등록</a>-->
-    <div class="RegistArray" style="display :flex ; justify-content: space-evenly; width : 80%;">
+    <div class="RegistArray" style="display :flex ; justify-content: space-evenly; width : 90%; height : 668px;">
         <div class="RegistForm" style="width : 40%;">
             <div class="RegistTitle" style="margin-top : 20px; margin-bottom : 20px;">
                 <a style="font-size : 18px; font-weight : bold;">기본 정보</a> <a class="regist_sub" style="font-size : 13px; color : red; font-weight : bold; "> *필수 </a>
@@ -64,7 +64,7 @@
         <div class="addRegist" style="overflow : auto; width : 42%;">
             <div class="RegistTitle" style="margin-top : 20px; margin-bottom : 20px;">
                 <a style="font-size : 18px; font-weight : bold; margin-bottom : 10px;">추가 정보</a>
-                <button class="BasicInfoSave" id="AddInfoSave" type="submit" style="margin-left : 80%;"
+                <button class="BasicInfoSave" id="AddInfoSave" type="submit" style="margin-left : 79%;"
                         onclick="doSaveAddInfo()">저장
                 </button>
             </div>
@@ -140,7 +140,7 @@
                     <p style="margin-top : 8px; margin-left : 10px; font-weight : bold;">(</p>
                     <input type="text" class="tagText" id="storeTag" placeholder="ex. #떡볶이맛집" onkeydown="if (event.key === 'Enter') { addFunc(); }" >
                     <p style="margin-top : 8px; font-weight : bold;">)</p>
-                    <Button type="submit" class="MenuInfoSave" style="height : 26px; margin-top : 1.4%; margin-left : 10%;"  onclick="saveTags()">태그 저장</Button>
+                    <Button type="submit" class="MenuInfoSave" style="height : 26px; margin-top : 1.4%; margin-left : 10%; font-size : 13px;"  onclick="saveTags()">태그 저장</Button>
                 </div>
                 <p style="color : red ; margin-left : 10px; border : none; font-size : 11px; margin-top : -10px;">작성 후 Enter키 누르면 태그 생성 및 태그 클릭하여 삭제</p>
                 <div style="display: flex;">

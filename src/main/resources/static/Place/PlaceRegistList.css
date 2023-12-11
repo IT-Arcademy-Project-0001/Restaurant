@@ -72,13 +72,14 @@ td, th {
     border-radius: 10px;
     width : 200px;
     height : 30px;
+    border: none;
 }
 
 .RegistArray{
     display :flex;
     justify-content: center;
     width : 90%;
-    height : 80%;
+    height : 65%;
     margin-left : 5%;
     margin-top : 1%;
 }

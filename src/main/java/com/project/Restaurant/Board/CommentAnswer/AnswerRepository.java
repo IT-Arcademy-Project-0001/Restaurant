@@ -1,4 +1,4 @@
-package com.project.Restaurant.CommentAnswer;
+package com.project.Restaurant.Board.CommentAnswer;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

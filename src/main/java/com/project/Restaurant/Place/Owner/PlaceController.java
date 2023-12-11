@@ -10,6 +10,7 @@ import com.project.Restaurant.Place.Operate.PlaceOperateService;
 import com.project.Restaurant.Place.Owner.Tag.PlaceTag;
 import com.project.Restaurant.Place.Owner.Tag.PlaceTagService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -83,6 +84,21 @@ public class PlaceController {
     model.addAttribute("placeList",placeList);
     return "Place/PlaceRegistList";
   }
+
+//  @GetMapping("regist/list")
+//  public String getList(Principal principal,Model model,@RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "kw", defaultValue = "") String kw){
+//    Owner owner = this.ownerService.findByusername(principal.getName());
+//    List<PlaceOwner> placeList = this.placeService.getPlaceOwnersByOwnerId(owner.getId());
+//    model.addAttribute("placeList",placeList);
+//
+//    Page<PlaceOwner> paging = placeService.getList(page, kw);
+//    model.addAttribute("paging", paging);
+//
+//    model.addAttribute("kw", kw);
+//    return "Place/PlaceRegistList";
+//  }
+//
+
   @GetMapping("regist/list/detail/{id}")
   public String getListDetail(Model model,@PathVariable("id") Long id){
     PlaceOwner placeOwner = this.placeService.findById(id);

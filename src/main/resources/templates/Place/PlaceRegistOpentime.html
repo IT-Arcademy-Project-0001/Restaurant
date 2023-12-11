@@ -22,7 +22,7 @@
                 <div class="RegistText" style="display:contents;" th:each="operateList, iterStat : ${placeOperateList}">
                     <div th:if="${operateList.openTime == ''}">
                         <p th:text="${operateList.day + '( 휴무 )'}"></p>
-                        <input type="hidden" id="operateList.day" th:text="${operateList.day}">
+                        <input type="hidden" id="dayOffValue" th:value="${operateList.day}">
                     </div>
                     <div style="display:contents;" th:if="${operateList.openTime != ''}">
                         <p th:text="${operateList.day + ' / OpenTime: ' + operateList.openTime + ' / CloseTime: ' + operateList.closeTime}"></p>
@@ -97,6 +97,9 @@
 
     <script th:inline="javascript">
 
+        var dayOff = document.getElementById("dayOffValue").value;
+        console.log(dayOff);
+
         function registPlace(){
             var BtnText = document.getElementById("RegistBtn").innerText;
             var form = document.querySelector('#targetCreateForm');
@@ -119,14 +122,12 @@
                 timeClickContainer.style.display = "block";
                 document.getElementById("businessDay_"+num).setAttribute('checked', '');
                 document.getElementById("dayOff_" + num).checked = false;
-            } else if (str_time != '' && end_time != '') {
-                timeClickContainer.style.display = "block";
-                document.getElementById("businessDay_"+num).setAttribute('checked', '');
-                document.getElementById("dayOff_" + num).checked = false;
-            } else if (str_time == '' && end_time == '') {
+            } else  {
                 timeClickContainer.style.display = "none";
-                str_time.value = "";
-                end_time.value = "";
+                document.getElementById("dayOff_"+num).setAttribute('checked', '');
+                document.getElementById("businessDay_" + num).checked = false;
+                document.getElementById(daysOfWeek[num - 1] + "_str_time").value = '';
+                document.getElementById(daysOfWeek[num - 1] + "_end_time").value = '';
             }
         }
 

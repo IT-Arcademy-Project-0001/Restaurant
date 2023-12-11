@@ -6,9 +6,11 @@ var markersCategory = {}; // // 카테고리로 검색한 마커를 담을 객�
 //markersCategory[3] = [];
 //...
 
-var markers = []; // // 마커를 담을 배열입니다
+var markers = []; // 마커를 담을 배열입니다
 
 var categoryOrderNumber = []; // 복수의 마커 data-order를 담을 배열입니다.
+
+var selectedMarkers = []; // 아이템리스트에서 선택된 장소를 강조하는 마커를 담을 배열입니다.
 
 var currCategory = ''; // 현재 선택된 카테고리를 가지고 있을 변수입니다
 
@@ -18,7 +20,7 @@ var defaultLng = 127.341445; // 기본 경도 값
 var mapContainer = document.getElementById('map'), // 지도를 표시할 div
     mapOption = {
         center: new kakao.maps.LatLng(defaultLat, defaultLng),
-        level: 5 // 지도의 확대 레벨
+        level: 3 // 지도의 확대 레벨
     };
 
 // HTML5의 geolocation으로 사용할 수 있는지 확인합니다
@@ -84,6 +86,7 @@ addCategoryClickEvent();
 var infowindow = new kakao.maps.InfoWindow({zIndex:1});
 var simpleinfowindow = new kakao.maps.InfoWindow({zIndex:1});
 var customInfo = new kakao.maps.CustomOverlay({clickable: true, yAnchor:1.3, zIndex:1});
+var customInfoSimple = new kakao.maps.CustomOverlay({clickable: true, xAnchor:0.43, yAnchor:1.21, zIndex:1});
 
  // Enter 키 이벤트 처리
 document.getElementById("keyword").addEventListener("keyup", function (event) {
@@ -165,8 +168,10 @@ function mySearchPlaces() {
   initializeMarkerCategory(categoryOrderNumber);
 
   // 테이블의 기존 내용을 비움
+  infoBody.empty();
 
-    infoBody.empty();
+  var listEl2 = document.getElementById('resList');
+  var fragment2 = document.createDocumentFragment();
 
     $.ajax({
         url: '/place/search',
@@ -182,32 +187,12 @@ function mySearchPlaces() {
                 // 서버에서 받아온 데이터를 이용하여 마커 생성
                 data.forEach(searchResult2 => {
 
-                    var listContent = '<div class="container">' +
-                                          '<div class="row mb-3 pb-3 border-bottom">' +
-                                              '<div class="col-sm-8">' +
-                                                  '<div class="fw-bold">' + searchResult2.store + '</div>' +
-                                                  '<div>' + searchResult2.address + '</div>' +
-                                                  '<div>' + searchResult2.category + '</div>' +
-                                              '</div>' +
-                                              '<div class="col-sm-4">' +
-                                                  '<img src="/MapSearch/samplethumbnail.png" class="img-fluid rounded float-start">' +
-                                              '</div>' +
-                                          '</div>' +
-                                      '</div>';
-
-                    // HTML을 삽입할 위치를 선택 (예: 특정 테이블의 tbody)
-                    infoBody = $('#resList');
-
-                    // 동적으로 생성된 HTML을 삽입
-                    infoBody.append(listContent);
-
-
                     // 마커를 생성하고 지도에 표시합니다
                     var marker = addMarkerCategory(new kakao.maps.LatLng(searchResult2.locationLat, searchResult2.locationLng), searchResult2.categoryOrder);
 
                     var markerCustomInfo = new kakao.maps.LatLng(searchResult2.locationLat, searchResult2.locationLng);
-                    // 마커 위에 커스텀오버레이를 표시합니다
-                    // 마커를 중심으로 커스텀 오버레이를 표시하기위해 CSS를 이용해 위치를 설정했습니다
+
+                    var itemEl2 = getListItem2(searchResult2); // 검색 결과 항목 Element를 생성합니다
 
                     (function(map, markerCustomInfo, placeOrder, placeAddress, placeCategory, placeId, placeStore) {
 
@@ -221,11 +206,26 @@ function mySearchPlaces() {
                            customInfo.setMap(null);
                        });
 
+                       itemEl2.onmouseenter = function () {
+                           displayCustomWindowSimple(markerCustomInfo, placeOrder, placeAddress, placeCategory, placeId, placeStore);
+                           addMarkerSelect(markerCustomInfo);
+                       };
+
+                       itemEl2.onmouseleave = function () {
+                           customInfoSimple.setMap(null);
+                           removeSelectedMarkers();
+                       };
+
                        // 커스텀 오버레이를 닫기 위해 호출되는 함수입니다
 
                     })(map, markerCustomInfo, searchResult2.categoryOrder, searchResult2.address, searchResult2.category, searchResult2.id, searchResult2.store);
 
+                    // 동적으로 생성된 HTML을 삽입
+                    fragment2.appendChild(itemEl2);
+
                 });
+
+                listEl2.appendChild(fragment2);
 
         },
         error: function (error) {
@@ -233,6 +233,27 @@ function mySearchPlaces() {
         }
     });
 
+}
+
+function getListItem2(searchResult2) {
+
+    var el2 = document.createElement('div')
+    var listContent = '<div class="row p-3 border-bottom">' +
+                          '<div class="col-sm-8">' +
+                              '<div class="fw-bold"><a href="/place/' + searchResult2.categoryOrder + '/' + searchResult2.id + '" target="_blank" class="link">' + searchResult2.store + '</a></div>' +
+                              '<div>' + searchResult2.starRate + '</div>' +
+                              '<div>' + searchResult2.address + '</div>' +
+                              '<div>' + searchResult2.category + '</div>' +
+                          '</div>' +
+                          '<div class="col-sm-4">' +
+                              '<img src="/MapSearch/samplethumbnail.png" class="img-fluid rounded float-start">' +
+                          '</div>' +
+                      '</div>';
+
+    el2.innerHTML = listContent;
+    el2.className = 'container';
+
+    return el2;
 }
 
 // 장소검색이 완료됐을 때 호출되는 콜백함수 입니다
@@ -420,6 +441,26 @@ function addMarkerCategory(position, order) {
     return marker;
 }
 
+function addMarkerSelect(position) {
+
+    var imageSrc = '/MapSearch/selected_Marker.png', // 마커 이미지 url, 스프라이트 이미지를 씁니다
+        imageSize = new kakao.maps.Size(60, 72),  // 마커 이미지의 크기
+        imgOptions =  {
+            offset: new kakao.maps.Point(24, 45) // 마커 좌표에 일치시킬 이미지 내에서의 좌표
+        },
+
+//        imageOption = {offset: new kakao.maps.Point(27, 69)}; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+
+        markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imgOptions),
+            marker = new kakao.maps.Marker({
+            position: position, // 마커의 위치
+            image: markerImage
+        });
+
+    marker.setMap(map); // 지도 위에 마커를 표출합니다
+    selectedMarkers.push(marker);
+}
+
 // 마커 카테고리별 배열을 초기화합니다.
 function initializeMarkerCategory(orders) {
     for (var i = 0; i < orders.length; i++) {
@@ -465,6 +506,15 @@ function removeMarkerCategory(order) {
     }
 }
 
+// 아이템 리스트에서 선택되어 강조된 마커를 제거합니다.
+function removeSelectedMarkers() {
+    for ( var i = 0; i < selectedMarkers.length; i++ ) {
+        selectedMarkers[i].setMap(null);
+    }
+    selectedMarkers = [];
+}
+
+
 // 검색결과 목록 하단에 페이지번호를 표시는 함수입니다
 function displayPagination(pagination) {
     var paginationEl = document.getElementById('pagination'),
@@ -500,6 +550,15 @@ function displaysimpleInfowindow(marker, title) {
     var content = '<div style="padding:5px;z-index:1;">' + title + '</div>';
     simpleinfowindow.setContent(content);
     simpleinfowindow.open(map, marker);
+}
+
+function displayCustomWindowSimple(marker, placeOrder, placeAddress, placeCategory, placeId, placeStore) {
+
+        var content = '<div class ="labelCustom"><span class="left"></span><span class="center">' + placeStore + '</span><span class="right"></span></div>';
+        customInfoSimple.setContent(content)
+        customInfoSimple.setMap(map);
+        customInfoSimple.setPosition(marker);
+
 }
 
 function displayCustomWindow(marker, placeOrder, placeAddress, placeCategory, placeId, placeStore) {
