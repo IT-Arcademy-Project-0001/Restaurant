@@ -4,6 +4,7 @@ import com.project.Restaurant.Member.EmailService;
 import com.project.Restaurant.Member.MemberCreateForm;
 import com.project.Restaurant.Member.PasswordResetForm;
 import com.project.Restaurant.Member.consumer.Customer;
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -41,7 +42,7 @@ public class OwnerController {
     }
 
     @PostMapping("/signup")
-    public String signup(@Valid MemberCreateForm memberCreateForm, BindingResult bindingResult, Model model) {
+    public String signup(@Valid MemberCreateForm memberCreateForm, BindingResult bindingResult, Model model) throws MessagingException {
         if (bindingResult.hasErrors()) {
             return "/member/signup_form";
         }
@@ -92,7 +93,7 @@ public class OwnerController {
     }
 
     @PostMapping("/userNameEmail")
-    public String usernameEmail(String username, String email, Model model) {
+    public String usernameEmail(String username, String email, Model model) throws MessagingException {
         Owner targetOwner = ownerService.findByusername(username);
         String message = "아이디 또는 이메일을 확인해주세요";
         if (targetOwner == null) {
