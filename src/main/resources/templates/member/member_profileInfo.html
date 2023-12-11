@@ -10,6 +10,26 @@
         <div class="profile">
             <img th:src="${member.getPhoto()}" class="image">
         </div>
+        <div id="btnWrap">
+            <button typ="button" id="popupBtn">모달 팝업 띄우기</button>
+        </div>
+        <div id="modalWrap" style="display : none;">
+            <div id="modalContent">
+                <div id="modalBody">
+                    <span id="closeBtn">&times;</span>
+                    <div>
+                        <img src="/member/profilePhoto/boy.png" style="width : 23%;">
+                        <img src="/member/profilePhoto/boy2.png" style="width : 23%;">
+                        <img src="/member/profilePhoto/girl.png" style="width : 23%;">
+                    </div>
+                    <div>
+                        <img src="/member/profilePhoto/man.png" style="width : 21%;">
+                        <img src="/member/profilePhoto/woman.png" style="width : 21%;">
+                        <img src="/member/profilePhoto/woman2.png" style="width : 21%;">
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="info">
             <div>
                 <label for="nickName" class="form-label">닉네임 : </label>
@@ -29,6 +49,24 @@
             <a th:href="@{/member/changePw}" class="btn btn-secondary">비밀번호변경</a>
         </div>
     </div>
+    <script>
+        const btn = document.getElementById('popupBtn');
+        const modal = document.getElementById('modalWrap');
+        const closeBtn = document.getElementById('closeBtn');
+
+        btn.onclick = function() {
+            modal.style.display = 'block';
+        }
+        closeBtn.onclick = function() {
+            modal.style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
 </div>
 </body>
 </html>
