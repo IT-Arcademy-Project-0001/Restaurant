@@ -55,11 +55,19 @@ public class PlaceController {
   }
 
   @PostMapping("/regist/info/subSave")
-  public  String saveTag(@RequestParam String webSite, @RequestParam String storeMemo, @RequestParam Long placeId){
+  public  String saveAddInfo(@RequestParam String webSite, @RequestParam String storeMemo, @RequestParam Long placeId){
 
     this.placeService.saveSubInfo(webSite,storeMemo,placeId);
 
     return "redirect:/place/map/regist/info/" + placeId;
+  }
+
+  @PostMapping("/regist/info/subUpdate")
+  public  String updateAddInfo(@RequestParam String webSite, @RequestParam String storeMemo, @RequestParam Long placeId){
+
+    this.placeService.saveSubInfo(webSite,storeMemo,placeId);
+
+    return "redirect:/place/map/regist/list/detail/" + placeId;
   }
 
   @PostMapping("/regist/info/tag")
@@ -78,13 +86,23 @@ public class PlaceController {
     return response;
   }
 
+//  @GetMapping("regist/list")
+//  public String getList(Principal principal,Model model, @RequestParam(value="page", defaultValue="0") int page){
+//    Owner owner = this.ownerService.findByusername(principal.getName());
+//    Page<PlaceOwner> paging = this.placeService.getList(page,owner.getId());
+//    model.addAttribute("paging",paging);
+//
+//    return "Place/PlaceRegistList";
+//  }
+
   @GetMapping("regist/list")
-  public String getList(Principal principal,Model model){
+  public String list(Principal principal, Model model, @RequestParam(value="page", defaultValue="0") int page,
+                     @RequestParam(value = "kw", defaultValue = "") String kw){
     Owner owner = this.ownerService.findByusername(principal.getName());
-    List<PlaceOwner> placeList = this.placeService.getPlaceOwnersByOwnerId(owner.getId());
-    model.addAttribute("placeList",placeList);
+    Page<PlaceOwner> paging = this.placeService.getList(page,owner.getId(),kw);
+    model.addAttribute("paging",paging);
     return "Place/PlaceRegistList";
-  } 
+  }
   @GetMapping("regist/list/detail/{id}")
   public String getListDetail(Model model,@PathVariable("id") Long id){
     PlaceOwner placeOwner = this.placeService.findById(id);
@@ -113,17 +131,5 @@ public class PlaceController {
     return "redirect:/place/map/regist/list/detail/" + POwnerId;
   }
 
-//  @GetMapping("regist/list")
-//  public String getList(Principal principal,Model model,@RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "kw", defaultValue = "") String kw){
-//    Owner owner = this.ownerService.findByusername(principal.getName());
-//    List<PlaceOwner> placeList = this.placeService.getPlaceOwnersByOwnerId(owner.getId());
-//    model.addAttribute("placeList",placeList);
-//
-//    Page<PlaceOwner> paging = placeService.getList(page, kw);
-//    model.addAttribute("paging", paging);
-//
-//    model.addAttribute("kw", kw);
-//    return "Place/PlaceRegistList";
-//  }
-//
+
 }

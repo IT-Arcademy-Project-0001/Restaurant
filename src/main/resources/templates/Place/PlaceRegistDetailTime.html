@@ -21,7 +21,7 @@
                 <div class="RegistText" style="display:contents;" th:each="operateList, iterStat : ${placeOperateList}">
                     <div th:if="${operateList.openTime == ''}">
                         <p th:text="${operateList.day + '( 휴무 )'}"></p>
-                        <input type="hidden" id="operateList.day" th:text="${operateList.day}">
+                        <input type="hidden" id="operateListDayOff" th:value="${operateList.day}">
                     </div>
                     <div style="display:contents;" th:if="${operateList.openTime != ''}">
                         <p th:text="${operateList.day + ' / OpenTime: ' + operateList.openTime + ' / CloseTime: ' + operateList.closeTime}"></p>
@@ -96,15 +96,27 @@
 
     <script th:inline="javascript">
 
+        function toggleDayContainerByData(){
+            var operateListDay = [[${placeOperateList}]];
+
+            for (var i = 0; i < operateListDay.length; i++) {
+                if (operateListDay[i].openTime == "") {
+                    toggleDayContainer(i+1,1);
+                } else {
+                    toggleDayContainer(i+1,0);
+                }
+            }
+        }
+
         function registPlace(){
             var BtnText = document.getElementById("RegistBtn").innerText;
             var form = document.querySelector('#targetCreateForm');
 
             if(BtnText == "수정"){
-                form.action = "/place/map/regist/owner/time/update";
+                form.action = "/place/map/regist/owner/time/detailUpdate";
                 form.submit();
             } else {
-                form.action = "/place/map/regist/owner/time";
+                form.action = "/place/map/regist/owner/timeDetail";
                 form.submit();
             }
         };
@@ -114,18 +126,17 @@
             var str_time = document.getElementById(daysOfWeek[num - 1] + "_str_time").value;
             var end_time = document.getElementById(daysOfWeek[num - 1] + "_end_time").value;
 
+
             if (num2 != 1) {
                 timeClickContainer.style.display = "block";
                 document.getElementById("businessDay_"+num).setAttribute('checked', '');
                 document.getElementById("dayOff_" + num).checked = false;
-            } else if (str_time != '' && end_time != '') {
-                timeClickContainer.style.display = "block";
-                document.getElementById("businessDay_"+num).setAttribute('checked', '');
-                document.getElementById("dayOff_" + num).checked = false;
-            } else if (str_time == '' && end_time == '') {
+            } else {
                 timeClickContainer.style.display = "none";
-                str_time.value = "";
-                end_time.value = "";
+                document.getElementById("dayOff_"+num).setAttribute('checked', '');
+                document.getElementById("businessDay_" + num).checked = false;
+                document.getElementById(daysOfWeek[num - 1] + "_str_time").value = '';
+                document.getElementById(daysOfWeek[num - 1] + "_end_time").value = '';
             }
         }
 
@@ -204,20 +215,14 @@
             });
         }
         var popup2 = document.getElementById('popup_open_btn2');
+
         if(popup2 != null){
             popup2.addEventListener('click', function() {
-                // 모달창 띄우기
                 modal('time_modal');
                 let timeClickList = document.querySelectorAll('.time_click');
 
-                timeClickList.forEach(function(element) {
-                    let words = element.id.split('_');
-                    console.log(words);
-                    let result = words[1];
-
-                    toggleDayContainer(result);
-                    document.getElementById("RegistBtn").innerText = "수정";
-                });
+                toggleDayContainerByData();
+                document.getElementById("RegistBtn").innerText = "수정";
             });
         }
 

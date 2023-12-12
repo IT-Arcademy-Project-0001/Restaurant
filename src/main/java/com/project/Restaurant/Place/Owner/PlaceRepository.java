@@ -11,19 +11,20 @@ import java.util.List;
 
 public interface PlaceRepository extends JpaRepository<PlaceOwner, Long> {
   List<PlaceOwner> findByOwnerId(Long ownerId);
+  Page<PlaceOwner> findByOwnerId(Long ownerId, Pageable pageable);
 
-//  @Query("SELECT p FROM PlaceOwner p WHERE p.store LIKE %:kw%")
-//  Page<PlaceOwner> findAllByKeyword(@Param("kw") String kw, Pageable pageable)
-//Page<PlaceOwner> findAll(Pageable pageable);
-//
+//  @Query("Select p From PlaceOwner p Where p.store Like %:kw%")
+
 //  @Query("select "
 //          + "distinct p "
 //          + "from PlaceOwner p "
 //          + "where "
+//          + "   (p.id = :id) "
+//          + "   and ( "
 //          + "   p.store like %:kw% "
 //          + "   )")
-//  Page<PlaceOwner> findAllByKeyword(@Param("kw") String kw, Pageable pageable);
 
-
+  @Query("Select p From PlaceOwner p Where p.owner.id = :id and p.store Like %:kw%")
+  Page<PlaceOwner> findAllByKeyword(@Param("kw") String kw, @Param("id") Long OwnerId, Pageable pageable);
 
 }
