@@ -17,24 +17,9 @@
             <!--&lt;!&ndash;            <input type="button" th:data-iter-index="${iterStat.index}" onclick="articleMessage(this)" style="background : yellow;">&ndash;&gt;-->
             <!--        </div>-->
 
- 
-            <div th:if="${placeOperateList != null}">
-                <div class="RegistText" style="display:contents;" th:each="operateList, iterStat : ${placeOperateList}">
-                    <div th:if="${operateList.openTime == ''}">
-                        <p th:text="${operateList.day + '( 휴무 )'}"></p>
-                        <input type="hidden" id="dayOffValue" th:value="${operateList.day}">
-                    </div>
-                    <div style="display:contents;" th:if="${operateList.openTime != ''}">
-                        <p th:text="${operateList.day + ' / OpenTime: ' + operateList.openTime + ' / CloseTime: ' + operateList.closeTime}"></p>
-                    </div>
-                </div>
-                <input type="button" class="Modify" id="popup_open_btn2"
-                       style="height : 26px; margin-top : 1.4%; margin-left : 10%;  border : 2px solid rgb(25, 206, 96); color : black; border-radius: 10px; font-size : 13px; margin-left : 70%"
-                       value="영업시간 수정" th:if="${!#lists.isEmpty(placeOperateList)}"/>
-                <div th:if="${#lists.isEmpty(placeOperateList)}">
-                    <input type="text" class="RegistText" id="popup_open_btn" placeholder="여기를 클릭해주세요."/>
-                </div>
-            </div> 
+
+            <input type="text" class="RegistText" id="popup_open_btn" placeholder="여기를 클릭해주세요."/>
+
             <div id="time_modal" style="overflow : auto; max-height : 61%;">
                 <div class="time_array" style="margin : 15px;">
                     <form id="targetCreateForm" name="targetCreateForm" method="post">
@@ -47,8 +32,8 @@
                                th:value="${placeOwner?.id == null ? '' :  placeOwner.id}"/>
 
                         <div th:if="${message != null}" th:text="${message}" class="message"
-                             style="color : red; font-weight : bold; margin-top : 2px;"></div>\
-                        <div class="time_table" style="text-align : center;">\
+                             style="color : red; font-weight : bold; margin-top : 2px;"></div>
+                        <div class="time_table" style="text-align : center;">
                             <div style="margin-top: 17px;">
                                 <script>
                                     var daysOfWeek = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
@@ -97,8 +82,7 @@
 
     <script th:inline="javascript">
 
-        var dayOff = document.getElementById("dayOffValue").value;
-        console.log(dayOff);
+<!--        var dayOff = document.getElementById("dayOffValue").value; -->
 
         function registPlace(){
             var BtnText = document.getElementById("RegistBtn").innerText;
