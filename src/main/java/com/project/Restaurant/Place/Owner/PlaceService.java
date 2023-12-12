@@ -48,5 +48,14 @@ public class PlaceService {
   public List<PlaceOwner> getPlaceOwnersByOwnerId(Long ownerId) {
     return this.placeRepository.findByOwnerId(ownerId); 
   }
+
+  public Page<PlaceOwner> getList(int page, Long Id , String kw) {
+    List<Sort.Order> sorts = new ArrayList<>();
+    sorts.add(Sort.Order.desc("openingDate"));
+
+    Pageable pageable = PageRequest.of(page, 5, Sort.by(sorts));
+
+    return this.placeRepository.findAllByKeyword(kw, Id, pageable);
+  }
  
 }

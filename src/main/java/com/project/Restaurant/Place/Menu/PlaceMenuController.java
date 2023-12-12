@@ -151,4 +151,26 @@ public class PlaceMenuController {
         return "redirect:/place/map/regist/menu/detail/" + ownerId;
     }
 
+    @RequestMapping("/regist/menu/delete/detail")
+    public String detailMenuDelete(Model model, @RequestParam Long fileId, @RequestParam Long ownerId) {
+
+        String path = "C:\\"+"place\\"+"menu\\";
+        String originFileName = this.placeMenuService.findFile(fileId);
+
+        File file = new File(path+originFileName);
+        file.delete();
+
+        this.placeMenuService.deleteFile(fileId);
+
+        PlaceOwner placeOwner = this.placeService.findById(ownerId);
+        PlaceOwnerDto placeOwnerDto = placeOwner.convertDto();
+        model.addAttribute("placeOwner", placeOwnerDto);
+
+        Long OwnerId = placeOwner.getId();
+        List<OperateDto> operateDtoList = placeOperateService.getAllOperateDtoList(OwnerId);
+        model.addAttribute("placeOperateList", operateDtoList);
+
+        return "redirect:/place/map/regist/list/detail/" + ownerId;
+    }
+
 }
