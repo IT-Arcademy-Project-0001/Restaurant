@@ -133,6 +133,23 @@ public class MemberController {
         return "member/member_profileInfo";
     }
 
+    @PostMapping("/photoChange")
+    public String photoChange(Principal principal, String selectedImageAlt) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        GrantedAuthority authority = authentication.getAuthorities().iterator().next();
+
+        if (authority.getAuthority().equals("사장님")) {
+            Owner owner = ownerService.findByusername(principal.getName());
+            owner.setPhoto(selectedImageAlt);
+            ownerService.saveOwner(owner);
+        } else {
+            Customer customer = customerService.findByusername(principal.getName());
+            customer.setPhoto(selectedImageAlt);
+            customerService.saveCustomer(customer);
+        }
+        return "redirect:/member/profileInfo";
+    }
+
     @GetMapping("/security")
     public String memberSecurity(Model model, Principal principal) {
         populateMemberInfo(model, principal);

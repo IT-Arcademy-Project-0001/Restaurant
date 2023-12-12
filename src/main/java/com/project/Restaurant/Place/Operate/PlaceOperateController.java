@@ -43,6 +43,20 @@ public class PlaceOperateController {
         this.placeOperateService.updateOperate(operateDtoList,placeOwnerId);
         return "redirect:/place/map/regist/info/" + placeOwnerId;
     }
+
+    @PostMapping("/regist/owner/timeDetail")
+    public String saveOperateTimeUpdate(@ModelAttribute OperateDto operateDto, @RequestParam Long placeOwnerId){
+        List<OperateDto> operateDtoList = operateDto.getOperateDtoList();
+        this.placeOperateService.saveOperate(operateDtoList, placeOwnerId);
+        return "redirect:/place/map/regist/list/detail/" + placeOwnerId;
+    }
+
+    @PostMapping("/regist/owner/time/detailUpdate")
+    public String detailOperateTimeUpdate(@ModelAttribute OperateDto operateDto,@RequestParam Long placeOwnerId){
+        List<OperateDto> operateDtoList = operateDto.getOperateDtoList();
+        this.placeOperateService.updateOperate(operateDtoList,placeOwnerId);
+        return "redirect:/place/map/regist/list/detail/" + placeOwnerId;
+    }
     @GetMapping("/regist/info/{id}")
     public String infosave2(Model model, @PathVariable Long id ){
         PlaceOwner placeOwner = this.placeService.findById(id);

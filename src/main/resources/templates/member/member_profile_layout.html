@@ -4,31 +4,32 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="/member/member_layout.css">
     <script>
+
         function clickMenu(event, element) {
-            // 이전에 선택된 모든 요소에서 'clicked' 클래스 제거
             document.querySelectorAll('.menu-item').forEach(item => {
                 item.classList.remove('clicked');
             });
-
-            // 현재 선택된 요소에 'clicked' 클래스 추가
             element.closest('.menu-item').classList.add('clicked');
 
-            // 선택된 요소의 인덱스 가져오기
             var selectedMenuItem = Array.from(element.closest('.menu').children).indexOf(element.closest('.menu-item'));
             localStorage.setItem('selectedMenuItem', selectedMenuItem);
-            console.log(selectedMenuItem);
+
         }
 
         document.addEventListener('DOMContentLoaded', function () {
-            var selectedIndex = localStorage.getItem('selectedMenuItem');
-            console.log(selectedIndex);
-            if (selectedIndex !== null) {
-                var selectedElement = document.querySelector('.menu-item:nth-child(' + (parseInt(selectedIndex) + 1) + ')');
-                if (selectedElement) {
-                    selectedElement.classList.add('clicked');
-                }
-            }
-        });
+                var selectedIndex = localStorage.getItem('selectedMenuItem');
+
+                if (selectedIndex !== null) {
+                    var selectedElement = document.querySelector('.menu-item:nth-child(' + (parseInt(selectedIndex) + 1) + ')');
+                    if (selectedElement) {
+                        selectedElement.classList.add('clicked');
+                    }
+                } else {
+                    var defaultMenuItem = document.querySelector('.menu-item:first-child');
+                    if (defaultMenuItem) {
+                        defaultMenuItem.classList.add('clicked');
+                    }
+            } });
     </script>
 </head>
 <body>

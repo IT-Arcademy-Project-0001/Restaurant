@@ -6,7 +6,7 @@
 </head> 
     <body>
         <div layout:fragment="profileContent">
-            <div class="RegistArray" style="display :flex ; justify-content: space-evenly; width : 91%; height : 668px;">
+            <div class="RegistArray" style="display :flex ; justify-content: space-evenly; width : 80%; height : 668px;">
                 <div class="RegistForm" style="width : 40%;">
                     <div class="RegistTitle" style="margin-top : 20px; margin-bottom : 20px;">
                         <a style="font-size : 18px; font-weight : bold;">기본 정보</a>
@@ -51,7 +51,7 @@
                     </div>
                     <div class="RegistAddContent">
                         <label class="RegistLabel"> 영업시간 </label>
-                        <nav th:replace="~{Place/PlaceRegistOpentime :: navbarFragment}"></nav>
+                        <nav th:replace="~{Place/PlaceRegistDetailTime :: navbarFragment}"></nav>
                         <form id="siteArray" style="display : contents;">
                             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                             <input type="hidden" id="placeId" name="placeId" th:value="${placeOwner?.Id == null ? '' : placeOwner.Id}">
@@ -157,7 +157,7 @@
                     var form = document.getElementById('siteArray');
 
                     if(form){
-                        form.action = "/place/map/regist/info/subSave";
+                        form.action = "/place/map/regist/info/subUpdate";
                         form.method = "post";
                         form.submit();
                     }
@@ -208,8 +208,7 @@
                        alert("체크하세요");
                        return;
                     } else {
-
-                       form.action = "/place/map/regist/menu/delete";
+                       form.action = "/place/map/regist/menu/delete/detail";
                        form.method = "post";
                        form.submit();
                     }
@@ -259,7 +258,7 @@
                     })
                     .then(data => {
                         console.log('서버 응답:', data);
-                        window.location.href = '/place/map/regist/info/'+ placeOwnerId ;
+                        window.location.href = '/place/map/regist/info/detail/'+ placeOwnerId ;
                     })
                     .catch(error => {
                         console.error('에러 발생:', error);
