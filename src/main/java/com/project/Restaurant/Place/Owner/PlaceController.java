@@ -104,6 +104,7 @@ public class PlaceController {
     model.addAttribute("paging",paging); 
     model.addAttribute("parameter", parameter);  
     return "Place/PlaceRegistList";
+
   }
   @GetMapping("regist/list/detail/{id}")
   public String getListDetail(Model model,@PathVariable("id") Long id){
