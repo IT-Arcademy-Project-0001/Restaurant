@@ -34,43 +34,70 @@
 }
 
 
-#popupBtn {
-  width: 150px;
-  height: 50px;
-  padding: 10px 5px;
-}
 
-#modalWrap {
-  position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
-  padding-top: 100px; /* Location of the box */
+
+/* 모달창 스타일 */
+.modal {
+  display: none; /* 모달 숨기기 */
+  position: fixed;
+  z-index: 1;
   left: 0;
   top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.7);
 }
 
-#modalBody {
-  width: 500px;
-  height: 300px;
-  padding: 30px 30px;
-  margin: 0 auto;
-  border: 1px solid #777;
-  background-color: #fff;
+.modal-content {
+  background-color: #fefefe;
+  margin: 10% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 35%;
 }
 
-#modalBody > div {
-    display:flex;
-    justify-content:center;
-
-}
-
-#closeBtn {
-  float:right;
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
   font-weight: bold;
-  color: #777;
-  font-size:25px;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* 이미지 컨테이너 스타일 */
+.image-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.selectable-image {
+  margin: 5px;
+  cursor: pointer;
+  max-width: 150px;
+  max-height: 150px;
+}
+
+.selectable-image.selected {
+  border: 2px solid black; /* 선택된 이미지 테두리 스타일링 */
+}
+
+.image-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between; /* 좌우 여백을 균등하게 배분합니다. */
+}
+
+/* 선택 가능한 이미지 스타일 */
+.selectable-image {
+  width: 100%;
+  height: auto;
   cursor: pointer;
 }
