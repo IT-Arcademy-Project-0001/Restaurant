@@ -131,18 +131,5 @@ public class PlaceController {
     return "redirect:/place/map/regist/list/detail/" + POwnerId;
   }
 
-//  @GetMapping("regist/list")
-//  public String getList(Principal principal,Model model,@RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "kw", defaultValue = "") String kw){
-//    Owner owner = this.ownerService.findByusername(principal.getName());
-//    List<PlaceOwner> placeList = this.placeService.getPlaceOwnersByOwnerId(owner.getId());
-//    model.addAttribute("placeList",placeList);
-//
-//    Page<PlaceOwner> paging = placeService.getList(page, kw);
-//    model.addAttribute("paging", paging);
-//
-//    model.addAttribute("kw", kw);
-//    return "Place/PlaceRegistList";
-//  }
-//
 
 }
