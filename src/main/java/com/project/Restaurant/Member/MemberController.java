@@ -1,16 +1,21 @@
 package com.project.Restaurant.Member;
 
 import com.project.Restaurant.Member.consumer.Customer;
+import com.project.Restaurant.Member.consumer.CustomerDetailsService;
 import com.project.Restaurant.Member.consumer.CustomerService;
 import com.project.Restaurant.Member.owner.Owner;
+import com.project.Restaurant.Member.owner.OwnerDetailsService;
 import com.project.Restaurant.Member.owner.OwnerService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,6 +31,8 @@ public class MemberController {
     private final CustomerService customerService;
     private final OwnerService ownerService;
     private final PasswordEncoder passwordEncoder;
+    private final OwnerDetailsService ownerDetailsService;
+    private final CustomerDetailsService customerDetailsService;
 
     @GetMapping("/login")
     public String login() {
@@ -147,6 +154,7 @@ public class MemberController {
             customer.setPhoto(selectedImageAlt);
             customerService.saveCustomer(customer);
         }
+        refreshUserPrincipal();
         return "redirect:/member/profileInfo";
     }
 
@@ -213,5 +221,23 @@ public class MemberController {
             Customer customer = customerService.findByusername(principal.getName());
             model.addAttribute("member", customer);
         }
+    }
+
+    public void refreshUserPrincipal() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        GrantedAuthority authority = authentication.getAuthorities().iterator().next();
+
+        UserDetails userDetails;
+
+        if (authority.getAuthority().equals("사장님")) {
+            userDetails = ownerDetailsService.loadUserByUsername(authentication.getName());
+        } else {
+            userDetails = customerDetailsService.loadUserByUsername(authentication.getName());
+        }
+
+        Authentication newAuthentication = new UsernamePasswordAuthenticationToken(
+                userDetails, authentication.getCredentials(), userDetails.getAuthorities());
+
+        SecurityContextHolder.getContext().setAuthentication(newAuthentication);
     }
 }
