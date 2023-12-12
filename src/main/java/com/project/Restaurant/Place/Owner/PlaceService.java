@@ -3,10 +3,15 @@ package com.project.Restaurant.Place.Owner;
 import com.project.Restaurant.Member.owner.Owner;
 import com.project.Restaurant.Member.owner.OwnerService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -41,6 +46,7 @@ public class PlaceService {
   }
 
   public List<PlaceOwner> getPlaceOwnersByOwnerId(Long ownerId) {
-    return this.placeRepository.findByOwnerId(ownerId);
-  } 
+    return this.placeRepository.findByOwnerId(ownerId); 
+  }
+ 
 }

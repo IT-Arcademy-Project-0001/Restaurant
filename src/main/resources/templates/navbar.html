@@ -14,9 +14,6 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link" href="/guide">이용방법</a>
-                </li>
-                <li class="nav-item">
                     <a sec:authorize="isAnonymous()" th:href="@{/member/login}" class="nav-link">로그인</a>
                     <a sec:authorize="isAuthenticated()" th:href="@{/member/logout}" class="nav-link">로그아웃</a>
                 </li>
@@ -25,9 +22,6 @@
                 </li>
                 <li sec:authorize="isAuthenticated()">
                     <a class="nav-link" th:href="@{/member/profileInfo}">마이페이지</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/place/map">맛집등록</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" sec:authorize="hasAuthority('사장님')" th:href="@{/reservation/ownerList}">맛집예약</a>

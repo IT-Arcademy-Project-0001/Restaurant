@@ -66,8 +66,7 @@ Pseudo ::scrollbar-thumb element{
 .RegistArray{
     display :flex;
     justify-content: center;
-    width : 90%;
-    height : 80%;
+    width : 93%;
     margin-left : 5%;
     margin-top : 1%;
 }
