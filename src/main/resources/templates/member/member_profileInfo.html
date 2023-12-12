@@ -8,19 +8,19 @@
 <div layout:fragment="profileContent">
     <div class="wrap">
         <div class="profile">
-            <img th:src="${member.getPhoto()}" class="image">
+            <img th:src="${member.getPhoto()}" class="image" alt="선택 가능한 이미지">
         </div>
         <button id="openModalBtn" class="btn btn-outline-success">이미지 변경</button>
         <div id="myModal" class="modal">
             <div class="modal-content">
                 <span class="close">&times;</span>
                 <div class="image-container">
-                    <img class="selectable-image" src="/member/profilePhoto/boy.png" alt="선택 가능한 이미지 1">
-                    <img class="selectable-image" src="/member/profilePhoto/boy2.png" alt="선택 가능한 이미지 2">
-                    <img class="selectable-image" src="/member/profilePhoto/girl.png" alt="선택 가능한 이미지 2">
-                    <img class="selectable-image" src="/member/profilePhoto/man.png" alt="선택 가능한 이미지 2">
-                    <img class="selectable-image" src="/member/profilePhoto/woman.png" alt="선택 가능한 이미지 2">
-                    <img class="selectable-image" src="/member/profilePhoto/woman2.png" alt="선택 가능한 이미지 2">
+                    <img class="selectable-image" src="/member/profilePhoto/boy.png" alt="선택 가능한 이미지">
+                    <img class="selectable-image" src="/member/profilePhoto/boy2.png" alt="선택 가능한 이미지">
+                    <img class="selectable-image" src="/member/profilePhoto/girl.png" alt="선택 가능한 이미지">
+                    <img class="selectable-image" src="/member/profilePhoto/man.png" alt="선택 가능한 이미지">
+                    <img class="selectable-image" src="/member/profilePhoto/woman.png" alt="선택 가능한 이미지">
+                    <img class="selectable-image" src="/member/profilePhoto/woman2.png" alt="선택 가능한 이미지">
                 </div>
                 <form id="imageForm" th:action="@{/member/photoChange}" method="post">
                     <input type="hidden" id="selectedImageAlt" name="selectedImageAlt" value="">
@@ -91,19 +91,16 @@
         });
 
 
-// 변경 버튼 클릭 시 폼 전송
 const changeImageBtn = document.querySelector('.btn.btn-success');
-
-changeImageBtn.addEventListener('click', function() {
-  // 선택된 이미지 가져오기
+changeImageBtn.addEventListener('click', function(event) {
   const selectedImage = document.querySelector('.selectable-image.selected');
 
-  if (selectedImage) {
+  if (!selectedImage) {
+    alert('이미지를 선택해주세요.');
+    event.preventDefault();
+  } else {
     const selectedImageSrc = selectedImage.getAttribute('src');
-
     document.getElementById('selectedImageAlt').value = selectedImageSrc;
-
-    // 폼 제출
     document.getElementById('imageForm').submit();
   }
 });

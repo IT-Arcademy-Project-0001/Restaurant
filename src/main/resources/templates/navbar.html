@@ -23,6 +23,12 @@
                 </li>
             </ul>
             <ul class="navbar-nav ml-auto">
+                <li sec:authorize="isAuthenticated()" class="image-container" style="display: flex; flex-direction: row-reverse;">
+                    <img th:src="${#authentication.getPrincipal().getPhoto()}" alt="선택 가능한 이미지" style="width: 9%;">
+                </li>
+                <li sec:authorize="isAuthenticated()">
+                    <h4 th:text="${#authentication.getPrincipal().getNickname()} + ' 님 안녕하세요'"></h4>
+                </li>
                 <li sec:authorize="isAuthenticated()">
                     <a class="nav-link" th:href="@{/member/profileInfo}">마이페이지</a>
                 </li>
