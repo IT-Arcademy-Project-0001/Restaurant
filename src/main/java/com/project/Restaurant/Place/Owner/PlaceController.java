@@ -96,20 +96,13 @@ public class PlaceController {
 //    return "Place/PlaceRegistList";
 //  }
 
-  @GetMapping("regist/list")
-<<<<<<< HEAD
-  public String list(Principal principal, Model model, @RequestParam(name = "parameter", required = false) String parameter,@RequestParam(value="page", defaultValue="0") int page,
-=======
-  public String list(Principal principal, Model model, @RequestParam(value="page", defaultValue="0") int page,
->>>>>>> c1b1d2c005033cc779f5848e30232c9c7536773b
+  @GetMapping("regist/list") 
+  public String list(Principal principal, Model model, @RequestParam(name = "parameter", required = false) String parameter,@RequestParam(value="page", defaultValue="0") int page, 
                      @RequestParam(value = "kw", defaultValue = "") String kw){
     Owner owner = this.ownerService.findByusername(principal.getName());
     Page<PlaceOwner> paging = this.placeService.getList(page,owner.getId(),kw);
-    model.addAttribute("paging",paging);
-<<<<<<< HEAD
-    model.addAttribute("parameter", parameter);
-=======
->>>>>>> c1b1d2c005033cc779f5848e30232c9c7536773b
+    model.addAttribute("paging",paging); 
+    model.addAttribute("parameter", parameter);  
     return "Place/PlaceRegistList";
   }
   @GetMapping("regist/list/detail/{id}")
