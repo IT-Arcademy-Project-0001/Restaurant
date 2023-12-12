@@ -82,4 +82,8 @@ public class OwnerService {
     public void deleteOwner(Owner owner) {
         ownerRepository.delete(owner);
     }
+
+    public void saveOwner(Owner owner) {
+        ownerRepository.save(owner);
+    }
 }
