@@ -85,24 +85,6 @@ public class PlaceController {
     model.addAttribute("placeList",placeList);
     return "Place/PlaceRegistList";
   } 
-  @GetMapping("regist/list/detail/{id}")
-  public String getListDetail(Model model,@PathVariable("id") Long id){
-    PlaceOwner placeOwner = this.placeService.findById(id);
-    model.addAttribute("placeOwner", placeOwner);
-
-    Long ownerId = placeOwner.getId();
-    List<OperateDto> operateDtoList = placeOperateService.getAllOperateDtoList(ownerId);
-    model.addAttribute("placeOperateList", operateDtoList);
-
-
-    List<PlaceMenu> placeMenuList  =  this.placeMenuService.findByPlaceOwnerId(id);
-    model.addAttribute("menus", placeMenuList);
-
-    List<PlaceTag> tagList = this.placeTagService.findTags(id);
-    model.addAttribute("TagList",tagList);
-
-    return "Place/PlaceRegistDetailList";
-  }
 
   @PostMapping("regist/list/delete/tag")
   public String deleteTags(Model model,@RequestParam Long tagId, @RequestParam Long POwnerId){
