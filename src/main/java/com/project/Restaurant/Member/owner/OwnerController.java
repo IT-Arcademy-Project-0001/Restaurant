@@ -156,6 +156,6 @@ public class OwnerController {
             model.addAttribute("targetMember", targetOwner);
             return "member/reset_password_form";
         }
-        return "member/loginForm/login_form";
+        return "member/loginForm/ownerLoginForm";
     }
 }

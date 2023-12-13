@@ -59,7 +59,7 @@ public class EmailService {
 
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-        String link = "http://localhost:8900/member/welcome/" + "/" + owner.getUsername() + "/" + code;
+        String link = "http://localhost:8900/owner/resetPassword/" + owner.getUsername() + "/" + code;
 
         helper.setTo(owner.getEmail());
         helper.setSubject("비밀번호 변경 메일입니다."); // 이메일 제목
@@ -73,7 +73,7 @@ public class EmailService {
 
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-        String link = "http://localhost:8900/member/welcome/" + "/" + customer.getUsername() + "/" + code;
+        String link = "http://localhost:8900/customer/resetPassword/" + customer.getUsername() + "/" + code;
 
         helper.setTo(customer.getEmail());
         helper.setSubject("비밀번호 변경 메일입니다."); // 이메일 제목

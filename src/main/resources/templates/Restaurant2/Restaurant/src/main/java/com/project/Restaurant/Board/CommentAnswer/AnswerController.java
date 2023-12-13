@@ -152,7 +152,7 @@ public class AnswerController {
         Customer customer = customerService.findByusername(principal.getName());
 
 
-        if (customer.getId() != answerForm.getAnswerWriter()) {
+        if (!(customer.isAdmin()) && (customer.getId() != answerForm.getAnswerWriter())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다");
         }
 
@@ -181,7 +181,7 @@ public class AnswerController {
         Customer customer = customerService.findByusername(principal.getName());
 
         // 관리자가 아니거나 현재 로그인한 사용자가 작성한 댓글이 아니면 삭제 불가
-        if (customer.getId() != answerForm.getAnswerWriter()) {
+        if (!(customer.isAdmin()) && (customer.getId() != answerForm.getAnswerWriter())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제 권한이 없습니다");
         }
 

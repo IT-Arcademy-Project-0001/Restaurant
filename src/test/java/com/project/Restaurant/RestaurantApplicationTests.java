@@ -15,10 +15,10 @@ class RestaurantApplicationTests {
     @Test
     void testJpa() {
 
-        for (int i = 1; i <= 300; i++) {
-            String title = String.format("테스트 데이터입니다:[%03d]", i);
+        for (int i = 1; i <= 1; i++) {
+            String title = String.format("대전 찐맛집 입니다.");
             String content = "내용무";
-            this.postService.create(title, content, null, 1);
+            this.postService.create(title, content, null, 2);
         }
     }
 }
