@@ -4,6 +4,7 @@ import com.project.Restaurant.Member.EmailService;
 import com.project.Restaurant.Member.MemberCreateForm;
 import com.project.Restaurant.Member.PasswordResetForm;
 import com.project.Restaurant.Member.owner.Owner;
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -17,8 +18,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import java.security.Principal;
 
 @RequiredArgsConstructor
 @Controller
@@ -34,7 +33,7 @@ public class CustomerController {
     }
 
     @PostMapping("/signup")
-    public String signup(@Valid MemberCreateForm memberCreateForm, BindingResult bindingResult, Model model) {
+    public String signup(@Valid MemberCreateForm memberCreateForm, BindingResult bindingResult, Model model) throws MessagingException {
         if (bindingResult.hasErrors()) {
             return "member/signup_form";
         }
@@ -61,18 +60,6 @@ public class CustomerController {
         return "member/message";
     }
 
-    @GetMapping("/profile")
-    public String customerProfile(Model model, Principal principal) {
-
-        Customer customer = customerService.findByusername(principal.getName());
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        GrantedAuthority authority = authentication.getAuthorities().iterator().next();
-
-        model.addAttribute("member", customer);
-        model.addAttribute("authority", authority);
-        return "member/member_profile";
-    }
-
     @PostMapping("/findusername")
     public String findusername(String email, Model model) {
         Customer targetCustomer = customerService.findByEmail(email);
@@ -87,7 +74,7 @@ public class CustomerController {
     }
 
     @PostMapping("/userNameEmail")
-    public String usernameEmail(String username, String email, Model model) {
+    public String usernameEmail(String username, String email, Model model) throws MessagingException {
         Customer targetCustomer = customerService.findByusername(username);
         String message = "아이디 또는 이메일을 확인해주세요";
         if (targetCustomer == null) {
@@ -149,6 +136,6 @@ public class CustomerController {
             model.addAttribute("targetMember", targetCustomer);
             return "member/reset_password_form";
         }
-        return "member/loginForm/login_form";
+        return "member/loginForm/customerLoginForm";
     }
 }

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ko" layout:decorate="~{/member/member_profile_layout}">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/member/member_form.css">
+</head>
+<body>
+<div layout:fragment="profileContent">
+    <div class="wrap">
+        <form th:action="@{/member/delete}" method="post" th:object="${passwordResetForm}">
+            <h1>회원탈퇴</h1>
+            <div role="alert" th:if="${#fields.hasAnyErrors()}">
+                <div th:replace="~{form_errors :: formErrorsFragment}"></div>
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">비밀번호</label>
+                <input type="password" id="password" th:field="*{password}"
+                       name="password" class="form-control">
+            </div>
+            <div class="mb-3">
+                <label for="passwordConfirm" class="form-label">비밀번호 확인</label>
+                <input type="password" id="passwordConfirm" th:field="*{passwordConfirm}"
+                       name="passwordConfirm" class="form-control">
+            </div>
+            <input type="button" class="btn btn-secondary" th:value="회원탈퇴" onclick="deleteMember(this)">
+        </form>
+    </div>
+    <script>
+        function deleteMember(input) {
+            if(confirm("정말 탈퇴하시겠습니까?")) {
+                input.form.submit();
+            }
+        }
+    </script>
+</div>
+</body>
+</html>

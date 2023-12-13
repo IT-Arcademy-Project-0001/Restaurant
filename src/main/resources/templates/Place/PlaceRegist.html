@@ -11,9 +11,9 @@
     </style>
 </head>
 <body>
-<div layout:fragment="profileContent">
+<div layout:fragment="profileContent" >
 <!--    <a style="font-size : 20px; font-weight : bold; margin-left : 50px;">가게 등록</a>-->
-    <div class="RegistArray" style="display :flex ; justify-content: space-evenly; width : 80%;">
+    <div class="RegistArray" style="display :flex ; justify-content: space-evenly; width : 80%; height : 668px;">
         <div class="RegistForm" style="width : 40%;">
             <div class="RegistTitle" style="margin-top : 20px; margin-bottom : 20px;">
                 <a style="font-size : 18px; font-weight : bold;">기본 정보</a> <a class="regist_sub" style="font-size : 13px; color : red; font-weight : bold; "> *필수 </a>
@@ -31,11 +31,11 @@
                         <input type="text" id="detailAddress" name="detailAddress"
                                style="width : 23%; padding : 3px; margin:5px;" placeholder="상세주소" th:value="${placeOwner?.storeAddress == null ? '' : placeOwner.storeAddress.split('/').length > 1 ? placeOwner.storeAddress.split('/')[1] : ''}">
                         <input type="button" style="width : 17%; padding : 3px; font-size : 13px;" onclick="address_execDaumPostcode()"
-                               value="주소 검색"><br>
+                               value="주소 검색"><br> 
+                      
                         <div id="map" style="width:90%;height:300px;margin-top:10px; margin-bottom:10px;"></div> 
                         <input type="hidden" id="latitude" name="latitude" th:value="${placeOwner?.latitude == null ? '' : placeOwner.latitude}">
-                        <input type="hidden" id="longitude" name="longitude" th:value="${placeOwner?.longitude == null ? '' : placeOwner.longitude}">
- 
+                        <input type="hidden" id="longitude" name="longitude" th:value="${placeOwner?.longitude == null ? '' : placeOwner.longitude}"> 
                     </div>
                     <label class="RegistLabel"> 전화번호 </label>
                     <input type="text" class="RegistText" id="phoneNum" name="phoneNum" maxlength="13"
@@ -43,7 +43,7 @@
                     <label class="RegistLabel"> 업종 </label>
                     <div style="width : 98%; height : 36px; margin-left : 5px;">
                         <label>
-                            <input type="radio" name="category" value="음식점"  th:checked="${placeOwner?.storeCategory == '음식점'}"/>
+                            <input type="radio" name="category" value="음식점" th:checked="${placeOwner?.storeCategory == '음식점' || placeOwner == null}" />
                             <span style="font-size : 13px;">음식점</span>
                         </label>
                         <label>
@@ -56,15 +56,15 @@
                         </label>
                     </div>
                     <button class="BasicInfoSave" id="BasicInfoSave" type="submit" style="margin-left : 75%;"
-                            onclick="doSave(document.getElementById('info'))">저장
+                            onclick="doSave(document.getElementById('info')); return false;">저장
                     </button>
                 </div>
-            </form>
-        </div> 
+            </form> 
+        </div>
         <div class="addRegist" style="overflow : auto; width : 42%;"> 
             <div class="RegistTitle" style="margin-top : 20px; margin-bottom : 20px;">
                 <a style="font-size : 18px; font-weight : bold; margin-bottom : 10px;">추가 정보</a>
-                <button class="BasicInfoSave" id="AddInfoSave" type="submit" style="margin-left : 80%;"
+                <button class="BasicInfoSave" id="AddInfoSave" type="submit" style="margin-left : 79%;"
                         onclick="doSaveAddInfo()">저장
                 </button>
             </div>
@@ -80,8 +80,7 @@
                     <input type="text" class="RegistText" id="storeMemo" name="storeMemo" style="width : 94%;" placeholder="ex. Take out 10% 할인 진행합니다." th:value="${placeOwner?.storeMemo == null ? '' : placeOwner.storeMemo}">
                 </form>
                 <label class="RegistLabel"> 메뉴 </label>
-                <form id="menu" name="frm" style="display : flex; flex-direction : row;" method="post" action="/place/map/regist/menu"
-                      enctype="multipart/form-data">
+                <form id="menu" name="frm" style="display : flex; flex-direction : row;" enctype="multipart/form-data">
                     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                     <input type="hidden" id="placeOwnerId" name="placeOwnerId" th:value="${placeOwner?.Id == null ? '' : placeOwner.Id}">
                     <img id="preview" src="/Place/noimage.png" style="max-width: 150px; max-height: 150px;">
@@ -99,7 +98,7 @@
                         <div>
                             <input type="file" name="file" style="width : 72%; font-size : 13px;"
                                    accept="image/png, image/jpeg, image/jpg" onchange="previewImage(this)">
-                            <Button type="submit" class="MenuInfoSave" style="font-size : 13px;">메뉴 등록</Button>
+                            <Button type="submit" class="MenuInfoSave" style="font-size : 13px;" onclick="doSaveMenu()">메뉴 등록</Button>
                         </div>
                     </div>
                 </form>
@@ -136,7 +135,7 @@
             </div>
             <div style="display : grid; margin-top : 3px;">
                 <div style="display : inline-flex; width : 100%;">
-                    <label class="RegistLabel" style="margin-top : 9px;"> 매장 태그 </label>
+                    <label class="RegistLabel" style="margin-top : 9px;"> 매장 태그 </label> 
                     <p style="margin-top : 8px; margin-left : 10px; font-weight : bold;">(</p> 
                     <input type="text" class="tagText" id="storeTag" placeholder="ex. #떡볶이맛집" onkeydown="if (event.key === 'Enter') { addFunc(); }" >
                     <p style="margin-top : 8px; font-weight : bold;">)</p>
@@ -167,21 +166,75 @@
         }, true);
 
         function doSave(form){
-             form.action = "/place/map/regist/info/save";
-             form.method = "post";
-             form.submit();
+            var latitude = document.getElementById('latitude').value;
+            var longitude = document.getElementById('longitude').value;
+            var address = document.getElementById('address').value;
+            var addressSub = document.getElementById('detailAddress').value;
+            var storeName  = document.getElementById('storeName').value;
+            var phoneNum = document.getElementById('phoneNum').value;
+
+            if(latitude == "" && storeName == "" && phoneNum == "" && longitude == "" && address == ""){
+                alert("기본 정보 작성해주세요.");
+                return;
+            } else if(latitude == "" || longitude == "" || address == "" ){
+                alert("주소를 작성해주세요.");
+                return;
+            } else if (storeName == ""){
+                alert("매장명을 작성해주세요.");
+                return;
+            } else if (phoneNum == ""){
+                alert("전화번호를 작성해주세요.");
+                return;
+            }
+
+            if(confirm("<가게 정보 >" + "\n매장명 : " + storeName + "\n주소 : " + address + "  상세주소 : " + addressSub +"\n전화번호 : " + phoneNum + "로 저장하시겠습니까?")){
+                form.action = "/place/map/regist/info/save";
+                form.method = "post";
+                form.submit();
+                alert("저장완료");
+            }
         }
 
         function doSaveAddInfo(){
             var form = document.getElementById('siteArray');
+            var latitude = document.getElementById('latitude').value;
+            var longitude = document.getElementById('longitude').value;
+            var address = document.getElementById('address').value;
+            var storeName = document.getElementById('storeName').value;
 
-            if(form){
+             if(latitude == "" || longitude == "" || address == "" || storeName == "" ){
+                alert("기본 정보 저장 후 작성해주세요.");
+                return;
+             }
+
+            if(confirm("저장하시겠습니까?")){
                 form.action = "/place/map/regist/info/subSave";
                 form.method = "post";
                 form.submit();
+                alert("저장완료");
             }
         }
 
+
+        function doSaveMenu(){
+            var form = document.getElementById('menu');
+            var latitude = document.getElementById('latitude').value;
+            var longitude = document.getElementById('longitude').value;
+            var address = document.getElementById('address').value;
+            var storeName = document.getElementById('storeName').value;
+
+             if(latitude == "" || longitude == "" || address == "" || storeName == "" ){
+                alert("기본 정보 저장 후 작성해주세요.");
+                return;
+             }
+
+            if(confirm("저장하시겠습니까?")){
+                form.action = "/place/map/regist/menu";
+                form.method = "post";
+                form.submit();
+                alert("저장완료");
+            }
+        }
 
         function inputNumberFormat(obj) {
               obj.value = comma(uncomma(obj.value));
@@ -228,7 +281,6 @@
                alert("체크하세요");
                return;
             } else {
-
                form.action = "/place/map/regist/menu/delete";
                form.method = "post";
                form.submit();
@@ -266,24 +318,29 @@
             var token = document.getElementById('token').value;
             var placeOwnerId = document.getElementById('placeOwnerId').value;
 
-            fetch('/place/map/regist/info/tag', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': token
-                },
-                body: JSON.stringify({ tagsArray: tagsArray, placeOwnerId: placeOwnerId }),
-            })
-            .then(response => {
-                return response.json();
-            })
-            .then(data => {
-                console.log('서버 응답:', data);
-                window.location.href = '/place/map/regist/info/'+ placeOwnerId ;
-            })
-            .catch(error => {
-                console.error('에러 발생:', error);
-            });
+            if( placeOwnerId == ""){
+                alert("기본정보 저장 후 이용해주세요.");
+                return;
+            } else {
+                fetch('/place/map/regist/info/tag', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': token
+                    },
+                    body: JSON.stringify({ tagsArray: tagsArray, placeOwnerId: placeOwnerId }),
+                })
+                .then(response => {
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('서버 응답:', data);
+                    window.location.href = '/place/map/regist/info/'+ placeOwnerId ;
+                })
+                .catch(error => {
+                    console.error('에러 발생:', error);
+                });
+            }
         }
 
 
@@ -343,22 +400,25 @@
               var mapContainer = document.getElementById('map'), // 지도를 표시할 div
               mapOption = {
                   center: new daum.maps.LatLng(37.537187, 127.005476), // 지도의 중심좌표
-                  level: 5 // 지도의 확대 레벨
-              }; 
+                  level: 5 // 지도의 확대 레벨 
+              };
+
+
               var map = new daum.maps.Map(mapContainer, mapOption);
 
               var geocoder = new daum.maps.services.Geocoder();
- 
+
               var marker = new daum.maps.Marker({
                   position: new daum.maps.LatLng(37.537187, 127.005476),
                   map: map
-              }); 
+              });
+ 
               function address_execDaumPostcode() {
                   new daum.Postcode({
                       oncomplete: function(data) {
                           var addr = data.address; // 최종 주소 변수
 
-                          // 주소 정보를 해당 필드에 넣는다.
+                          // 주소 정보를 해당 필드에 넣는다. 
                           document.getElementById("address").value = addr; 
                               geocoder.addressSearch(data.address, function(results, status) {
 1
@@ -379,7 +439,7 @@
                                       document.getElementById("longitude").value = result.x;
 
                                   }
-                              });
+                              }); 
                           } 
                   }).open();
               }

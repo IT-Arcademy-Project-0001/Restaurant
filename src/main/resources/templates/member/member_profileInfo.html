@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ko" layout:decorate="~{/member/member_profile_layout}">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/member/member_form.css">
+</head>
+<body>
+<div layout:fragment="profileContent">
+    <div class="wrap">
+        <div class="profile">
+            <img th:src="${member.getPhoto()}" class="image" alt="선택 가능한 이미지">
+        </div>
+        <button id="openModalBtn" class="btn btn-outline-success">이미지 변경</button>
+        <div id="myModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <div class="image-container">
+                    <img class="selectable-image" src="/member/profilePhoto/boy.png" alt="선택 가능한 이미지">
+                    <img class="selectable-image" src="/member/profilePhoto/boy2.png" alt="선택 가능한 이미지">
+                    <img class="selectable-image" src="/member/profilePhoto/girl.png" alt="선택 가능한 이미지">
+                    <img class="selectable-image" src="/member/profilePhoto/man.png" alt="선택 가능한 이미지">
+                    <img class="selectable-image" src="/member/profilePhoto/woman.png" alt="선택 가능한 이미지">
+                    <img class="selectable-image" src="/member/profilePhoto/woman2.png" alt="선택 가능한 이미지">
+                </div>
+                <form id="imageForm" th:action="@{/member/photoChange}" method="post">
+                    <input type="hidden" id="selectedImageAlt" name="selectedImageAlt" value="">
+                    <input type="submit" class="btn btn-success" value="변경">
+                </form>
+            </div>
+        </div>
+        <div class="info">
+            <div>
+                <label for="nickName" class="form-label">닉네임 : </label>
+                <h4 th:text="${member.getNickname()}" id="nickName"></h4>
+            </div>
+            <div>
+                <label for="email" class="form-label">이메일 : </label>
+                <h4 th:text="${member.getEmail()}" id="email"></h4>
+            </div>
+            <div>
+                <label for="signupDate" class="form-label">가입일자 : </label>
+                <h4 th:text="${#temporals.format(member.getSignupDate(), 'yyyy-MM-dd')}" id="signupDate"></h4>
+            </div>
+        </div>
+        <div class="set">
+            <a th:href="@{/member/deleteForm}" class="btn btn-secondary">회원탈퇴</a>
+            <a th:href="@{/member/changePw}" class="btn btn-secondary">비밀번호변경</a>
+        </div>
+    </div>
+    <script>
+        // 모달 관련 요소 가져오기
+        const modal = document.getElementById('myModal');
+        const openModalBtn = document.getElementById('openModalBtn');
+        const closeModal = modal.querySelector('.close');
+
+        // 버튼을 클릭하여 모달 열기
+        openModalBtn.addEventListener('click', function() {
+          modal.style.display = 'block';
+        });
+
+        // 모달 닫기 버튼 또는 모달 외부 클릭 시 모달 닫기
+        closeModal.addEventListener('click', function() {
+          modal.style.display = 'none';
+        });
+        window.addEventListener('click', function(event) {
+          if (event.target === modal) {
+            modal.style.display = 'none';
+          }
+        });
+
+        // 선택 가능한 이미지들 가져오기
+        const selectableImages = document.querySelectorAll('.selectable-image');
+
+        // 이미지를 클릭하여 선택 상태 변경
+        selectableImages.forEach(image => {
+          image.addEventListener('click', function() {
+            // 이미 선택된 이미지인지 확인
+            const isSelected = this.classList.contains('selected');
+
+            // 모든 이미지의 선택 상태를 초기화
+            selectableImages.forEach(img => {
+              img.classList.remove('selected');
+            });
+
+            // 이미지 선택 상태 변경
+            if (!isSelected) {
+              // 이미지 선택
+              this.classList.add('selected');
+            }
+          });
+        });
+
+
+const changeImageBtn = document.querySelector('.btn.btn-success');
+changeImageBtn.addEventListener('click', function(event) {
+  const selectedImage = document.querySelector('.selectable-image.selected');
+
+  if (!selectedImage) {
+    alert('이미지를 선택해주세요.');
+    event.preventDefault();
+  } else {
+    const selectedImageSrc = selectedImage.getAttribute('src');
+    document.getElementById('selectedImageAlt').value = selectedImageSrc;
+    document.getElementById('imageForm').submit();
+  }
+});
+    </script>
+</div>
+</body>
+</html>

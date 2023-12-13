@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="/Place/PlaceRegistList.css">
-</head>
+</head> 
     <body>
         <div layout:fragment="profileContent">
-            <div class="RegistArray" style="display :flex ; justify-content: space-evenly; width : 80%;">
+            <div class="RegistArray" style="display :flex ; justify-content: space-evenly; width : 80%; height : 668px;">
                 <div class="RegistForm" style="width : 40%;">
                     <div class="RegistTitle" style="margin-top : 20px; margin-bottom : 20px;">
                         <a style="font-size : 18px; font-weight : bold;">기본 정보</a>
@@ -42,16 +42,16 @@
                         </div>
                     </div>
                 </div>
-                <div class="addRegist" style="overflow : auto; width : 38%;">
+                <div class="addRegist" style="overflow : auto; width : 42%;">
                     <div class="RegistTitle" style="margin-top : 20px; margin-bottom : 20px;">
                         <a style="font-size : 18px; font-weight : bold; margin-bottom : 10px;">추가 정보</a>
-                        <button class="BasicInfoSave" id="AddInfoModify" type="submit" style="margin-left : 80%; border: none;"
+                        <button class="BasicInfoSave" id="AddInfoModify" type="submit" style="margin-left : 70%; border: none;"
                                 onclick="doSaveAddInfo()">수정
                         </button>
                     </div>
                     <div class="RegistAddContent">
                         <label class="RegistLabel"> 영업시간 </label>
-                        <nav th:replace="~{Place/PlaceRegistOpentime :: navbarFragment}"></nav>
+                        <nav th:replace="~{Place/PlaceRegistDetailTime :: navbarFragment}"></nav>
                         <form id="siteArray" style="display : contents;">
                             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                             <input type="hidden" id="placeId" name="placeId" th:value="${placeOwner?.Id == null ? '' : placeOwner.Id}">
@@ -61,7 +61,7 @@
                             <input type="text" class="RegistText" id="storeMemo" name="storeMemo" style="width : 94%;" placeholder="ex. Take out 10% 할인 진행합니다." th:value="${placeOwner?.storeMemo == null ? '' : placeOwner.storeMemo}">
                         </form>
                         <label class="RegistLabel"> 메뉴 </label>
-                        <form id="menu" name="frm" style="display : flex; flex-direction : row;" method="post" action="/place/map/regist/menu"
+                        <form id="menu" name="frm" style="display : flex; flex-direction : row;" method="post" action="/place/map/update/menu"
                               enctype="multipart/form-data">
                             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                             <input type="hidden" id="placeOwnerId" name="placeOwnerId" th:value="${placeOwner?.Id == null ? '' : placeOwner.Id}">
@@ -126,9 +126,13 @@
                         <p style="color : red ; margin-left : 10px; border : none; font-size : 11px; margin-top : -10px;">작성 후 Enter키 누르면 태그 생성 및 태그 클릭하여 삭제</p>
                         <div style="display: flex;">
                             <div id="wordContainer" style="margin-bottom : 10px;">
-                            <span class="tagLayout" th:each="Tag : ${TagList}" th:if="${TagList != null}" >
-                                <span style="border: none; margin-right: 5px; " th:text="${Tag.tag}"  ></span>
-                            </span>
+                                <form id="TagList" class="TagList">
+                                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                                    <span class="tagLayout" th:each="tag : ${TagList}" th:if="${TagList != null}" >
+                                        <span style="border: none; margin-right: 5px; " th:text="${tag.tag}" th:onclick="deleteTag([[${tag.id}]])" ></span>
+                                    </span>
+                                    <input type="hidden" id="POwnerId" name="POwnerId" th:value="${placeOwner?.Id == null ? '' : placeOwner.Id}">
+                                </form>
                             </div>
                         </div>
                         <input type="hidden" id="token" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
@@ -147,22 +151,24 @@
                      };
                 }, true);
 
-                function doSave(form){
-                     form.action = "/place/map/regist/info/save";
-                     form.method = "post";
-                     form.submit();
-                }
-
                 function doSaveAddInfo(){
                     var form = document.getElementById('siteArray');
 
                     if(form){
-                        form.action = "/place/map/regist/info/subSave";
+                        form.action = "/place/map/regist/info/subUpdate";
                         form.method = "post";
                         form.submit();
                     }
                 }
 
+                function deleteTag(tagId){
+                    var form = document.getElementById('TagList');
+                    var tagId = tagId;
+
+                    form.action = "/place/map/regist/list/delete/" + tagId;
+                    form.method = "post";
+                    form.submit();
+                }
 
                 function inputNumberFormat(obj) {
                       obj.value = comma(uncomma(obj.value));
@@ -184,9 +190,8 @@
 
                     if (file) {
                         var reader = new FileReader();
-
                         reader.onload = function(e) {
-                            preview.src = e.target.result;
+                        preview.src = e.target.result;
                         };
                         reader.readAsDataURL(file);
                     } else {
@@ -209,8 +214,7 @@
                        alert("체크하세요");
                        return;
                     } else {
-
-                       form.action = "/place/map/regist/menu/delete";
+                       form.action = "/place/map/regist/menu/delete/detail";
                        form.method = "post";
                        form.submit();
                     }
@@ -260,7 +264,7 @@
                     })
                     .then(data => {
                         console.log('서버 응답:', data);
-                        window.location.href = '/place/map/regist/info/'+ placeOwnerId ;
+                        window.location.href = '/place/map/regist/info/detail/'+ placeOwnerId ;
                     })
                     .catch(error => {
                         console.error('에러 발생:', error);
@@ -348,5 +352,5 @@
 
             </script>
         </div>
-    </body>
+    </body> 
 </html>

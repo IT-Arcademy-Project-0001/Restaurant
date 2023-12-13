@@ -63,7 +63,6 @@ public class PlaceMenuController {
         model.addAttribute("uploadPath",uploadPath);
         return "redirect:/place/map/regist/menu/detail/" + placeOwnerId;
     }
-
     @RequestMapping("/regist/menu/detail/{id}")
     public String detailMenu(Model model, @PathVariable Long id) {
         List<PlaceMenu> placeMenuList  =  this.placeMenuService.findByPlaceOwnerId(id);
@@ -80,6 +79,56 @@ public class PlaceMenuController {
         return "redirect:/place/map/regist/info/" + id;
     }
 
+    @RequestMapping("/update/menu")
+    public String uploadUpdateMenu(MultipartHttpServletRequest mre, Model model, @RequestParam Long placeOwnerId, @RequestParam String name, @RequestParam String price) throws IOException {
+
+        MultipartFile mf = mre.getFile("file");
+        String uploadPath = "";
+        PlaceOwner owner = this.placeService.findById(placeOwnerId);
+
+        String path = "C:\\"+"place\\"+"menu\\";
+
+        File Folder = new File(path);
+        if (!Folder.exists()) {
+            Folder.mkdirs();
+        }
+
+        Path directoryPath = Paths.get(path);
+        Files.createDirectories(directoryPath);
+
+        String origional = mf.getOriginalFilename();
+
+        String timestamp = String.valueOf(System.currentTimeMillis());
+        String uniqueFileName = timestamp + "_" + origional;
+
+        uploadPath = path+uniqueFileName;
+
+        try{
+            mf.transferTo(new File(uploadPath)); // 파일 저장
+            this.placeMenuService.savefile(uniqueFileName,uploadPath,owner,name,price);
+        } catch (IllegalStateException | IOException e){
+            e.printStackTrace();;
+        }
+        model.addAttribute("uploadPath",uploadPath);
+        return "redirect:/place/map/update/menu/detail/" + placeOwnerId;
+    }
+
+    @RequestMapping("/update/menu/detail/{id}")
+    public String placeListMenu(Model model, @PathVariable Long id) {
+        List<PlaceMenu> placeMenuList  =  this.placeMenuService.findByPlaceOwnerId(id);
+        model.addAttribute("menus", placeMenuList);
+
+        PlaceOwner placeOwner = this.placeService.findById(id);
+        PlaceOwnerDto placeOwnerDto = placeOwner.convertDto();
+        model.addAttribute("placeOwner", placeOwnerDto);
+
+        Long ownerId = placeOwner.getId();
+        List<OperateDto> operateDtoList = placeOperateService.getAllOperateDtoList(ownerId);
+        model.addAttribute("placeOperateList", operateDtoList);
+
+        return "redirect:/place/map/regist/list/detail/" + id;
+    }
+
     @RequestMapping("/regist/menu/delete")
     public String deleteMenu(Model model, @RequestParam Long fileId, @RequestParam Long ownerId) {
 
@@ -87,7 +136,6 @@ public class PlaceMenuController {
         String originFileName = this.placeMenuService.findFile(fileId);
 
         File file = new File(path+originFileName);
-        System.out.println(file);
         file.delete();
 
         this.placeMenuService.deleteFile(fileId);
@@ -101,6 +149,28 @@ public class PlaceMenuController {
         model.addAttribute("placeOperateList", operateDtoList);
 
         return "redirect:/place/map/regist/menu/detail/" + ownerId;
+    }
+
+    @RequestMapping("/regist/menu/delete/detail")
+    public String detailMenuDelete(Model model, @RequestParam Long fileId, @RequestParam Long ownerId) {
+
+        String path = "C:\\"+"place\\"+"menu\\";
+        String originFileName = this.placeMenuService.findFile(fileId);
+
+        File file = new File(path+originFileName);
+        file.delete();
+
+        this.placeMenuService.deleteFile(fileId);
+
+        PlaceOwner placeOwner = this.placeService.findById(ownerId);
+        PlaceOwnerDto placeOwnerDto = placeOwner.convertDto();
+        model.addAttribute("placeOwner", placeOwnerDto);
+
+        Long OwnerId = placeOwner.getId();
+        List<OperateDto> operateDtoList = placeOperateService.getAllOperateDtoList(OwnerId);
+        model.addAttribute("placeOperateList", operateDtoList);
+
+        return "redirect:/place/map/regist/list/detail/" + ownerId;
     }
 
 }

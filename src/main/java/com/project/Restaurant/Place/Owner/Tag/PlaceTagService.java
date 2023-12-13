@@ -21,9 +21,14 @@ public class PlaceTagService {
 
         this.placeTagRepository.save(placeTag);
     }
+    public void deleteTag(Long id){
+        PlaceTag placeTag = this.placeTagRepository.findById(id).get();
+        this.placeTagRepository.delete(placeTag);
+    }
 
     public List<PlaceTag> findTags(Long id){
         List<PlaceTag> tagList = this.placeTagRepository.findByPlaceOwner_Id(id);
         return tagList;
     }
+
 }

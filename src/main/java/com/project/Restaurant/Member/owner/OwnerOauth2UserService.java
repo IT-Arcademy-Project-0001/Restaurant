@@ -55,6 +55,7 @@ public class OwnerOauth2UserService extends DefaultOAuth2UserService {
             owner.setAuthority(MemberRole.OWNER.getValue());
             owner.setSignupDate(LocalDateTime.now());
             owner.setCode(getRandomCode());
+            owner.setPhoto(oAuth2User.getAttribute("picture"));
             ownerRepository.save(owner);
         } else {
             owner = _owner.get();

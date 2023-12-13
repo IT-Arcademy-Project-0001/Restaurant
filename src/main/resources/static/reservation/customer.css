@@ -1,0 +1,79 @@
+.table {
+    width: 100%;
+    margin-bottom: 1rem;
+    color: #212529;
+}
+h2 {
+color:black;
+text-align:center;
+}
+
+.table th,
+.table td {
+    padding: 0.75rem;
+    vertical-align: top;
+    border-top: 1px solid #dee2e6;
+}
+
+.table thead th {
+    vertical-align: bottom;
+    border-bottom: 2px solid #dee2e6;
+    background-color: green;
+    text-align:center;
+}
+
+.table tr {
+text-align:center;
+}
+
+#kkk {
+    width: 80%; /* 예시로 80%로 설정했습니다. 필요에 따라 조절하세요. */
+    margin: 0 auto; /* 가운데 정렬을 위한 설정 */
+}
+
+.table tbody + tbody {
+    border-top: 2px solid #dee2e6;
+}
+
+.table-dark {
+    color: #fff;
+    background-color: #343a40;
+}
+
+.table-dark th,
+.table-dark td,
+.table-dark thead th {
+    border-color: #454d55;
+}
+
+/* 추가적인 스타일 지정 */
+.alert {
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border: 1px solid transparent;
+    border-radius: 0.25rem;
+}
+
+.alert-success {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}
+
+/* 예약 목록 페이지 전체에 적용될 스타일 */
+body {
+    font-family: 'Helvetica Neue', sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    color: #212529;
+    background-color: #f8f9fa;
+}
+
+h2 {
+    color: #007bff;
+}
+
+button{
+  background-color: transparent;
+  border : 2px solid rgb(25, 206, 96);
+}
