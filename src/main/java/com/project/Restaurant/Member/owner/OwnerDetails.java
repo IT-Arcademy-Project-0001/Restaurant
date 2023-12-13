@@ -31,6 +31,14 @@ public class OwnerDetails implements UserDetails, OAuth2User {
         return null;
     }
 
+    public String getNickname() {
+        return owner.getNickname();
+    }
+
+    public String getPhoto() {
+        return owner.getPhoto();
+    }
+
     @Override
     public Map<String, Object> getAttributes() {
         return attributes;

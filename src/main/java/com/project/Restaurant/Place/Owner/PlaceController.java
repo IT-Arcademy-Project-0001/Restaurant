@@ -34,7 +34,7 @@ public class PlaceController {
   private final OperateDto operateDto; 
    
   @GetMapping("/regist")
-  public String regist(Model model) {
+  public String regist(Model model, @RequestParam(name = "parameter", required = false) String parameter) {
     List<PlaceOperate> placeOperateList = this.placeOperateService.getAllOperateList(null);
     model.addAttribute("placeOperateList", placeOperateList);
     model.addAttribute("placeOwner", null);
@@ -98,13 +98,14 @@ public class PlaceController {
 
   @GetMapping("regist/list")
   public String list(Principal principal, Model model, @RequestParam(value="page", defaultValue="0") int page,
-                     @RequestParam(value = "kw", defaultValue = "") String kw){
+                     @RequestParam(value = "kw", defaultValue = "") String kw) {
     Owner owner = this.ownerService.findByusername(principal.getName());
-    Page<PlaceOwner> paging = this.placeService.getList(page,owner.getId(),kw);
-    model.addAttribute("paging",paging);
-    model.addAttribute("parameter",1);
+    Page<PlaceOwner> paging = this.placeService.getList(page, owner.getId(), kw);
+    model.addAttribute("paging", paging);
+    model.addAttribute("parameter", 1);
     return "Place/PlaceRegistList";
   }
+
   @GetMapping("regist/list/detail/{id}")
   public String getListDetail(Model model,@PathVariable("id") Long id){
     PlaceOwner placeOwner = this.placeService.findById(id);
