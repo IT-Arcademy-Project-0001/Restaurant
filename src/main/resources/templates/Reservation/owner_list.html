@@ -22,7 +22,7 @@
             <th>예약날짜</th>
             <th>예약 상태</th>
             <th>예약 입력</th>
-            <th>작업</th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
@@ -33,7 +33,7 @@
             <td th:text="${reservation.customer.username}"></td>
             <td th:text="${reservation.placeOwner.owner.username}"></td>
             <td>
-            <span th:text="${#temporals.format(reservation.reservationDate, 'yyyy-MM-dd HH:mm')}"></span>
+            <span th:text="${#temporals.format(reservation.reservationDate, 'yyyy-MM-dd HH:00')}"></span>
             </td>
             <td>
                 <span th:if="${reservation.status == '0'}">요청중</span>
@@ -45,7 +45,7 @@
                 <form th:if="${reservation.status == '0'}" th:action="@{/reservation/accept}" method="post">
                     <!-- 예약 ID를 input hidden 필드로 추가 -->
                     <input type="hidden" name = "reservationid" th:value="${reservation.id}"/>
-                    <input type="submit" value="수락" />
+                    <button type="submit">수락</button>
                 </form>
             </td>
         </tr>
