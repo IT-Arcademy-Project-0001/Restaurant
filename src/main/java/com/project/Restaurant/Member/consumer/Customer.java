@@ -64,4 +64,6 @@ public class Customer {
     @ManyToMany(mappedBy = "likes")
     private Set<Post> likeList;
 
+
 }
+

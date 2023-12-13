@@ -22,6 +22,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
 
+import static com.project.Restaurant.Board.Post.PostEnum.*;
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/post")
@@ -38,9 +40,9 @@ public class PostController {
                        @RequestParam(value = "page", defaultValue = "0") int page,
                        @RequestParam(value = "kw", defaultValue = "") String kw){
         int category = switch (type) {
-            case "notice" -> PostEnum.NOTICE.getStatus();
-            case "free" -> PostEnum.FREE.getStatus();
-            case "request" -> PostEnum.REQUEST.getStatus();
+            case "notice" -> NOTICE.getStatus();
+            case "free" -> FREE.getStatus();
+            case "request" -> REQUEST.getStatus();
             default -> throw new RuntimeException("올바르지 않은 접근입니다.");
         };
         model.addAttribute("boardName", category);
@@ -85,9 +87,9 @@ public class PostController {
             return "Board/post_form";
         }
         int category = switch (type) {
-            case "notice" -> PostEnum.NOTICE.getStatus();
-            case "free" -> PostEnum.FREE.getStatus();
-            case "request" -> PostEnum.REQUEST.getStatus();
+            case "notice" -> NOTICE.getStatus();
+            case "free" -> FREE.getStatus();
+            case "request" -> REQUEST.getStatus();
             default -> throw new RuntimeException("올바르지 않은 접근입니다.");
         };
 
@@ -139,8 +141,25 @@ public class PostController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제권한이 없습니다.");
         }
         this.postService.delete(post);
-        return "redirect:/post/list";
+
+        String redirectUrl = "/post/list/" + getPostType(post);
+        return "redirect:" + redirectUrl;
     }
+
+
+        private String getPostType(Post post){
+            switch (post.getCategoryAsEnum()) {
+                case NOTICE:
+                    return NOTICE.name().toLowerCase();
+                case FREE:
+                    return FREE.name().toLowerCase();
+                case REQUEST:
+                    return REQUEST.name().toLowerCase();
+                default:
+                    throw new IllegalArgumentException("Unsupported post type");
+            }
+        }
+
 
 
     @PreAuthorize("isAuthenticated()")
@@ -149,6 +168,7 @@ public class PostController {
         Post post = this.postService.getPost(id);
         Customer customer = this.customerService.findByusername(principal.getName());
         this.postService.likes(post, customer);
-        return String.format("redirect:/post/detail/%s", id);
+        return "redirect:/post/detail/" + id;
+//        return String.format("redirect:/post/detail/%s", id);
     }
 }

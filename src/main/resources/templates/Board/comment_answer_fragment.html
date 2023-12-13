@@ -84,7 +84,7 @@
 
             <!-- 수정, 삭제, 답글 등록 버튼-->
             <div sec:authorize="isAuthenticated()" class="d-flex justify-content-start mt-3 gap-2">
-                <button class="btn btn-sm btn-secondary" th:data-answer-index="${answer.id}"
+                <button class="btn btn-sm btn-secondary"  th:data-answer-index="${answer.id}"
                         onclick="commentShowReplyForm(this.getAttribute('data-answer-index'));">
                     답글 작성
                 </button>
@@ -109,7 +109,6 @@
                     class="border border-gray-300 rounded-lg textarea-lg flex-grow-1 focus:ring-blue-400"></textarea>
             <div class="d-flex justify-content-start">
                 <label class="label gap-2" style="cursor:pointer;">
-                    <i class="fa-solid fa-lock"></i>
                     <span class="label-text font-semibold">비밀댓글</span>
                     <input type="checkbox" th:id="'replySecret-' + ${answer.id}"
                            class="toggle toggle-primary"/>
@@ -214,10 +213,10 @@
                             </label>
                         </div>
 
-                        <button id="comment-modify-reply-answer-write-btn" th:data-child-index="${childAnswer.id}"
-                                onclick="commentModifyReplyAnswerWrite(this.getAttribute('data-child-index'))"
-                                class="btn btn-sm mb-3 btn-secondary" style="width:6%">댓글수정
-                        </button>
+<!--                        <button id="comment-modify-reply-answer-write-btn" th:data-child-index="${childAnswer.id}"-->
+<!--                                onclick="commentModifyReplyAnswerWrite(this.getAttribute('data-child-index'))"-->
+<!--                                class="btn btn-sm mb-3 btn-secondary" style="width:6%">댓글수정-->
+<!--                        </button>-->
                     </div>
                 </div>
             </div>
