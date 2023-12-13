@@ -14,12 +14,12 @@
             </div>
             <div class="mb-3">
                 <label for="password" class="form-label">비밀번호</label>
-                <input type="text" id="password" th:field="*{password}"
+                <input type="password" id="password" th:field="*{password}"
                        name="password" class="form-control">
             </div>
             <div class="mb-3">
                 <label for="passwordConfirm" class="form-label">비밀번호 확인</label>
-                <input type="text" id="passwordConfirm" th:field="*{passwordConfirm}"
+                <input type="password" id="passwordConfirm" th:field="*{passwordConfirm}"
                        name="passwordConfirm" class="form-control">
             </div>
             <input type="button" class="btn btn-secondary" th:value="회원탈퇴" onclick="deleteMember(this)">
