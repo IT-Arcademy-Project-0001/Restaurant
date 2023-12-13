@@ -136,6 +136,6 @@ public class CustomerController {
             model.addAttribute("targetMember", targetCustomer);
             return "member/reset_password_form";
         }
-        return "member/loginForm/login_form";
+        return "member/loginForm/customerLoginForm";
     }
 }
