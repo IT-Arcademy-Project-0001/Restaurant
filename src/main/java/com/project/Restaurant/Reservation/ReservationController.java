@@ -36,21 +36,36 @@ public class ReservationController {
     @PostMapping("/reservation/request")
     public String Request(@RequestParam("placeOwnerId") Long placeOwnerId, Principal principal) {
 
-
         PlaceOwner placeOwner = this.placeService.findById(placeOwnerId);
-        ;
         Customer customer = this.customerService.findByusername(principal.getName());
-
         Reservation reservation = new Reservation();
-
         reservation.setReservationDate(LocalDateTime.now());
         reservation.setStatus("0");
         reservation.setCustomer(customer);
         reservation.setPlaceOwner(placeOwner);
-
         reservationService.save(reservation);
+        return "redirect:/reservation/customerRequest";
+    }
+    @GetMapping("/reservation/customerRequest")
+    public String customerRequest (Model model, Principal principal) {
+        if (principal == null) {
+            return "redirect:/member/login";
+        }
+        String loggedInUsername = principal.getName(); // 현재 로그인한 사용자의 ID
+        List<Reservation> reservationsList = this.reservationService.findByCustomerUsername(loggedInUsername);
+        model.addAttribute("reservationList", reservationsList);
+        return "Reservation/customer_request";
+    }
 
-        return "redirect:/reservation/customerList";
+    @GetMapping("/reservation/customerList")
+    public String customerList(Model model, Principal principal) {
+        if (principal == null) {
+            return "redirect:/member/login";
+        }
+        String loggedInUsername = principal.getName(); // 현재 로그인한 사용자의 ID
+        List<Reservation> reservationsList = this.reservationService.findByCustomerUsername(loggedInUsername);
+        model.addAttribute("reservationList", reservationsList);
+        return "Reservation/customer_list";
     }
 
     @GetMapping("/reservation/ownerList")
@@ -75,16 +90,6 @@ public class ReservationController {
         return "Reservation/owner_list";
     }
 
-    @GetMapping("/reservation/customerList")
-    public String customerList(Model model, Principal principal) {
-        if (principal == null) {
-            return "redirect:/member/login";
-        }
-        String loggedInUsername = principal.getName(); // 현재 로그인한 사용자의 ID
-        List<Reservation> reservationsList = this.reservationService.findByCustomerUsername(loggedInUsername);
-        model.addAttribute("reservationList", reservationsList);
-        return "Reservation/customer_list";
-    }
 
     @PostMapping("/reservation/accept")
     public String acceptReservation(Model model, @RequestParam("reservationid") Long reservationId) {
@@ -116,6 +121,7 @@ public class ReservationController {
         reservationService.changeReservationTime(reservationId, newReservationDate);
         return "redirect:/reservation/customerList";
     }
+
 
     private boolean isCustomerLoggedIn(Principal principal) {
         if (principal != null && principal instanceof Authentication) {
