@@ -24,7 +24,7 @@
             </ul>
             <ul class="navbar-nav ml-auto">
                 <li sec:authorize="isAuthenticated()" class="image-container" style="display: flex; flex-direction: row-reverse;">
-                    <img th:src="${#authentication.getPrincipal().getPhoto()}" alt="선택 가능한 이미지" style="width: 9%;">
+                    <img th:src="${#authentication.getPrincipal().getPhoto()}" alt="선택 가능한 이미지" style="width: 9%; border:1px solid rgba(0,0,0, 0.2); border-radius : 50%; margin-right : 7px;">
                 </li>
                 <span sec:authorize="isAuthenticated()"  th:text="${#authentication.getPrincipal().getNickname()} + ' 님 안녕하세요'"
                        style="margin-top: 1%;"></span>
