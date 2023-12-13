@@ -38,12 +38,12 @@
 
         </div>
     </div>
-    <!-- 답변의 갯수 표시 -->
+    <!-- 댓글의 갯수 표시 -->
     <h5 class="border-bottom my-3 py-2"
         th:text="|댓글${#lists.size(post.getCommentList)}개|"></h5>
 
 
-    <!-- 답변 반복 시작 -->
+    <!-- 댓글 반복 시작 -->
 
     <div class="card my-3" th:each="comment : ${post.getCommentList}" th:if="${comment.id}">
         <a th:id="|comment${comment.id}|"></a>
@@ -77,91 +77,149 @@
                    th:if="${comment.customer != null and #authentication.getPrincipal().getUsername() == comment.customer.username}"
                    th:text="삭제"></a>
             </div>
+        </div>
 
-            <div class="border-bottom my-3 py-2"
-                 th:text="|${#lists.size(comment.getAnswerList())}개의 답글이 있습니다.|"></div>
-
-            <div class="card my-3" th:each="answer : ${comment.getAnswerList()}" th:if="${comment.id}">
-                <a th:id="|answer${answer.id}|"></a>
-                <div class="card-body">
-                    <div class="card-text" style="white-space: pre-line;" th:text="${answer.content}"></div>
-                    <div class="d-flex justify-content-end">
-                        <div th:if="${answer.modifyDate != null}" class="badge bg-light text-dark p-2 text-start mx-3">
-                            <div class="mb-2">수정한 날짜</div>
-                            <div th:text="${#temporals.format(answer.modifyDate, 'yyyy-MM-dd HH:mm')}"></div>
-                        </div>
-                        <div class="badge bg-light text-dark p-2 text-start">
-                            <div class="mb-2">
-                                <span th:if="${answer.customer != null}" th:text="${answer.customer.nickname}"></span>
-                            </div>
-                            <div th:text="${#temporals.format(answer.localDateTime, 'yyyy-MM-dd HH:mm')}"></div>
-                        </div>
-                    </div>
+        <!-- 댓글에 달린 답변 시작 -->
+        <div>
+            <a th:data-a-answer-index="${comment.id}"
+               onclick="showCommentAnswer(this.getAttribute('data-a-answer-index'));"
+               href="javascript:void(0);" class="d-flex align-items-baseline gap-2" style="margin-left: 1%;">
+                <i class="fa-regular fa-answer-dots" style="color: #94bbff;"></i>
+                <div class="d-flex">
+                    <div class="fw-bold" th:text="|${#lists.size(comment.answers)}|"
+                         th:id="'a-answer-count-' + ${comment.id}"></div>
+                    <div>개의 답글이 있습니다.</div>
                 </div>
-            </div>
-
-
-            <!--            댓글에 답변 작성-->
-            <form  th:action="@{|/answer/create/${comment.id}|}" method="post" class="my-3" th:object="${answerForm}"
-                  onsubmit="return submitAnswer()">
-                <input type="hidden" th:value="${post.id}" name="postId">
-                <input type="hidden" th:value="${comment.id}" name="commentId">
-                <div class="alert alert-danger" role="alert" th:if="${#fields.hasAnyErrors()}">
-                    <div th:each="err : ${#fields.allErrors()}" th:text="${err}"/>
-                </div>
-                <div id="Textarea" >
-                    <div th:if="${#authorization.expression('isAuthenticated()') and not #authorization.expression('hasAuthority(''사장님'')')}"
-                    >
-                            <textarea  th:field="*{content}" class="form-control" rows="2" placeholder="답글을 남겨보세요."></textarea>
-                        <input type="submit" value="등록" class="btn btn-primary my-2">
-                    </div>
-                </div>
-            </form>
+            </a>
+            <div th:id="'a-answer-list-' + ${comment.id}" style="display: none;"></div>
         </div>
     </div>
-    <!--        답변작성 끝-->
-
-
-    <!-- 답변 반복 끝  -->
 
 
     <!-- 답변 작성 -->
-    <form th:action="@{|/comment/create/${post.id}|}" method="post" class="my-3" th:object="${commentForm}" onsubmit="return submitComment()">
+    <form th:action="@{|/comment/create/${post.id}|}" method="post" class="my-3" th:object="${commentForm}"
+          onsubmit="return submitComment()">
         <div class="alert alert-danger" role="alert" th:if="${#fields.hasAnyErrors()}">
             <div th:each="err : ${#fields.allErrors()}" th:text="${err}"/>
         </div>
         <div id="floatingTextarea">
             <!-- 익명 사용자인 경우 "로그인" 버튼을 표시 -->
             <div th:if="${#authorization.expression('isAnonymous()')}">
-                <textarea disabled th:field="*{content}" class="form-control" rows="2" placeholder="로그인을 해주세요." id="anonymousContent"></textarea>
+                    <textarea disabled th:field="*{content}" class="form-control" rows="2" placeholder="로그인을 해주세요."
+                              id="anonymousContent"></textarea>
                 <input type="submit" value="로그인" class="btn btn-primary my-2">
             </div>
             <!-- 인증된 사용자이면서 사장님 권한이 아닌 경우 "등록" 버튼을 표시 -->
             <div th:if="${#authorization.expression('isAuthenticated()') and not #authorization.expression('hasAuthority(''사장님'')')}"
             >
-                <textarea th:field="*{content}" class="form-control" rows="2" placeholder="댓글을 남겨보세요." id="authenticatedComment"></textarea>
+                    <textarea th:field="*{content}" class="form-control" rows="2" placeholder="댓글을 남겨보세요."
+                              id="authenticatedComment"></textarea>
                 <input type="submit" value="등록" class="btn btn-primary my-2">
             </div>
         </div>
     </form>
 
 
-    <script>
-        // function submitAnswer() {
-        //     // 답변 내용 가져오기
-        //     var content = document.getElementById("authenticatedAnswer").value;
-        //
-        //     // 답변 내용이 공백인 경우
-        //     if (!content.trim()) {
-        //         // 경고창 표시
-        //         alert("답변을 입력해주세요.");
-        //         return false; // 폼 제출 막기
-        //     } else {
-        //         // 여기에 실제 답변 등록 코드 추가 (예: 서버로 데이터 전송 등)
-        //         // 실제 답변 등록 코드를 여기에 추가하세요.
-        //         return true; // 폼 제출 허용
-        //     }
-        // }
+    <script th:inline="javascript">
+
+
+        window.onload = function () {
+            checkPostRead(); // html 로드 시 바로 Ajax 요청
+            addClassInCode();
+        };
+
+        function addClassInCode() {
+            // 코드 요소를 모두 선택합니다.
+            const codeElements = document.querySelectorAll('code');
+
+            // 각 코드 요소마다 실행합니다.
+            codeElements.forEach(codeElement => {
+
+                // 코드 요소 바로 앞에 있는 요소가 이미 pre 태그인 경우, 추가 작업을 하지 않습니다.
+                const prevElement = codeElement.previousElementSibling;
+                if (prevElement && prevElement.tagName.toLowerCase() === 'pre') {
+                    return;
+                }
+
+                // pre 태그를 생성하고, 코드 요소를 해당 pre 태그의 자식 요소로 추가합니다.
+                const pre = document.createElement('pre');
+                const codeParent = codeElement.parentNode;
+                codeParent.replaceChild(pre, codeElement);
+                pre.appendChild(codeElement);
+            });
+        }
+
+        // 로컬스토리지에 해당 게시글 읽은적이 있는지 검사
+        function checkIdInLocalStorage(id) {
+            const visitedPosts = JSON.parse(localStorage.getItem("visitedPosts") || "[]");
+            return visitedPosts.includes(id);
+        }
+
+        // 로컬스토리지에 방문 게시글 번호 추가
+        // null 일 경우 []값이 들어가고, push로 id넣고 새로 세팅(맨 처음)
+        function addIdToLocalStorage(id) {
+            const visitedPosts = JSON.parse(localStorage.getItem("visitedPosts") || "[]");
+            visitedPosts.push(id);
+            localStorage.setItem("visitedPosts", JSON.stringify(visitedPosts));
+        }
+
+        const checkPostRead = () => {
+            const postId = [[${post.id}]];
+
+            // 방문 내역 검사
+            const isVisited = checkIdInLocalStorage(postId);
+
+            // 방문하지 않았을 때만 추가하고 조회수 증가하도록
+            // true인 경우는 조건 제외함(요청 안보내도 되니)
+            if (!isVisited) {
+                addIdToLocalStorage(postId);
+                $.ajax({
+                    // 요청방식: get
+                    type: "get",
+                    url: "/post/increase",
+                    data: {
+                        "postId": postId,
+                        "isVisited": isVisited
+                    },
+                    success: function (fragment) {
+                        $('#postView').text(fragment);
+                    },
+                    error: function (err) {
+                        console.log("요청 실패", err);
+                    }
+                });
+            }
+        }
+
+        const showCommentAnswer = (commentIndex) => {
+            const postId = [[${post.id}]];
+            const aAnswerList = $("#a-answer-list-" + commentIndex);
+            // 댓글이 이미 표시되어 있다면 숨김
+            if (aAnswerList.is(':visible')) {
+                aAnswerList.hide();
+            } else {
+                // 댓글이 숨겨져 있을 경우만 Ajax 요청
+                $.ajax({
+                    // 요청방식: get, 요청주소: /comment/answer/id
+                    // 요청데이터: 작성내용, 게시글번호, 비밀 댓글 여부, 부모 댓글 id
+                    type: "get",
+                    url: "/answer/comment/" + commentIndex,
+                    data: {
+                        "postId": postId
+                    },
+                    success: function (fragment) {
+                        aAnswerList.show();
+                        aAnswerList.html(fragment);
+                    },
+                    error: function (err) {
+                        console.log("요청 실패", err);
+                    }
+                });
+            }
+        }
+
+        // 마크다운에디터
+        var simplemde = new SimpleMDE({element: document.getElementById("content")});
     </script>
 
     <script>
@@ -206,8 +264,8 @@
             });
         });
 
-
     </script>
+
 
 </div>
 </html>

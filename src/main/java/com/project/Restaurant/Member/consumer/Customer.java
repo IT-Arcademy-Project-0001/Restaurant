@@ -51,4 +51,9 @@ public class Customer {
     private String providerId;
 
     private String code;    //  회원가입시 유저마다 부여되는 고유코드(랜덤코드)
+
+    public boolean isAdmin() {
+        return this.username.equals("admin");
+    }
+
 }

@@ -8,6 +8,15 @@
     <link rel="stylesheet" type="text/css" th:href="@{/bootstrap.min.css}">
     <!-- Greenwalker CSS -->
     <link rel="stylesheet" type="text/css" th:href="@{/style.css}">
+    <!-- JQuery + csrf -->
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
+            crossorigin="anonymous"></script>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}">
+    <meta name="_csrf" th:content="${_csrf.token}">
+    <!-- 마크다운 에디터-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+    <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+
     <title>Hello, Bro</title>
 </head>
 <body>

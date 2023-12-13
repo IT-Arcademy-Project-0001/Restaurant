@@ -29,9 +29,7 @@ public class CommentService {
     }
 
     public Comment getComment(Long id) {
-        System.out.println( "=======================" + "시작" + "=======================");
         Optional<Comment> commentOptional = this.commentRepository.findById(id);
-        System.out.println( "=======================" + commentOptional+ "=======================");
         if(commentOptional.isEmpty()){
             return null;
         }
