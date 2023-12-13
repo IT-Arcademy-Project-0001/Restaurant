@@ -31,6 +31,14 @@ public class CustomerDetails implements UserDetails, OAuth2User {
         return null;
     }
 
+    public String getNickname() {
+        return customer.getNickname();
+    }
+
+    public String getPhoto() {
+        return customer.getPhoto();
+    }
+
     @Override
     public Map<String, Object> getAttributes() {
         return attributes;

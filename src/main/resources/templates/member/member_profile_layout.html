@@ -1,61 +1,45 @@
 <!DOCTYPE html>
 <html lang="ko" layout:decorate="~{layout}">
-    <head>
-        <meta charset="UTF-8">
-        <link rel="stylesheet" href="/member/member_layout.css">
-        <script>
-            function clickMenu(event, element) {
-                // 이전에 선택된 모든 요소에서 'clicked' 클래스 제거
-                document.querySelectorAll('.menu-item').forEach(item => {
-                    item.classList.remove('clicked');
-                });
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/member/member_layout.css">
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var parameter = [[${parameter}]];
 
-                // 현재 선택된 요소에 'clicked' 클래스 추가
-                element.closest('.menu-item').classList.add('clicked');
-
-                // 선택된 요소의 인덱스 가져오기
-                var selectedMenuItem = Array.from(element.closest('.menu').children).indexOf(element.closest('.menu-item'));
-                localStorage.setItem('selectedMenuItem', selectedMenuItem);
-                console.log(selectedMenuItem);
-            }
-
-            document.addEventListener('DOMContentLoaded', function () {
-                var selectedIndex = localStorage.getItem('selectedMenuItem');
-                console.log(selectedIndex);
-                if (selectedIndex !== null) {
-                    var selectedElement = document.querySelector('.menu-item:nth-child(' + (parseInt(selectedIndex) + 1) + ')');
-                    if (selectedElement) {
-                        selectedElement.classList.add('clicked');
-                    }
-                }
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.classList.remove('clicked');
             });
 
-
-        </script>
-    </head>
-    <body>
-        <div layout:fragment="content" style="padding-top : 2%; display : flex;">
-            <div class="profileMenu" style="width : 15%;">
-                <ul class="menu">
-                    <li class="menu-item">
-                        <img src="/member/infoimg.png" style="width : 9%; margin-top : -4px;">
-                        <a class="menu-link" onclick="clickMenu(event, this)">개인정보</a>
-                    </li>
-                    <li class="menu-item">
-                        <img src="/member/listimg.png" style="width : 9%; margin-top : -4px;">
-                        <a class="menu-link" th:href="@{/place/map/regist/list}" onclick="clickMenu(event, this)">가게 목록</a>
-                    </li>
-                    <li class="menu-item">
-                        <img src="/member/registerimg.png" style="width : 10%; margin-top : -4px;">
-                        <a class="menu-link" th:href="@{/place/map/regist}" onclick="clickMenu(event, this)">가게 등록</a>
-                    </li>
-                    <li class="menu-item">
-                        <img src="/member/securityimg.png" style="width : 10%; margin-top : -7px;">
-                        <a class="menu-link" onclick="clickMenu(event, this)">보안</a>
-                    </li>
-                </ul>
-            </div>
-            <th:block layout:fragment="profileContent" style ="width : 80%; height : 100%;"></th:block>
-        </div>
-    </body>
+            if (parameter == '1') {
+                document.querySelector('.menu-item:nth-child(2)').classList.add('clicked');
+            } else if (parameter == '2') {
+                document.querySelector('.menu-item:nth-child(3)').classList.add('clicked');
+            } else {
+                document.querySelector('.menu-item:nth-child(1)').classList.add('clicked');
+            }
+        });
+    </script>
+</head>
+<body>
+<div layout:fragment="content" style="padding-top : 2%; display : flex;">
+    <div class="profileMenu" style="width : 15%;">
+        <ul class="menu">
+            <li class="menu-item">
+                <img src="/member/infoimg.png" style="width : 9%; margin-top : -4px;">
+                <a class="menu-link" th:href="@{/member/profileInfo}" onclick="clickMenu(event, this)">개인정보</a>
+            </li>
+            <li class="menu-item" sec:authorize="hasAuthority('사장님')">
+                <img src="/member/listimg.png" style="width : 9%; margin-top : -4px;">
+                <a class="menu-link" th:href="@{/place/map/regist/list(parameter='1')}" onclick="clickMenu(event, this)">가게 목록</a>
+            </li>
+            <li class="menu-item" sec:authorize="hasAuthority('사장님')">
+                <img src="/member/registerimg.png" style="width : 10%; margin-top : -4px;">
+                <a class="menu-link" th:href="@{/place/map/regist(parameter='2')}" onclick="clickMenu(event, this)">가게 등록</a>
+            </li>
+        </ul>
+    </div>
+    <th:block layout:fragment="profileContent" style="width : 85%; height : 100%;"></th:block>
+</div>
+</body>
 </html>

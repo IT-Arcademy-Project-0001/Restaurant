@@ -43,8 +43,46 @@ public class PlaceOperateController {
         this.placeOperateService.updateOperate(operateDtoList,placeOwnerId);
         return "redirect:/place/map/regist/info/" + placeOwnerId;
     }
+
+    @PostMapping("/regist/owner/timeDetail")
+    public String saveOperateTimeUpdate(@ModelAttribute OperateDto operateDto, @RequestParam Long placeOwnerId){
+        List<OperateDto> operateDtoList = operateDto.getOperateDtoList();
+        this.placeOperateService.saveOperate(operateDtoList, placeOwnerId);
+        return "redirect:/place/map/regist/list/detail/" + placeOwnerId;
+    }
+
+    @PostMapping("/regist/owner/time/detailUpdate")
+    public String detailOperateTimeUpdate(@ModelAttribute OperateDto operateDto,@RequestParam Long placeOwnerId){
+        List<OperateDto> operateDtoList = operateDto.getOperateDtoList();
+        this.placeOperateService.updateOperate(operateDtoList,placeOwnerId);
+        return "redirect:/place/map/regist/list/detail/" + placeOwnerId;
+    }
     @GetMapping("/regist/info/{id}")
     public String infosave2(Model model, @PathVariable Long id ){
+        PlaceOwner placeOwner = this.placeService.findById(id);
+        PlaceOwnerDto placeOwnerDto = placeOwner.convertDto();
+        model.addAttribute("placeOwner", placeOwnerDto);
+
+        Long ownerId = placeOwner.getId();
+        List<OperateDto> operateDtoList = placeOperateService.getAllOperateDtoList(ownerId);
+        model.addAttribute("placeOperateList", operateDtoList);
+
+        List<PlaceMenu> placeMenuList  =  this.placeMenuService.findByPlaceOwnerId(id);
+        model.addAttribute("menus", placeMenuList);
+
+        List<PlaceTag> tagList = this.placeTagService.findTags(id);
+        model.addAttribute("TagList",tagList);
+
+        model.addAttribute("parameter",2);
+
+
+//        List<PlaceOperate> placeOperateList = this.placeOperateService.getAllOperateList(Math.toIntExact(placeOwner.getId()));
+//        model.addAttribute("placeOperateList", placeOperateList);
+
+        return "Place/PlaceRegist";
+    }
+    @GetMapping("/regist/info/detail/{id}")
+    public String infosave3(Model model, @PathVariable Long id ){
         PlaceOwner placeOwner = this.placeService.findById(id);
         PlaceOwnerDto placeOwnerDto = placeOwner.convertDto();
         model.addAttribute("placeOwner", placeOwnerDto);
@@ -62,7 +100,7 @@ public class PlaceOperateController {
 //        List<PlaceOperate> placeOperateList = this.placeOperateService.getAllOperateList(Math.toIntExact(placeOwner.getId()));
 //        model.addAttribute("placeOperateList", placeOperateList);
 
-        return "Place/PlaceRegist";
+        return "Place/PlaceRegistDetailList";
     }
 
 }

@@ -103,8 +103,8 @@
         <!-- 답글 버튼 클릭 -->
         <div th:id="'reply-form-' + ${answer.id}" class="d-flex flex-column gap-2 visually-hidden"
              style="margin : 10px">
-          <textarea placeholder="답글을 입력해주세요." th:id="'replyAnswerContents-' + ${comment.id}" style="height: 50px"
-                    class="border border-gray-300 rounded-lg textarea-lg flex-grow-1 focus:ring-blue-400"></textarea>
+<!--          <textarea placeholder="답글을 입력해주세요." th:id="'replyAnswerContents-' + ${comment.id}" style="height: 50px"-->
+<!--                    class="border border-gray-300 rounded-lg textarea-lg flex-grow-1 focus:ring-blue-400"></textarea>-->
             <div class="d-flex justify-content-start">
                 <label class="label gap-2" style="cursor:pointer;">
                     <i class="fa-solid fa-lock"></i>
@@ -270,15 +270,15 @@
 
     // 답변, 댓글 수정 동시에 못하도록 하기 위한 답변 폼 숨기기 메서드
 
-    // const commentHideReplyForm = (answerIndex) => {
-    //     const formId = "reply-form-" + answerIndex;
-    //     const formElement = document.getElementById(formId);
-    //     if (formElement) {
-    //         formElement.classList.add("visually-hidden");
-    //     } else {
-    //         console.error("Element with ID '" + formId + "' not found.");
-    //     }
-    // };
+    const commentHideReplyForm = (answerIndex) => {
+        const formId = "reply-form-" + answerIndex;
+        const formElement = document.getElementById(formId);
+        if (formElement) {
+            formElement.classList.add("visually-hidden");
+        } else {
+            console.error("Element with ID '" + formId + "' not found.");
+        }
+    };
 
     // 답변, 댓글 수정 동시에 못하도록 하기 위한 수정 폼 숨기기 메서드
 

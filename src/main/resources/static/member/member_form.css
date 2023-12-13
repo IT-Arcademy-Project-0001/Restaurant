@@ -8,3 +8,96 @@
 .find {
     margin-top: 9px;
 }
+
+.image {
+    height:250px;
+    margin:5%;
+}
+
+.set {
+    position: absolute;
+    right: 0;
+    bottom: -58px;
+}
+
+.wrap {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top:5%;
+    border-radius: 10px;
+    border : 2px solid rgb(25, 206, 96);
+    margin-left: 27%;
+    width: 30%;
+    padding:15px;
+}
+
+
+
+
+/* 모달창 스타일 */
+.modal {
+  display: none; /* 모달 숨기기 */
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.7);
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 10% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 35%;
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* 이미지 컨테이너 스타일 */
+.image-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.selectable-image {
+  margin: 5px;
+  cursor: pointer;
+  max-width: 150px;
+  max-height: 150px;
+}
+
+.selectable-image.selected {
+  border: 2px solid black; /* 선택된 이미지 테두리 스타일링 */
+}
+
+.image-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between; /* 좌우 여백을 균등하게 배분합니다. */
+}
+
+/* 선택 가능한 이미지 스타일 */
+.selectable-image {
+  width: 100%;
+  height: auto;
+  cursor: pointer;
+}

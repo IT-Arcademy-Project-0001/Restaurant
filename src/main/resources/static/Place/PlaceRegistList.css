@@ -72,13 +72,14 @@ td, th {
     border-radius: 10px;
     width : 200px;
     height : 30px;
+    border: none;
 }
 
 .RegistArray{
     display :flex;
     justify-content: center;
     width : 90%;
-    height : 80%;
+    height : 65%;
     margin-left : 5%;
     margin-top : 1%;
 }
@@ -205,4 +206,27 @@ input::placeholder {color:#d2d2d2;}
      border-radius: 3px;
      padding : 1px;
      cursor : pointer;
+}
+
+.pagination .page-link {
+    margin-top: 15px;
+    color: #464646; /* 텍스트 색상을 검정색으로 설정 */
+    border: 1px solid #dee2e6; /* 클릭시 나타나는 테두리를 제거하려면 필요 (원하는 색상으로 설정 가능) */
+}
+
+.page-link.active {
+    background-color: transparent;
+    border-color: transparent;
+    color : #5EC75E;
+    transition: background-color 0.5s;
+}
+
+.pagination .page-link:hover{
+    background-color: #5A78AF;
+}
+
+.pagination .page-item.disabled .page-link {
+    color: #6c757d; /* disabled 상태일 때 텍스트 색상을 회색(원하는 색상으로 설정 가능) */
+    background-color: #f8f9fa; /* disabled 상태일 때 배경색을 밝은 회색(원하는 색상으로 설정 가능) */
+    pointer-events: none; /* disabled 상태에서 클릭 방지 */
 }

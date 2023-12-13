@@ -110,7 +110,7 @@
 
 
                         <!-- 페이지 번호 링크 -->
-                        <li th:each="i : ${#numbers.sequence(paging.number - (paging.number % 10), (paging.number + (9 - (paging.number % 10))) < paging.totalPages ? (paging.number + (9 - (paging.number % 10))) : paging.totalPages - 1)}"
+                        <li th:each="i  : ${#numbers.sequence(paging.number - (paging.number % 10), (paging.number + (9 - (paging.number % 10))) < paging.totalPages ? (paging.number + (9 - (paging.number % 10))) : paging.totalPages - 1)}"
                             class="page-item">
                             <a th:text="${i+1}" class="page-link" th:href="@{|?page=${i}|}"
                                th:classappend="${i == paging.number} ? 'active'"></a>

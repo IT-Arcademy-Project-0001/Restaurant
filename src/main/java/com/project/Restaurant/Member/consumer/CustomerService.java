@@ -1,6 +1,7 @@
 package com.project.Restaurant.Member.consumer;
 
 import com.project.Restaurant.Member.MemberRole;
+import com.project.Restaurant.Member.owner.Owner;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -37,6 +38,7 @@ public class CustomerService {
         customer.setMemberActivation(false);
         customer.setAuthority(MemberRole.CUSTOMER.getValue());
         customer.setCode(getRandomCode());
+        customer.setPhoto("/member/profilePhoto/human.png");
         customerRepository.save(customer);
     }
 
@@ -44,6 +46,11 @@ public class CustomerService {
         customer.setPassword(passwordEncoder.encode(password));
         String newCode = getRandomCode();
         customer.setCode(newCode);
+        customerRepository.save(customer);
+    }
+
+    public void changePassword(Customer customer, String password) {
+        customer.setPassword(passwordEncoder.encode(password));
         customerRepository.save(customer);
     }
 
@@ -67,6 +74,14 @@ public class CustomerService {
         customer.setMemberActivation(activation);
         String newCode = getRandomCode();
         customer.setCode(newCode);
+        customerRepository.save(customer);
+    }
+
+    public void deleteCustomer(Customer customer) {
+        customerRepository.delete(customer);
+    }
+
+    public void saveCustomer(Customer customer) {
         customerRepository.save(customer);
     }
 }
