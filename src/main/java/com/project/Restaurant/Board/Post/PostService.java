@@ -25,26 +25,6 @@ public class PostService {
     private final PostRepository postRepository;
 
 
-//    private Specification<Post> search(String kw) {
-//        return new Specification<>() {
-//            private static final long serialVersionUID = 1L;
-//
-//            @Override
-//            public Predicate toPredicate(Root<Post> p, CriteriaQuery<?> query, CriteriaBuilder cb) {
-//                query.distinct(true);  // 중복을 제거
-//                Join<Post, Customer> u1 = p.join("customer", JoinType.LEFT);
-//                Join<Post, Comment> a = p.join("commentList", JoinType.LEFT);
-//                Join<Comment, Customer> u2 = a.join("customer", JoinType.LEFT);
-//                return cb.or(cb.like(p.get("title"), "%" + kw + "%"), // 제목
-//                        cb.like(p.get("content"), "%" + kw + "%"),      // 내용
-//                        cb.like(u1.get("username"), "%" + kw + "%"),    // 질문 작성자
-//                        cb.like(a.get("content"), "%" + kw + "%"),      // 답변 내용
-//                        cb.like(u2.get("username"), "%" + kw + "%"));   // 답변 작성자
-//            }
-//        };
-//    }
-
-
     public Page<Post> getList(int category, int page, String kw) {
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.desc("localDateTime"));

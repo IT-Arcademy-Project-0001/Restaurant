@@ -32,12 +32,17 @@ public class Post {
   @ManyToOne
   private Customer customer;
 
-  @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
+  @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
   private List<Comment> commentList;
 
   private LocalDateTime modifyDate;
 
   @ManyToMany
+  @JoinTable(
+          name = "post_likes",                              // 연결테이블 이름
+          joinColumns = @JoinColumn(name = "post_id"),        // 회원과 매핑할 조인 컬럼 정보를 지정
+          inverseJoinColumns = @JoinColumn(name = "customer_id") // 상품과 매핑할 조인 컬럼 정보를 지정
+  )
   Set<Customer> likes;
 
   @Column(columnDefinition = "Integer default 0")
@@ -72,7 +77,7 @@ public class Post {
   }
 
 
-  @OneToMany(mappedBy = "post")
+  @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
   private List<Answer> answerList;
 
 
