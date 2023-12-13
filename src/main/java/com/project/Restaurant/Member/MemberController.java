@@ -137,6 +137,7 @@ public class MemberController {
     @GetMapping("/profileInfo")
     public String memberProfileInfo(Model model, Principal principal) {
         populateMemberInfo(model, principal);
+        model.addAttribute("parameter",0);
         return "member/member_profileInfo";
     }
 

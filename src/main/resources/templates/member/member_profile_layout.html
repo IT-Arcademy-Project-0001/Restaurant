@@ -5,8 +5,7 @@
     <link rel="stylesheet" href="/member/member_layout.css">
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            var urlParams = new URLSearchParams(window.location.search);
-            var parameter = urlParams.get('parameter');
+            var parameter = [[${parameter}]];
 
             document.querySelectorAll('.menu-item').forEach(item => {
                 item.classList.remove('clicked');
@@ -42,5 +41,5 @@
     </div>
     <th:block layout:fragment="profileContent" style="width : 85%; height : 100%;"></th:block>
 </div>
-</body> 
+</body>
 </html>

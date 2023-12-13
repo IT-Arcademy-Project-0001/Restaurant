@@ -73,6 +73,9 @@ public class PlaceOperateController {
         List<PlaceTag> tagList = this.placeTagService.findTags(id);
         model.addAttribute("TagList",tagList);
 
+        model.addAttribute("parameter",2);
+
+
 //        List<PlaceOperate> placeOperateList = this.placeOperateService.getAllOperateList(Math.toIntExact(placeOwner.getId()));
 //        model.addAttribute("placeOperateList", placeOperateList);
 
