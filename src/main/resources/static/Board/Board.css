@@ -211,6 +211,9 @@ section.notice {
     transition: background-color 0.5s;
 }
 
-.list-group-item:hover {
+.list-group-item:hover{
     background-color: #5A78AF;
 }
+
+
+
