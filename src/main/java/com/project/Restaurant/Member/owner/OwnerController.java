@@ -31,8 +31,9 @@ public class OwnerController {
 
 
     @GetMapping("/profile/test")
-    public String test() {
+    public String test(Model model) {
 
+        model.addAttribute("parameter",0);
         return "member/member_profile_layout";
     }
 

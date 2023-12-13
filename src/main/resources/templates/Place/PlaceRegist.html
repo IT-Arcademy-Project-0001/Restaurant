@@ -187,7 +187,7 @@
                 return;
             }
 
-            if(confirm("<가게 정보 >" + "\n매장명 : " + storeName + "\n주소 : " + address + "  상세주소 : " + addressSub +"\n전화번호 : " + phoneNum + "/n로 저장하시겠습니까?")){
+            if(confirm("<가게 정보 >" + "\n매장명 : " + storeName + "\n주소 : " + address + "  상세주소 : " + addressSub +"\n전화번호 : " + phoneNum + "로 저장하시겠습니까?")){
                 form.action = "/place/map/regist/info/save";
                 form.method = "post";
                 form.submit();

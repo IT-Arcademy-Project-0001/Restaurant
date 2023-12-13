@@ -38,6 +38,7 @@ public class PlaceController {
     List<PlaceOperate> placeOperateList = this.placeOperateService.getAllOperateList(null);
     model.addAttribute("placeOperateList", placeOperateList);
     model.addAttribute("placeOwner", null);
+    model.addAttribute("parameter",2);
     return "Place/PlaceRegist";
   }
   @PostMapping("/regist/info/save")
@@ -101,6 +102,7 @@ public class PlaceController {
     Owner owner = this.ownerService.findByusername(principal.getName());
     Page<PlaceOwner> paging = this.placeService.getList(page,owner.getId(),kw);
     model.addAttribute("paging",paging);
+    model.addAttribute("parameter",1);
     return "Place/PlaceRegistList";
   }
   @GetMapping("regist/list/detail/{id}")
@@ -112,20 +114,19 @@ public class PlaceController {
     List<OperateDto> operateDtoList = placeOperateService.getAllOperateDtoList(ownerId);
     model.addAttribute("placeOperateList", operateDtoList);
 
-
     List<PlaceMenu> placeMenuList  =  this.placeMenuService.findByPlaceOwnerId(id);
     model.addAttribute("menus", placeMenuList);
 
     List<PlaceTag> tagList = this.placeTagService.findTags(id);
     model.addAttribute("TagList",tagList);
 
+    model.addAttribute("parameter",1);
+
     return "Place/PlaceRegistDetailList";
   }
 
-  @PostMapping("regist/list/delete/tag")
-  public String deleteTags(Model model,@RequestParam Long tagId, @RequestParam Long POwnerId){
-    System.out.println("---tagId---"+ tagId);
-    System.out.println("---POwnerId---"+POwnerId);
+  @PostMapping("regist/list/delete/{tagId}")
+  public String deleteTags(Model model,@PathVariable("tagId") Long tagId, @RequestParam Long POwnerId){
     this.placeTagService.deleteTag(tagId);
 //
     return "redirect:/place/map/regist/list/detail/" + POwnerId;
